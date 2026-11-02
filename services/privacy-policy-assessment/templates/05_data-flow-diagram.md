@@ -4,33 +4,34 @@
 |---|---|
 | 대상 | {{기업명}} / {{서비스}} |
 | 원칙 | 흐름도의 모든 노드·화살표는 흐름표(04) 행 번호와 대응한다. 대응 없는 화살표는 그리지 않는다 |
+| 작성 규칙 | subgraph 제목은 반드시 `S1["제목"]`처럼 따옴표로 감싼다(가운뎃점 등 특수문자 파싱 오류 방지). 변환: `scripts/render_diagram.sh <이 파일>` |
 | 표기 | 실선: 국내 처리 / 점선: 국외 이전 / 주황: 위탁 / 빨강: 제3자 제공 |
 
 ## 1. 전체 흐름도 (Mermaid)
 
 ```mermaid
 flowchart LR
-  subgraph 수집
+  subgraph S1["수집"]
     U1[정보주체: 웹·앱 가입] -->|#1 이름·휴대폰| DB[(회원 DB)]
     U2[정보주체: 카카오 간편가입] -->|#2 이메일·닉네임| DB
     U3[정보주체: 주문서] -->|#3 배송지·결제| ORD[(주문 DB)]
     U4[정보주체: 채팅 상담] -->|#4 상담 내용| CS[상담 SaaS]
     U5[브라우저·앱] -.->|#5 쿠키·행태정보| AD[광고·분석 플랫폼]
   end
-  subgraph 이용·보관
+  subgraph S2["이용·보관"]
     DB --> CSTEAM[CS팀]
     ORD --> OPS[운영팀]
   end
-  subgraph 위탁
+  subgraph S3["위탁"]
     ORD ==>|위탁| PG[PG사]
     ORD ==>|위탁| DLV[배송사]
     DB ==>|위탁| MSG[알림톡 발송사]
   end
-  subgraph 국외
+  subgraph S4["국외"]
     CS -.->|국외이전 미고지?| US[(해외 리전)]
     AD -.-> US
   end
-  subgraph 파기
+  subgraph S5["파기"]
     DB -->|탈퇴 즉시| DEL1[삭제]
     ORD -->|5년 후| DEL2[삭제]
   end

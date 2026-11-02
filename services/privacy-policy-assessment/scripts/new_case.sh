@@ -21,7 +21,11 @@ if [ -e "$CASE_DIR" ]; then
 fi
 
 mkdir -p "$CASE_DIR"/{input,osint/captures,review,delivery,output}
-cp "$BASE"/templates/*.md "$CASE_DIR/output/"
+# 표준 표지 블록을 각 산출물 템플릿 앞에 붙여 복사 (_cover-block.md 자체는 제외)
+for t in "$BASE"/templates/0*.md; do
+  { sed -e "s/{{기업명}}/$COMPANY/g" -e "s/{{도메인}}/$DOMAIN/g" -e "s/{{YYYY-MM-DD}}/$(date +%F)/g" "$BASE/templates/_cover-block.md"; cat "$t"; } > "$CASE_DIR/output/$(basename "$t")"
+done
+cp "$BASE/review/cross-check-prompt.md" "$CASE_DIR/review/" 2>/dev/null || true
 
 cat > "$CASE_DIR/00_intake.md" <<EOF
 # 접수 (Intake)
