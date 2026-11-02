@@ -1,0 +1,15 @@
+# 로켓보안 (에이플러스넷)
+
+| 경로 | 내용 |
+|---|---|
+| `index.html` | 로켓보안 홈페이지 (정적, 단일 파일) |
+| `examples/milsi-bakery.html` | 홈페이지 제작 판매용 데모 (빵집 예시) |
+| `services/privacy-policy-assessment/` | 개인정보처리방침 평가 서비스 — 운영 매뉴얼·체크리스트·템플릿·일일 개선 루프 |
+| `.agents/skills/`, `.claude/skills/` | Higgsfield CLI 스킬 (영상·이미지 생성, 웹사이트 배포) |
+
+## 로컬 미리보기
+
+```bash
+python3 -m http.server 8080
+# http://localhost:8080
+```

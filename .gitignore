@@ -1,0 +1,10 @@
+# 고객 케이스 자료는 저장소에 올리지 않는다 (security/access-control.md)
+services/privacy-policy-assessment/cases/
+# 비밀값
+.env
+*.env
+*.pem
+*.key
+# OS / editor
+.DS_Store
+Thumbs.db

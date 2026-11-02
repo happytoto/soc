@@ -3,105 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>로켓보안서비스</title>
-<meta name="description" content="중소·중견기업을 위한 24시간 보안관제(SOC), 취약점 진단, 침해사고 대응, ISMS-P 컨설팅. 로켓보안서비스.">
+<title>로켓보안</title>
+<meta name="description" content="ISMS-P 인증심사원이 직접 점검하는 중소기업 보안 서비스. 로켓점검·정책수립·증적·조치, 개인정보처리방침 평가, 방화벽·웹방화벽 구독. 시장보다 싸게, 로켓처럼 빠르게.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f4f6f9;
-    --bg-deep:#e9edf3;
-    --panel:#ffffff;
-    --console:#101729;
-    --console-ink:#d9e0ee;
-    --console-dim:#7f8aa3;
-    --ink:#121a2b;
-    --ink-soft:#5a6578;
-    --line:#d7dde7;
-    --navy:#16294f;
-    --navy-soft:#3a4f80;
-    --flame:#e4552c;
-    --flame-soft:#f07a55;
-    --ok:#2e9e6b;
-    --warn:#d9a21b;
-    --crit:#d63b2f;
+    --bg:#f4f6f9; --bg-deep:#e9edf3; --panel:#ffffff;
+    --console:#101729; --console-ink:#d9e0ee; --console-dim:#7f8aa3;
+    --ink:#121a2b; --ink-soft:#5a6578; --line:#d7dde7;
+    --navy:#16294f; --navy-soft:#3a4f80;
+    --flame:#e4552c; --flame-soft:#f07a55;
+    --ok:#2e9e6b; --warn:#d9a21b; --crit:#d63b2f;
     --shadow:0 20px 44px -28px rgba(18,26,43,.35);
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#0d1322;
-      --bg-deep:#121a2d;
-      --panel:#171f33;
-      --console:#0a0f1c;
-      --console-ink:#d9e0ee;
-      --console-dim:#6f7a94;
-      --ink:#e6ebf3;
-      --ink-soft:#9aa5b8;
-      --line:#26314a;
-      --navy:#8ea7e0;
-      --navy-soft:#6a84c4;
-      --flame:#ff7b4f;
-      --flame-soft:#e4552c;
-      --ok:#4cc48c;
-      --warn:#e8b53a;
-      --crit:#f0574a;
+      --bg:#0d1322; --bg-deep:#121a2d; --panel:#171f33;
+      --console:#0a0f1c; --console-ink:#d9e0ee; --console-dim:#6f7a94;
+      --ink:#e6ebf3; --ink-soft:#9aa5b8; --line:#26314a;
+      --navy:#8ea7e0; --navy-soft:#6a84c4;
+      --flame:#ff7b4f; --flame-soft:#e4552c;
+      --ok:#4cc48c; --warn:#e8b53a; --crit:#f0574a;
       --shadow:0 20px 44px -24px rgba(0,0,0,.7);
     }
   }
   :root[data-theme="dark"]{
-    --bg:#0d1322;
-    --bg-deep:#121a2d;
-    --panel:#171f33;
-    --console:#0a0f1c;
-    --console-ink:#d9e0ee;
-    --console-dim:#6f7a94;
-    --ink:#e6ebf3;
-    --ink-soft:#9aa5b8;
-    --line:#26314a;
-    --navy:#8ea7e0;
-    --navy-soft:#6a84c4;
-    --flame:#ff7b4f;
-    --flame-soft:#e4552c;
-    --ok:#4cc48c;
-    --warn:#e8b53a;
-    --crit:#f0574a;
+    --bg:#0d1322; --bg-deep:#121a2d; --panel:#171f33;
+    --console:#0a0f1c; --console-ink:#d9e0ee; --console-dim:#6f7a94;
+    --ink:#e6ebf3; --ink-soft:#9aa5b8; --line:#26314a;
+    --navy:#8ea7e0; --navy-soft:#6a84c4;
+    --flame:#ff7b4f; --flame-soft:#e4552c;
+    --ok:#4cc48c; --warn:#e8b53a; --crit:#f0574a;
     --shadow:0 20px 44px -24px rgba(0,0,0,.7);
   }
 
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
-  body{
-    margin:0; background:var(--bg); color:var(--ink);
-    font-family:'Noto Sans KR','Pretendard',sans-serif; line-height:1.65;
-    -webkit-font-smoothing:antialiased;
-  }
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-    *{animation-duration:.001ms !important; transition-duration:.001ms !important;}
-  }
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:'Noto Sans KR','Pretendard',sans-serif; line-height:1.65; -webkit-font-smoothing:antialiased;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
   h1,h2,h3{font-family:'IBM Plex Sans KR','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-.01em; text-wrap:balance; margin:0; color:var(--ink);}
   .mono{font-family:'IBM Plex Mono','Noto Sans KR',monospace; font-variant-numeric:tabular-nums;}
   .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--flame); margin:0 0 .6rem;}
   a{color:inherit;}
   .wrap{max-width:1100px; margin:0 auto; padding:0 clamp(1.25rem,4vw,2.5rem);}
   section{padding:clamp(3.5rem,8vw,6rem) 0;}
-  .section-head{max-width:40em; margin-bottom:2.4rem;}
+  .section-head{max-width:42em; margin-bottom:2.4rem;}
   .section-head h2{font-size:clamp(1.6rem,3vw,2.15rem);}
   .section-head p{color:var(--ink-soft); margin:.8rem 0 0;}
   :focus-visible{outline:2px solid var(--flame); outline-offset:3px;}
+  .band{background:var(--bg-deep); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
 
   /* header */
   .site-header{position:sticky; top:0; z-index:40; background:color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
   .header-inner{max-width:1100px; margin:0 auto; padding:.85rem clamp(1.25rem,4vw,2.5rem); display:flex; align-items:center; justify-content:space-between; gap:1rem;}
-  .brand{display:flex; align-items:center; gap:.6rem; text-decoration:none; font-family:'IBM Plex Sans KR',sans-serif; font-weight:700; font-size:1.05rem;}
+  .brand{display:flex; align-items:center; gap:.6rem; text-decoration:none; font-family:'IBM Plex Sans KR',sans-serif; font-weight:700; font-size:1.1rem;}
+  .brand small{font-family:'IBM Plex Mono',monospace; font-weight:400; font-size:.66rem; color:var(--ink-soft); letter-spacing:.06em;}
   .brand-mark{width:1.75rem; height:1.75rem; flex:none;}
-  nav.primary-nav{display:flex; gap:clamp(1rem,3vw,1.8rem); font-size:.9rem;}
+  nav.primary-nav{display:flex; gap:clamp(.9rem,2.5vw,1.5rem); font-size:.88rem;}
   nav.primary-nav a{text-decoration:none; color:var(--ink-soft); transition:color .15s;}
   nav.primary-nav a:hover,nav.primary-nav a:focus-visible{color:var(--ink);}
-  .header-cta{display:flex; align-items:center; gap:.8rem;}
-  .hotline{font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--ink-soft); white-space:nowrap;}
-  .hotline b{color:var(--ink); font-weight:500;}
 
   /* buttons */
   .btn{display:inline-flex; align-items:center; justify-content:center; gap:.5rem; font-weight:700; font-size:.92rem; padding:.78rem 1.4rem; border-radius:.45rem; text-decoration:none; border:1px solid transparent; cursor:pointer; transition:transform .15s, background .15s, border-color .15s; font-family:inherit;}
@@ -115,78 +77,104 @@
   /* hero */
   .hero{padding-top:clamp(2.5rem,6vw,4.5rem);}
   .hero-grid{display:grid; grid-template-columns:1.05fr .95fr; gap:clamp(2rem,5vw,4rem); align-items:center;}
-  .hero h1{font-size:clamp(2.1rem,4.6vw,3.4rem); line-height:1.18; margin:.4rem 0 1.1rem;}
+  .hero h1{font-size:clamp(2rem,4.4vw,3.3rem); line-height:1.18; margin:.4rem 0 1.1rem;}
   .hero h1 em{font-style:normal; color:var(--flame);}
   .hero .lede{color:var(--ink-soft); font-size:1.05rem; max-width:32em; margin:0 0 1.8rem;}
   .hero-actions{display:flex; flex-wrap:wrap; gap:.8rem; margin-bottom:1.8rem;}
   .trust-row{display:flex; flex-wrap:wrap; gap:1.6rem; font-size:.84rem; color:var(--ink-soft);}
   .trust-row b{display:block; font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:1.25rem; color:var(--ink); line-height:1.2;}
 
-  /* console */
-  .console{background:var(--console); color:var(--console-ink); border-radius:.7rem; box-shadow:var(--shadow); overflow:hidden; font-family:'IBM Plex Mono',monospace; font-size:.76rem; border:1px solid color-mix(in srgb, var(--console-ink) 12%, transparent);}
-  .console-bar{display:flex; align-items:center; justify-content:space-between; padding:.65rem .9rem; border-bottom:1px solid color-mix(in srgb, var(--console-ink) 12%, transparent); color:var(--console-dim); font-size:.7rem; letter-spacing:.06em;}
-  .console-bar .live{display:inline-flex; align-items:center; gap:.4rem; color:var(--console-ink);}
-  .console-bar .live::before{content:""; width:.5rem; height:.5rem; border-radius:50%; background:var(--ok); box-shadow:0 0 0 3px color-mix(in srgb, var(--ok) 30%, transparent); animation:pulse 2s infinite;}
+  /* audit panel */
+  .audit{background:var(--console); color:var(--console-ink); border-radius:.7rem; box-shadow:var(--shadow); overflow:hidden; font-family:'IBM Plex Mono',monospace; font-size:.76rem; border:1px solid color-mix(in srgb, var(--console-ink) 12%, transparent);}
+  .audit-bar{display:flex; align-items:center; justify-content:space-between; padding:.65rem .9rem; border-bottom:1px solid color-mix(in srgb, var(--console-ink) 12%, transparent); color:var(--console-dim); font-size:.68rem; letter-spacing:.06em;}
+  .audit-bar .live{display:inline-flex; align-items:center; gap:.4rem; color:var(--console-ink);}
+  .audit-bar .live::before{content:""; width:.5rem; height:.5rem; border-radius:50%; background:var(--flame); box-shadow:0 0 0 3px color-mix(in srgb, var(--flame) 30%, transparent); animation:pulse 2s infinite;}
   @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.45;}}
-  .console-stats{display:grid; grid-template-columns:repeat(3,1fr); border-bottom:1px solid color-mix(in srgb, var(--console-ink) 12%, transparent);}
-  .console-stats div{padding:.7rem .9rem; border-right:1px solid color-mix(in srgb, var(--console-ink) 12%, transparent);}
-  .console-stats div:last-child{border-right:none;}
-  .console-stats small{display:block; color:var(--console-dim); font-size:.64rem; letter-spacing:.08em; text-transform:uppercase; margin-bottom:.2rem;}
-  .console-stats b{font-weight:500; font-size:1.05rem; font-variant-numeric:tabular-nums;}
-  .log{list-style:none; margin:0; padding:.5rem 0; height:15.5rem; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end;}
-  .log li{display:grid; grid-template-columns:4.4rem 3.2rem 1fr; gap:.6rem; padding:.3rem .9rem; align-items:baseline; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .log li.new{animation:slide .35s ease-out;}
+  .progress{padding:.8rem .9rem; border-bottom:1px solid color-mix(in srgb, var(--console-ink) 12%, transparent);}
+  .progress .lbl{display:flex; justify-content:space-between; color:var(--console-dim); font-size:.66rem; letter-spacing:.06em; margin-bottom:.4rem;}
+  .progress .lbl b{color:var(--console-ink); font-weight:500;}
+  .bar{height:.4rem; background:color-mix(in srgb, var(--console-ink) 14%, transparent); border-radius:999px; overflow:hidden;}
+  .bar i{display:block; height:100%; width:0; background:var(--flame); transition:width .6s ease;}
+  .audit-stats{display:grid; grid-template-columns:repeat(3,1fr); border-bottom:1px solid color-mix(in srgb, var(--console-ink) 12%, transparent);}
+  .audit-stats div{padding:.65rem .9rem; border-right:1px solid color-mix(in srgb, var(--console-ink) 12%, transparent);}
+  .audit-stats div:last-child{border-right:none;}
+  .audit-stats small{display:block; color:var(--console-dim); font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; margin-bottom:.15rem;}
+  .audit-stats b{font-weight:500; font-size:1.05rem;}
+  .rows{list-style:none; margin:0; padding:.4rem 0; height:14.2rem; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end;}
+  .rows li{display:grid; grid-template-columns:3.4rem 1fr 4.4rem; gap:.6rem; padding:.32rem .9rem; align-items:baseline; white-space:nowrap;}
+  .rows li.new{animation:slide .35s ease-out;}
   @keyframes slide{from{opacity:0; transform:translateY(6px);}to{opacity:1; transform:none;}}
-  .log .t{color:var(--console-dim);}
+  .rows .k{color:var(--console-dim);}
+  .rows .m{overflow:hidden; text-overflow:ellipsis;}
   .sev{font-size:.62rem; letter-spacing:.08em; padding:.08rem .35rem; border-radius:.25rem; text-align:center; font-weight:500;}
-  .sev-p1{background:var(--crit); color:#fff;}
-  .sev-p2{background:var(--warn); color:#1a1400;}
-  .sev-p3{background:color-mix(in srgb, var(--console-ink) 22%, transparent); color:var(--console-ink);}
+  .sev-def{background:var(--crit); color:#fff;}
+  .sev-chk{background:var(--warn); color:#1a1400;}
   .sev-ok{background:var(--ok); color:#fff;}
-  .log .m{overflow:hidden; text-overflow:ellipsis;}
 
-  /* services */
-  .services{background:var(--bg-deep); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
-  .svc-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:1.3rem;}
-  .svc{background:var(--panel); border:1px solid var(--line); border-radius:.6rem; padding:1.6rem 1.5rem; display:flex; flex-direction:column; gap:.7rem;}
-  .svc-top{display:flex; align-items:center; justify-content:space-between; gap:1rem;}
-  .svc h3{font-size:1.15rem;}
-  .svc .tag{font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.08em; color:var(--navy); border:1px solid color-mix(in srgb, var(--navy) 40%, transparent); padding:.1rem .45rem; border-radius:.3rem; white-space:nowrap;}
-  .svc p{margin:0; color:var(--ink-soft); font-size:.93rem;}
-  .svc ul{margin:.2rem 0 0; padding-left:1.1rem; color:var(--ink-soft); font-size:.88rem; display:flex; flex-direction:column; gap:.2rem;}
+  /* steps grid */
+  .step-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1.2rem;}
+  .step{background:var(--panel); border:1px solid var(--line); border-radius:.6rem; padding:1.5rem 1.4rem; display:flex; flex-direction:column; gap:.6rem; position:relative;}
+  .step .n{font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.1em; color:var(--flame);}
+  .step h3{font-size:1.1rem;}
+  .step p{margin:0; color:var(--ink-soft); font-size:.9rem;}
+  .step ul{margin:.2rem 0 0; padding-left:1.1rem; color:var(--ink-soft); font-size:.85rem; display:flex; flex-direction:column; gap:.15rem;}
+  .step .out{margin-top:auto; padding-top:.7rem; border-top:1px dashed var(--line); font-size:.8rem; color:var(--ink);}
+  .step .out span{font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.08em; color:var(--ink-soft); display:block; margin-bottom:.15rem;}
 
-  /* process */
+  /* privacy service */
+  .pp-grid{display:grid; grid-template-columns:1fr 1fr; gap:clamp(2rem,5vw,3.5rem); align-items:start;}
+  .io{display:flex; flex-direction:column; gap:.9rem;}
+  .io-box{background:var(--panel); border:1px solid var(--line); border-radius:.6rem; padding:1.1rem 1.2rem;}
+  .io-box h3{font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--flame); margin-bottom:.5rem;}
+  .io-box ul{margin:0; padding-left:1.1rem; font-size:.9rem; color:var(--ink); display:flex; flex-direction:column; gap:.2rem;}
+  .io-box ul li small{color:var(--ink-soft);}
+  .io-arrow{text-align:center; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; font-size:.7rem; letter-spacing:.1em;}
+  .law{background:var(--panel); border-left:3px solid var(--navy); padding:1rem 1.2rem; border-radius:0 .5rem .5rem 0; font-size:.9rem; color:var(--ink-soft); margin-top:1.4rem;}
+  .law b{color:var(--ink); font-weight:600;}
+
+  /* timeline + sla */
   .process-grid{display:grid; grid-template-columns:1fr 1fr; gap:clamp(2rem,5vw,4rem); align-items:start;}
   .steps{list-style:none; margin:0; padding:0; border-left:2px solid var(--line);}
-  .steps li{position:relative; padding:0 0 1.6rem 1.6rem;}
+  .steps li{position:relative; padding:0 0 1.5rem 1.6rem;}
   .steps li:last-child{padding-bottom:0;}
   .steps li::before{content:""; position:absolute; left:-.42rem; top:.35rem; width:.7rem; height:.7rem; border-radius:50%; background:var(--bg); border:2px solid var(--flame);}
   .steps .s-time{font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--flame); display:block;}
   .steps .s-label{font-weight:700; font-family:'IBM Plex Sans KR',sans-serif;}
   .steps .s-desc{color:var(--ink-soft); font-size:.9rem; margin:.15rem 0 0;}
-  .sla{background:var(--panel); border:1px solid var(--line); border-radius:.6rem; overflow:hidden; box-shadow:var(--shadow);}
-  .sla-head{padding:1rem 1.2rem; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:baseline; gap:1rem;}
-  .sla-head h3{font-size:1rem;}
-  .sla-head span{font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--ink-soft); letter-spacing:.06em;}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:.6rem; overflow:hidden; box-shadow:var(--shadow);}
+  .card-head{padding:1rem 1.2rem; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:baseline; gap:1rem;}
+  .card-head h3{font-size:1rem;}
+  .card-head span{font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--ink-soft); letter-spacing:.06em;}
   .table-scroll{overflow-x:auto;}
   table{width:100%; border-collapse:collapse; font-size:.88rem;}
-  th,td{padding:.75rem 1.2rem; text-align:left; border-bottom:1px solid var(--line); white-space:nowrap;}
+  th,td{padding:.75rem 1.2rem; text-align:left; border-bottom:1px solid var(--line); white-space:nowrap; vertical-align:top;}
   th{font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);}
   tr:last-child td{border-bottom:none;}
   td.mono{font-variant-numeric:tabular-nums;}
-  .dot{display:inline-block; width:.55rem; height:.55rem; border-radius:50%; margin-right:.45rem; vertical-align:middle;}
+  td .sub{display:block; font-size:.78rem; color:var(--ink-soft); white-space:normal;}
+  .note{font-size:.8rem; color:var(--ink-soft); padding:.8rem 1.2rem; border-top:1px solid var(--line);}
+
+  /* expert */
+  .expert-grid{display:grid; grid-template-columns:.8fr 1.2fr; gap:clamp(2rem,5vw,4rem); align-items:center;}
+  .avatar{aspect-ratio:1/1; max-width:300px; border-radius:.8rem; background:var(--navy); position:relative; overflow:hidden; display:flex; align-items:flex-end; padding:1.2rem; color:#fff;}
+  .avatar svg{position:absolute; inset:0; width:100%; height:100%;}
+  .avatar .cap{position:relative; font-family:'IBM Plex Mono',monospace; font-size:.7rem; letter-spacing:.08em; color:#c3cde3;}
+  .avatar .cap b{display:block; font-family:'IBM Plex Sans KR',sans-serif; font-size:1.3rem; letter-spacing:0; color:#fff; margin-bottom:.2rem;}
+  .creds{list-style:none; margin:1.2rem 0 0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:.6rem 1.2rem; font-size:.9rem;}
+  .creds li{padding-left:1rem; position:relative; color:var(--ink);}
+  .creds li::before{content:""; position:absolute; left:0; top:.6rem; width:.4rem; height:.4rem; background:var(--flame); border-radius:50%;}
 
   /* why */
   .why{background:var(--navy); color:#eef2fa; border-top:1px solid var(--line);}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .why{background:#111a33;} }
+  :root[data-theme="dark"] .why{background:#111a33;}
   .why .eyebrow{color:var(--flame-soft);}
   .why h2{color:#fff; font-size:clamp(1.6rem,3vw,2.15rem);}
   .why p{color:#c3cde3;}
   .why-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1.4rem; margin-top:2.4rem;}
   .why-item{border-top:1px solid rgba(255,255,255,.18); padding-top:1.1rem;}
-  .why-item b{display:block; font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:2rem; color:#fff; line-height:1.1; margin-bottom:.4rem;}
+  .why-item b{display:block; font-family:'IBM Plex Sans KR',sans-serif; font-size:1.25rem; color:#fff; margin-bottom:.4rem;}
   .why-item span{font-size:.9rem; color:#c3cde3;}
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .why{background:#111a33;} }
-  :root[data-theme="dark"] .why{background:#111a33;}
 
   /* faq */
   .faq-list{max-width:46em; display:flex; flex-direction:column; border-top:1px solid var(--line);}
@@ -198,7 +186,6 @@
   details p{margin:0 0 1.1rem; color:var(--ink-soft); font-size:.93rem; max-width:40em;}
 
   /* contact */
-  .contact{background:var(--bg-deep); border-top:1px solid var(--line);}
   .contact-grid{display:grid; grid-template-columns:.9fr 1.1fr; gap:clamp(2rem,5vw,4rem); align-items:start;}
   .contact h2{font-size:clamp(1.6rem,3vw,2.15rem);}
   .contact-notes{color:var(--ink-soft); margin:.8rem 0 1.4rem;}
@@ -211,7 +198,7 @@
   .field.full{grid-column:1/-1;}
   label{font-size:.8rem; font-weight:500; color:var(--ink-soft);}
   input,select,textarea{font:inherit; font-size:.92rem; padding:.65rem .8rem; border:1px solid var(--line); border-radius:.4rem; background:var(--bg); color:var(--ink); width:100%;}
-  textarea{min-height:6.5rem; resize:vertical;}
+  textarea{min-height:6rem; resize:vertical;}
   .form-foot{grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;}
   .form-foot small{color:var(--ink-soft); font-size:.78rem;}
   .form-msg{grid-column:1/-1; font-size:.88rem; color:var(--ok); display:none;}
@@ -224,39 +211,39 @@
   .footer-inner a:hover{color:var(--ink);}
   .biz{display:flex; flex-wrap:wrap; gap:.3rem 1rem;}
 
+  @media (max-width: 960px){ .step-grid{grid-template-columns:1fr 1fr;} }
   @media (max-width: 880px){
-    .hero-grid,.process-grid,.contact-grid{grid-template-columns:1fr;}
-    .svc-grid{grid-template-columns:1fr;}
+    .hero-grid,.process-grid,.contact-grid,.pp-grid,.expert-grid{grid-template-columns:1fr;}
     .why-grid{grid-template-columns:1fr;}
-    nav.primary-nav,.hotline{display:none;}
+    .creds{grid-template-columns:1fr;}
+    nav.primary-nav{display:none;}
     form{grid-template-columns:1fr;}
-    .field.full{grid-column:auto;}
-    .form-foot,.form-msg{grid-column:auto;}
+    .field.full,.form-foot,.form-msg{grid-column:auto;}
   }
+  @media (max-width: 600px){ .step-grid{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
 
 <header class="site-header">
   <div class="header-inner">
-    <a class="brand" href="#top" aria-label="로켓보안서비스 홈">
+    <a class="brand" href="#top" aria-label="로켓보안 홈">
       <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
         <path d="M16 3c5 3 8 9 8 15l-8 5-8-5c0-6 3-12 8-15Z" fill="var(--navy)"/>
         <circle cx="16" cy="14" r="3" fill="var(--bg)"/>
         <path d="M12 23l-3 6 7-3 7 3-3-6" fill="var(--flame)"/>
       </svg>
-      로켓보안서비스
+      로켓보안 <small>by APLUSNET</small>
     </a>
     <nav class="primary-nav" aria-label="주요 메뉴">
       <a href="#services">서비스</a>
-      <a href="#process">대응 절차</a>
-      <a href="#why">왜 로켓인가</a>
+      <a href="#privacy">개인정보 평가</a>
+      <a href="#process">진행 절차</a>
+      <a href="#pricing">가격</a>
+      <a href="#expert">전문가</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <div class="header-cta">
-      <span class="hotline">관제 핫라인 <b>1588-0000</b></span>
-      <a class="btn btn-primary btn-sm" href="#contact">무료 진단 신청</a>
-    </div>
+    <a class="btn btn-primary btn-sm" href="#contact">무료 사전점검 신청</a>
   </div>
 </header>
 
@@ -265,114 +252,177 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <p class="eyebrow">24 × 7 × 365 Managed SOC</p>
-        <h1>공격은 새벽에 옵니다.<br>우리는 <em>깨어 있습니다.</em></h1>
-        <p class="lede">로켓보안서비스는 중소·중견기업을 위한 보안관제 전문 기업입니다. 전담 애널리스트가 24시간 로그를 지켜보고, 위협이 확인되면 15분 안에 담당자에게 직접 연락합니다.</p>
+        <p class="eyebrow">ISMS-P 인증심사원이 직접 하는 보안</p>
+        <h1>심사에서 지적될 것을<br>심사 전에 <em>먼저 잡습니다.</em></h1>
+        <p class="lede">로켓보안은 ISMS-P 인증심사원과 기술사가 직접 점검하고 조치까지 함께하는 중소기업 보안 서비스입니다. 컨설팅사 가격이 부담스러웠던 회사를 위해, 시장보다 싸게 그리고 로켓처럼 빠르게 움직입니다.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#contact">무료 보안진단 신청</a>
-          <a class="btn btn-ghost" href="#services">서비스 살펴보기</a>
+          <a class="btn btn-primary" href="#contact">무료 사전점검 신청</a>
+          <a class="btn btn-ghost" href="#privacy">개인정보처리방침 평가 보기</a>
         </div>
         <div class="trust-row">
-          <div><b class="mono">15분</b>P1 위협 통보 기준</div>
-          <div><b class="mono">24/7</b>전담 관제 인력 상주</div>
-          <div><b class="mono">1,800+</b>탐지 룰 · 매주 갱신</div>
+          <div><b class="mono">5영업일</b>로켓점검 보고서 납기</div>
+          <div><b class="mono">101개</b>ISMS-P 인증기준 전 항목 점검</div>
+          <div><b class="mono">월 7만원~</b>방화벽 구독 시작가</div>
         </div>
       </div>
-      <div class="console" aria-label="관제 콘솔 데모">
-        <div class="console-bar">
-          <span class="live">SOC LIVE · 서울 관제센터</span>
+      <div class="audit" aria-label="로켓점검 모의심사 데모 화면">
+        <div class="audit-bar">
+          <span class="live">로켓점검 · 모의심사 (예시 화면)</span>
           <span id="clock">--:--:--</span>
         </div>
-        <div class="console-stats">
-          <div><small>오늘 수집 이벤트</small><b id="evt">2,418,930</b></div>
-          <div><small>분석 완료 경보</small><b id="alerts">137</b></div>
-          <div><small>고객 통보</small><b id="notified">4</b></div>
+        <div class="progress">
+          <div class="lbl"><span>ISMS-P 인증기준 점검</span><b><span id="done">0</span> / 101</b></div>
+          <div class="bar"><i id="barfill"></i></div>
         </div>
-        <ul class="log" id="log">
-          <li><span class="t">06:12:04</span><span class="sev sev-p3">P3</span><span class="m">fw-edge-01 · 해외 IP 반복 SSH 시도 — 자동 차단</span></li>
-          <li><span class="t">06:14:51</span><span class="sev sev-ok">OK</span><span class="m">edr · 의심 PowerShell 실행 — 정상 업무 스크립트 확인</span></li>
-          <li><span class="t">06:21:37</span><span class="sev sev-p2">P2</span><span class="m">m365 · 비정상 국가에서 관리자 로그인 — MFA 재인증 요청</span></li>
-          <li><span class="t">06:22:10</span><span class="sev sev-p3">P3</span><span class="m">waf · SQL 인젝션 패턴 24건 — 룰 1204 차단</span></li>
-          <li><span class="t">06:30:45</span><span class="sev sev-p1">P1</span><span class="m">edr · 랜섬웨어 행위 탐지 (ws-ACC-07) — 단말 격리, 담당자 통화 중</span></li>
-          <li><span class="t">06:31:02</span><span class="sev sev-ok">OK</span><span class="m">ws-ACC-07 네트워크 격리 완료 · 확산 없음</span></li>
-        </ul>
+        <div class="audit-stats">
+          <div><small>적합</small><b id="cOk">0</b></div>
+          <div><small>확인 필요</small><b id="cChk">0</b></div>
+          <div><small>결함 후보</small><b id="cDef">0</b></div>
+        </div>
+        <ul class="rows" id="rows"></ul>
       </div>
     </div>
   </section>
 
-  <section class="services" id="services">
+  <section class="band" id="services">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">Services</p>
-        <h2>탐지부터 복구, 인증까지 한 팀이 맡습니다</h2>
-        <p>장비만 팔고 떠나는 보안이 아니라, 사고가 났을 때 전화를 받아 주는 보안입니다.</p>
+        <p class="eyebrow">Rocket 4-Step</p>
+        <h2>점검하고, 정책을 세우고, 증적을 쌓고, 조치합니다</h2>
+        <p>인증 준비의 순서 그대로입니다. 네 단계를 한 팀이 끝까지 맡기 때문에 보고서만 남기고 떠나는 컨설팅과 다릅니다.</p>
       </div>
-      <div class="svc-grid">
-        <div class="svc">
-          <div class="svc-top"><h3>24시간 보안관제 (SOC)</h3><span class="tag">MONTHLY</span></div>
-          <p>방화벽·EDR·클라우드 로그를 SIEM으로 모아 실시간 상관분석하고, 애널리스트가 직접 판정합니다.</p>
+      <div class="step-grid">
+        <div class="step">
+          <span class="n">STEP 1 · 로켓점검</span>
+          <h3>심사원 관점 사전점검</h3>
+          <p>ISMS-P 101개 인증기준과 최신 개인정보보호법 기준으로 조직·기술·개인정보 영역을 점검합니다.</p>
           <ul>
-            <li>Microsoft 365 · AWS · 온프레미스 장비 연동</li>
-            <li>오탐 1차 필터링 후 정탐만 통보</li>
-            <li>월간 위협 리포트 · 분기 대면 브리핑</li>
+            <li>공개정보(OSINT) 기반 외부 노출 자산 확인</li>
+            <li>서버·네트워크·웹 취약점 점검</li>
+            <li>개인정보처리방침·흐름 분석</li>
           </ul>
+          <div class="out"><span>OUTPUT</span>한줄결함 대장 · 우선순위(P1~P3) 조치 계획</div>
         </div>
-        <div class="svc">
-          <div class="svc-top"><h3>취약점 진단 · 모의해킹</h3><span class="tag">PROJECT</span></div>
-          <p>웹·모바일 앱, 서버, 네트워크를 공격자 관점에서 점검하고 조치 우선순위를 드립니다.</p>
+        <div class="step">
+          <span class="n">STEP 2 · 로켓 정책수립</span>
+          <h3>우리 회사 크기에 맞는 규정</h3>
+          <p>대기업 템플릿을 복사하지 않습니다. 조직 규모와 실제 업무 흐름에 맞춘 정책·지침·절차를 작성합니다.</p>
           <ul>
-            <li>OWASP Top 10 · 주요정보통신기반시설 가이드 기준</li>
-            <li>재점검 1회 포함</li>
-            <li>개발팀이 바로 쓰는 조치 가이드</li>
+            <li>정보보호·개인정보보호 정책 및 하위 지침</li>
+            <li>개인정보처리방침 작성·개정</li>
+            <li>위탁·제3자 제공 계약서 보안 조항</li>
           </ul>
+          <div class="out"><span>OUTPUT</span>정책 문서 세트 · 경영진 승인용 요약본</div>
         </div>
-        <div class="svc">
-          <div class="svc-top"><h3>침해사고 대응 (IR)</h3><span class="tag">ON-CALL</span></div>
-          <p>랜섬웨어·계정 탈취·정보 유출 상황에서 격리, 원인 분석, 복구, 신고까지 함께 진행합니다.</p>
+        <div class="step">
+          <span class="n">STEP 3 · 로켓 증적</span>
+          <h3>심사 때 바로 꺼내는 증적</h3>
+          <p>접속기록 점검, 권한 검토, 교육·점검 기록을 매월 대신 수행하고 정리해 둡니다. 심사 2주 전에 밤새는 일을 없앱니다.</p>
           <ul>
-            <li>초동 대응 1시간 이내 착수</li>
-            <li>KISA · 개인정보위 신고 서류 지원</li>
-            <li>재발 방지 보고서 제공</li>
+            <li>개인정보 접속기록 월간 점검 보고</li>
+            <li>계정·권한 검토, 퇴직자 회수 확인</li>
+            <li>증적 폴더 체계 · 인덱스 관리</li>
           </ul>
+          <div class="out"><span>OUTPUT</span>월간 증적 패키지 · 심사 대응 체크리스트</div>
         </div>
-        <div class="svc">
-          <div class="svc-top"><h3>컴플라이언스 컨설팅</h3><span class="tag">CONSULT</span></div>
-          <p>ISMS-P, 개인정보보호법, 클라우드 보안 인증을 처음 준비하는 조직을 위한 실무형 컨설팅입니다.</p>
+        <div class="step">
+          <span class="n">STEP 4 · 로켓 조치</span>
+          <h3>결함을 실제로 닫습니다</h3>
+          <p>지적만 하고 끝나지 않습니다. 방화벽·웹방화벽 구독, 소스코드 점검, 로그 통합까지 조치 수단을 함께 제공합니다.</p>
           <ul>
-            <li>갭 분석 → 정책·지침 수립 → 심사 대응</li>
-            <li>증적 관리 템플릿 제공</li>
-            <li>인증 후 연간 유지관리 옵션</li>
+            <li>방화벽·웹방화벽 구독 (구축비 없음)</li>
+            <li>소스코드 보안점검 (Fortify)</li>
+            <li>SIEM 로그 통합 · 보안관제 연계</li>
           </ul>
+          <div class="out"><span>OUTPUT</span>조치 완료 보고 · 재점검 결과</div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="process" id="process">
+  <section id="privacy">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">Incident Flow</p>
-        <h2>경보가 울린 뒤 60분, 이렇게 움직입니다</h2>
-        <p>P1(치명) 위협 기준의 표준 대응 흐름입니다. 모든 단계는 티켓으로 기록되어 고객 포털에서 실시간 확인할 수 있습니다.</p>
+        <p class="eyebrow">Flagship · 개인정보 컨설팅</p>
+        <h2>개인정보처리방침 평가 서비스</h2>
+        <p>기업명과 도메인만 주시면 됩니다. 공개된 정보를 바탕으로 처리방침을 평가하고, 가입 화면부터 위탁·제3자 제공까지 개인정보가 흐르는 길을 전부 그려 드립니다.</p>
+      </div>
+      <div class="pp-grid">
+        <div class="io">
+          <div class="io-box">
+            <h3>Input · 입력</h3>
+            <ul><li>기업명, 서비스 도메인</li><li>(선택) 기존 처리방침·흐름표·흐름도 <small>— 있으면 고도화·현행화</small></li></ul>
+          </div>
+          <div class="io-arrow">▼ 분석</div>
+          <div class="io-box">
+            <h3>Process · 처리</h3>
+            <ul>
+              <li>공개정보 수집 (OSINT) <small>— 비침투·수동 방식, 서비스 장애 없음</small></li>
+              <li>처리방침 기재사항·가독성·접근성 평가</li>
+              <li>수집·처리 경로 전수 분석 <small>— 가입 페이지, SNS 유입, 오프라인, 협력사, 위탁, 제3자 제공</small></li>
+              <li>최신 법령 개정사항 대조</li>
+            </ul>
+          </div>
+          <div class="io-arrow">▼ 산출</div>
+          <div class="io-box">
+            <h3>Output · 6종 문서</h3>
+            <ul>
+              <li>분석보고서</li>
+              <li>개인정보처리방침 (신규 또는 개정안)</li>
+              <li>처리방침 평가분석 보고서</li>
+              <li>개인정보 흐름표 초안 + 평가보고서</li>
+              <li>개인정보 흐름도 초안 + 평가보고서</li>
+              <li>ISMS-P 모의심사 보고서</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-head"><h3>처리방침 평가 항목 (요약)</h3><span>개인정보보호법 §30 · §30의2</span></div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>관점</th><th>확인 내용</th></tr></thead>
+                <tbody>
+                  <tr><td>적정성</td><td>법정 기재사항 누락 여부<span class="sub">처리 목적·항목·보유기간, 제3자 제공, 위탁, 국외이전, 파기, 정보주체 권리, 보호책임자, 자동수집장치, 안전성 확보조치 등</span></td></tr>
+                  <tr><td>가독성</td><td>알기 쉽게 썼는가<span class="sub">목차·요약·표시(라벨링), 전문용어, 문장 길이</span></td></tr>
+                  <tr><td>접근성</td><td>쉽게 찾을 수 있는가<span class="sub">첫 화면 노출, 글자 크기·색, 앱 내 접근 경로</span></td></tr>
+                  <tr><td>정합성</td><td>실제 처리와 일치하는가<span class="sub">가입 화면 수집 항목, 동의서, 위탁사 목록과 대조</span></td></tr>
+                  <tr><td>최신성</td><td>개정 법령 반영 여부<span class="sub">국외이전, 민감정보 공개 가능성, 자동화된 결정 등</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="note">모든 지적 사항은 인증기준 번호와 법령 조문을 근거로 한 줄씩 기재합니다. 근거 없는 지적은 보고서에 싣지 않습니다.</div>
+          </div>
+          <div class="law"><b>왜 지금인가.</b> 개인정보보호위원회는 개인정보처리방침 평가제를 운영하며 기재 적정성·가독성·접근성을 평가하고 개선을 권고합니다. 평가 대상으로 선정된 뒤 고치는 것보다, 선정되기 전에 심사원 기준으로 먼저 점검하는 편이 훨씬 쌉니다.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="process">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">How it works</p>
+        <h2>로켓점검은 5영업일이면 끝납니다</h2>
+        <p>계약 다음 날 시작합니다. 담당자가 준비할 것은 기업명, 도메인, 그리고 30분 인터뷰 한 번입니다.</p>
       </div>
       <div class="process-grid">
         <ol class="steps">
-          <li><span class="s-time">T+0분</span><span class="s-label">탐지</span><p class="s-desc">SIEM 상관분석 룰 또는 EDR 행위 탐지가 경보를 생성합니다.</p></li>
-          <li><span class="s-time">T+5분</span><span class="s-label">분석 · 판정</span><p class="s-desc">당직 애널리스트가 로그를 확인해 오탐·정탐을 가리고 심각도를 매깁니다.</p></li>
-          <li><span class="s-time">T+15분</span><span class="s-label">고객 통보</span><p class="s-desc">지정 담당자에게 전화·문자·카카오톡으로 상황과 권고 조치를 전달합니다.</p></li>
-          <li><span class="s-time">T+60분</span><span class="s-label">초동 대응</span><p class="s-desc">단말 격리, 계정 잠금, 방화벽 차단 룰 적용. 사전 합의된 범위는 즉시 실행합니다.</p></li>
-          <li><span class="s-time">T+24시간</span><span class="s-label">원인 분석 보고</span><p class="s-desc">침투 경로, 영향 범위, 재발 방지 대책을 담은 보고서를 전달합니다.</p></li>
+          <li><span class="s-time">D+0</span><span class="s-label">착수 · 공개정보 수집</span><p class="s-desc">도메인·서브도메인·앱·SNS 채널을 공개 정보만으로 확인합니다. 서비스에 부하를 주는 스캔은 하지 않습니다.</p></li>
+          <li><span class="s-time">D+1</span><span class="s-label">인터뷰 30분</span><p class="s-desc">담당자와 화상으로 조직·시스템·개인정보 업무를 확인합니다. 기존 문서가 있으면 이때 받습니다.</p></li>
+          <li><span class="s-time">D+2~3</span><span class="s-label">분석 · 모의심사</span><p class="s-desc">ISMS-P 인증기준과 개인정보보호법을 기준으로 결함 후보를 도출하고 근거를 붙입니다.</p></li>
+          <li><span class="s-time">D+5</span><span class="s-label">보고 · 조치 계획</span><p class="s-desc">한줄결함 대장과 우선순위 조치 계획을 경영진·실무자용 두 가지 버전으로 보고합니다.</p></li>
+          <li><span class="s-time">이후</span><span class="s-label">정책 · 증적 · 조치</span><p class="s-desc">필요한 단계만 골라 월 구독 또는 프로젝트로 이어갑니다.</p></li>
         </ol>
-        <div class="sla">
-          <div class="sla-head"><h3>심각도별 서비스 수준 (SLA)</h3><span>STANDARD PLAN</span></div>
+        <div class="card">
+          <div class="card-head"><h3>결함 우선순위 기준</h3><span>ROCKET PRIORITY</span></div>
           <div class="table-scroll">
             <table>
-              <thead><tr><th>등급</th><th>예시</th><th>통보</th><th>초동 대응</th></tr></thead>
+              <thead><tr><th>등급</th><th>의미</th><th>예시</th><th>권고 조치 기한</th></tr></thead>
               <tbody>
-                <tr><td><span class="dot" style="background:var(--crit)"></span>P1 치명</td><td>랜섬웨어, 관리자 계정 탈취</td><td class="mono">15분</td><td class="mono">1시간</td></tr>
-                <tr><td><span class="dot" style="background:var(--warn)"></span>P2 높음</td><td>내부 확산 시도, 악성코드 실행</td><td class="mono">30분</td><td class="mono">4시간</td></tr>
-                <tr><td><span class="dot" style="background:var(--navy-soft)"></span>P3 중간</td><td>반복 스캔, 정책 위반</td><td class="mono">2시간</td><td class="mono">1영업일</td></tr>
-                <tr><td><span class="dot" style="background:var(--line)"></span>P4 낮음</td><td>단발성 차단 이벤트</td><td class="mono">일일 리포트</td><td class="mono">주간 리포트</td></tr>
+                <tr><td>P1</td><td>법 위반·인증 불가 사유</td><td>처리방침 필수 기재사항 누락, 주민번호 암호화 미적용</td><td class="mono">2주</td></tr>
+                <tr><td>P2</td><td>심사 결함 확실</td><td>접속기록 미점검, 퇴직자 계정 잔존</td><td class="mono">1개월</td></tr>
+                <tr><td>P3</td><td>개선 권고</td><td>정책 문서 현행화, 교육 기록 보완</td><td class="mono">3개월</td></tr>
               </tbody>
             </table>
           </div>
@@ -381,20 +431,73 @@
     </div>
   </section>
 
-  <section class="why" id="why">
+  <section id="pricing">
     <div class="wrap">
-      <p class="eyebrow">Why Rocket</p>
-      <h2>대기업 관제를 중소기업 예산으로</h2>
-      <p style="max-width:40em; margin-top:.8rem;">보안 담당자가 한 명뿐이거나, 아예 없는 회사를 위해 설계했습니다. 장비 구매 없이 월 구독으로 시작하고, 계약 첫 달 안에 관제가 켜집니다.</p>
-      <div class="why-grid">
-        <div class="why-item"><b class="mono">7분</b><span>P1 경보 평균 통보 시간 (최근 12개월, 자체 집계)</span></div>
-        <div class="why-item"><b class="mono">120+</b><span>관제 중인 고객사 · 제조, 핀테크, 이커머스, 의료</span></div>
-        <div class="why-item"><b class="mono">2주</b><span>계약부터 관제 개시까지 평균 소요 기간</span></div>
+      <div class="section-head">
+        <p class="eyebrow">Pricing</p>
+        <h2>시장보다 싸게, 숨긴 비용 없이</h2>
+        <p>장비 구축비와 라이선스 선납이 없습니다. 모든 금액은 부가세 별도이며, 자산 규모에 따라 상담 후 확정합니다.</p>
+      </div>
+      <div class="card">
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>서비스</th><th>형태</th><th>가격</th><th>포함 내용</th></tr></thead>
+            <tbody>
+              <tr><td>로켓점검 (사전 모의심사)</td><td>프로젝트</td><td class="mono">상담 후 견적</td><td>101개 기준 점검, 한줄결함 대장, 조치 계획<span class="sub">무료 사전점검(외부 노출·처리방침 약식 평가) 후 견적</span></td></tr>
+              <tr><td>개인정보처리방침 평가</td><td>프로젝트</td><td class="mono">상담 후 견적</td><td>6종 문서 (분석보고서, 처리방침, 평가보고서, 흐름표·흐름도, 모의심사)</td></tr>
+              <tr><td>방화벽 구독 (Fortinet)</td><td>월 구독</td><td class="mono">월 7만원~</td><td>장비·라이선스·정책 운영 포함, 구축비 0원</td></tr>
+              <tr><td>웹방화벽 구독</td><td>월 구독</td><td class="mono">월 15만원~</td><td>룰 튜닝, 월간 차단 리포트</td></tr>
+              <tr><td>로켓 증적 (월간 점검 대행)</td><td>월 구독</td><td class="mono">상담 후 견적</td><td>접속기록·권한 점검, 증적 패키지</td></tr>
+              <tr><td>소스코드 보안점검 (Fortify)</td><td>프로젝트</td><td class="mono">상담 후 견적</td><td>정적 분석, 개발팀용 조치 가이드, 재점검 1회</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">ISMS-P 의무대상이 아닌 회사도 간편인증·경량 체계로 시작할 수 있습니다. 어떤 인증이 필요한지부터 상담해 드립니다.</div>
       </div>
     </div>
   </section>
 
-  <section class="faq" id="faq">
+  <section class="band" id="expert">
+    <div class="wrap expert-grid">
+      <div class="avatar" aria-hidden="true">
+        <svg viewBox="0 0 300 300">
+          <circle cx="150" cy="150" r="120" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+          <circle cx="150" cy="150" r="80" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+          <path d="M150 60c30 18 48 54 48 90l-48 30-48-30c0-36 18-72 48-90Z" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.4)" stroke-width="2"/>
+          <circle cx="150" cy="130" r="16" fill="var(--flame)"/>
+          <path d="M126 184l-18 36 42-18 42 18-18-36" fill="var(--flame)" opacity=".9"/>
+        </svg>
+        <div class="cap"><b>김철수</b>대표 · 컴퓨터시스템응용기술사</div>
+      </div>
+      <div>
+        <p class="eyebrow">Who checks your company</p>
+        <h2 style="font-size:clamp(1.6rem,3vw,2.15rem);">심사하는 사람이 점검합니다</h2>
+        <p style="color:var(--ink-soft); margin-top:.8rem; max-width:36em;">ISMS-P 인증심사원으로 금융·플랫폼·유통·공공 분야 인증심사에 참여해 왔고, 그 전에는 20년 넘게 보안관제와 IDC 보안 서비스를 운영했습니다. 심사장에서 어떤 결함이 실제로 지적되는지 알기 때문에, 점검도 그 기준으로 합니다.</p>
+        <ul class="creds">
+          <li>ISMS-P 인증심사원 (한국인터넷진흥원 등록)</li>
+          <li>컴퓨터시스템응용기술사</li>
+          <li>한국홈네트워크안전관리협회 기술위원장</li>
+          <li>「공동주택 IT 안전관리사」 교재 공저</li>
+          <li>보안관제 · IDC 보안 서비스 20년+</li>
+          <li>공인전자문서센터 기술심사 위원</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="why">
+    <div class="wrap">
+      <p class="eyebrow">Why Rocket</p>
+      <h2>컨설팅사 보고서 대신, 닫힌 결함을 드립니다</h2>
+      <div class="why-grid">
+        <div class="why-item"><b>심사원의 기준</b><span>교과서가 아니라 실제 심사장에서 지적되는 순서대로 점검합니다. 보고서의 모든 줄에 인증기준 번호와 법 조문이 붙습니다.</span></div>
+        <div class="why-item"><b>시장보다 싼 가격</b><span>장비 재판매 마진과 대형 컨설팅 인건비 구조를 걷어냈습니다. 방화벽 월 7만원부터, 구축비 없이 시작합니다.</span></div>
+        <div class="why-item"><b>로켓 같은 속도</b><span>사전점검 5영업일, 처리방침 개정안 2주. 자동화한 공개정보 수집과 표준화된 문서 체계로 시간을 줄입니다.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">FAQ</p>
@@ -402,57 +505,57 @@
       </div>
       <div class="faq-list">
         <details>
-          <summary>보안 장비가 하나도 없는데 관제가 가능한가요?</summary>
-          <p>가능합니다. Microsoft 365, Google Workspace, AWS 같은 클라우드 로그와 PC에 설치하는 EDR 에이전트만으로 시작할 수 있습니다. 필요한 경우 방화벽·WAF를 구독형으로 함께 제공합니다.</p>
+          <summary>ISMS-P 의무대상이 아닌데도 받을 수 있나요?</summary>
+          <p>네. 오히려 의무대상이 아닌 회사가 핵심 고객입니다. 인증 없이도 개인정보보호법은 똑같이 적용되므로, 처리방침 평가와 로켓점검만으로도 법 위반 위험을 크게 줄일 수 있습니다. 인증이 필요해지면 간편인증부터 안내합니다.</p>
         </details>
         <details>
-          <summary>월 비용은 어느 정도인가요?</summary>
-          <p>관제 대상 자산 수(PC·서버·클라우드 계정)에 따라 산정합니다. 50인 규모 기준으로 월 단위 구독이며, 무료 진단 후 정확한 견적을 드립니다. 초기 구축비는 없습니다.</p>
+          <summary>공개정보 수집(OSINT)이 우리 서비스에 영향을 주지 않나요?</summary>
+          <p>공개된 페이지와 공개 DNS·인증서 정보만 읽는 수동 방식입니다. 로그인 시도, 인증번호 요청, 취약점 스캔, 대량 요청은 하지 않으며, 침투 성격의 점검은 서면 동의 후 별도 일정으로만 진행합니다.</p>
         </details>
         <details>
-          <summary>사고가 나면 직접 현장에 오시나요?</summary>
-          <p>수도권은 당일 출동이 원칙이며, 그 외 지역은 원격 대응 후 필요 시 익일 출동합니다. 랜섬웨어 등 P1 사고는 원격 격리를 먼저 진행해 확산을 막습니다.</p>
+          <summary>이미 처리방침과 흐름도가 있습니다. 또 만들어야 하나요?</summary>
+          <p>아닙니다. 기존 문서를 받아 최신 법령 개정과 실제 가입 화면·위탁 현황에 맞게 현행화합니다. 바뀐 부분만 표시한 개정 대조표를 함께 드립니다.</p>
         </details>
         <details>
-          <summary>ISMS-P 인증 컨설팅은 얼마나 걸리나요?</summary>
-          <p>조직 규모와 현재 수준에 따라 다르지만, 갭 분석부터 심사 대응까지 보통 6~9개월을 잡습니다. 관제 서비스와 함께 진행하면 기술적 보호조치 증적을 자동으로 확보할 수 있어 기간이 단축됩니다.</p>
+          <summary>보고서와 자료는 어떻게 보관되나요?</summary>
+          <p>고객 자료는 권한이 있는 담당자만 접근할 수 있는 저장소에 암호화해 보관하고, 계약 종료 후 합의한 기간이 지나면 파기합니다. 파기 확인서를 발급합니다.</p>
+        </details>
+        <details>
+          <summary>인증심사원이 컨설팅을 해도 되나요?</summary>
+          <p>로켓보안이 컨설팅한 회사의 인증심사에는 참여하지 않습니다. 이해충돌을 피하기 위한 원칙이며 계약서에 명시합니다.</p>
         </details>
       </div>
     </div>
   </section>
 
-  <section class="contact" id="contact">
+  <section class="band contact" id="contact">
     <div class="wrap contact-grid">
       <div>
-        <p class="eyebrow">Free Assessment</p>
-        <h2>무료 보안진단 신청</h2>
-        <p class="contact-notes">외부 노출 자산 스캔과 계정 보안 점검 결과를 1주일 안에 보고서로 드립니다. 영업일 기준 1일 내 회신합니다.</p>
+        <p class="eyebrow">Free Pre-check</p>
+        <h2>무료 사전점검 신청</h2>
+        <p class="contact-notes">기업명과 도메인만 알려 주시면 외부 노출 자산과 처리방침 약식 평가 결과를 3영업일 안에 보내 드립니다. 영업 전화는 하지 않습니다.</p>
         <dl class="info-rows">
-          <div class="info-row"><dt>핫라인</dt><dd>1588-0000 (24시간, 관제 고객 전용)</dd></div>
-          <div class="info-row"><dt>영업문의</dt><dd>sales@rocketsec.kr · 평일 09:00–18:00</dd></div>
-          <div class="info-row"><dt>주소</dt><dd>서울특별시 ○○구 ○○로 00, 0층</dd></div>
+          <div class="info-row"><dt>회사</dt><dd>에이플러스넷 (브랜드: 로켓보안)</dd></div>
+          <div class="info-row"><dt>문의</dt><dd>contact@aplusnet.net</dd></div>
+          <div class="info-row"><dt>전화</dt><dd>02-000-0000 · 평일 09:00–18:00</dd></div>
         </dl>
       </div>
       <form id="leadForm" novalidate>
-        <div class="field"><label for="company">회사명</label><input id="company" name="company" required placeholder="(주)로켓테크"></div>
-        <div class="field"><label for="name">담당자 성함</label><input id="name" name="name" required placeholder="홍길동"></div>
-        <div class="field"><label for="phone">연락처</label><input id="phone" name="phone" type="tel" required placeholder="010-0000-0000"></div>
-        <div class="field"><label for="size">임직원 규모</label>
-          <select id="size" name="size">
-            <option>10인 미만</option><option selected>10–50인</option><option>50–200인</option><option>200인 이상</option>
-          </select>
-        </div>
+        <div class="field"><label for="company">회사명</label><input id="company" name="company" required placeholder="(주)예시"></div>
+        <div class="field"><label for="domain">서비스 도메인</label><input id="domain" name="domain" required placeholder="example.co.kr"></div>
+        <div class="field"><label for="name">담당자</label><input id="name" name="name" required placeholder="홍길동"></div>
+        <div class="field"><label for="phone">연락처 (이메일 또는 전화)</label><input id="phone" name="phone" required placeholder="hong@example.co.kr"></div>
         <div class="field full"><label for="interest">관심 서비스</label>
           <select id="interest" name="interest">
-            <option>24시간 보안관제</option><option>취약점 진단 · 모의해킹</option><option>침해사고 대응</option><option>ISMS-P 컨설팅</option><option>아직 모르겠어요 — 상담 먼저</option>
+            <option>개인정보처리방침 평가</option><option>로켓점검 (사전 모의심사)</option><option>ISMS-P 인증 준비 전체</option><option>방화벽·웹방화벽 구독</option><option>아직 모르겠어요 — 상담 먼저</option>
           </select>
         </div>
-        <div class="field full"><label for="msg">현재 상황 (선택)</label><textarea id="msg" name="msg" placeholder="예: 최근 피싱 메일로 계정이 탈취된 적이 있어 대책을 찾고 있습니다."></textarea></div>
+        <div class="field full"><label for="msg">현재 상황 (선택)</label><textarea id="msg" name="msg" placeholder="예: 내년 ISMS-P 최초 심사를 준비 중인데 개인정보 흐름도가 없습니다."></textarea></div>
         <div class="form-foot">
-          <small>입력하신 정보는 상담 목적 외에 사용하지 않습니다.</small>
-          <button class="btn btn-primary" type="submit">진단 신청하기</button>
+          <small>입력하신 정보는 상담 목적 외에 사용하지 않으며 상담 종료 후 파기합니다.</small>
+          <button class="btn btn-primary" type="submit">사전점검 신청하기</button>
         </div>
-        <p class="form-msg" id="formMsg">메일 작성 창이 열렸습니다. 전송하시면 영업일 1일 내 연락드립니다.</p>
+        <p class="form-msg" id="formMsg">메일 작성 창이 열렸습니다. 전송하시면 영업일 1일 내 회신드립니다.</p>
       </form>
     </div>
   </section>
@@ -462,8 +565,8 @@
 <footer class="site-footer">
   <div class="wrap footer-inner">
     <div class="biz">
-      <span>© 2026 로켓보안서비스</span>
-      <span>대표 ○○○</span>
+      <span>© 2026 에이플러스넷 · 로켓보안</span>
+      <span>대표 김철수</span>
       <span>사업자등록번호 000-00-00000</span>
       <span>서울특별시 ○○구 ○○로 00</span>
     </div>
@@ -473,59 +576,53 @@
 
 <script>
 (function(){
-  // 콘솔 시계
   var clock = document.getElementById('clock');
-  function tick(){
-    var d = new Date();
-    clock.textContent = [d.getHours(), d.getMinutes(), d.getSeconds()].map(function(n){return String(n).padStart(2,'0');}).join(':');
-  }
+  function hhmmss(){ var d=new Date(); return [d.getHours(),d.getMinutes(),d.getSeconds()].map(function(n){return String(n).padStart(2,'0');}).join(':'); }
+  function tick(){ clock.textContent = hhmmss(); }
   tick(); setInterval(tick, 1000);
 
-  // 데모 경보 피드 (실제 데이터가 아닌 화면 예시)
+  // 모의심사 데모: 실제 고객 데이터가 아닌 화면 예시
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var log = document.getElementById('log');
-  var evt = document.getElementById('evt');
-  var alerts = document.getElementById('alerts');
-  var notified = document.getElementById('notified');
-  var evtCount = 2418930, alertCount = 137, notifyCount = 4;
-  var samples = [
-    ['P3','fw-edge-02 · 포트 스캔 1,204건 — 소스 IP 차단'],
-    ['OK','m365 · 신규 기기 로그인 — 사용자 본인 확인'],
-    ['P2','aws · IAM 키 비정상 사용 (ap-northeast-2 외 리전) — 키 비활성화 권고'],
-    ['P3','waf · 디렉터리 트래버설 시도 — 룰 0931 차단'],
-    ['OK','edr · 백업 에이전트 업데이트 — 정상'],
-    ['P2','mail · 임원 사칭 피싱 3건 — 수신함 격리, 전사 공지 요청'],
-    ['P3','vpn · 동일 계정 다중 국가 접속 — 세션 종료'],
-    ['OK','siem · 룰셋 주간 갱신 완료 (1,812 rules)'],
-    ['P1','edr · 자격증명 덤프 시도 (srv-FIN-02) — 프로세스 차단, 담당자 통보']
+  var rows = document.getElementById('rows'), done = document.getElementById('done'), fill = document.getElementById('barfill');
+  var cOk = document.getElementById('cOk'), cChk = document.getElementById('cChk'), cDef = document.getElementById('cDef');
+  var items = [
+    ['1.1.2','최고책임자의 지정 — CPO 임원급 지정 확인','ok'],
+    ['2.5.1','사용자 계정 관리 — 퇴직자 계정 2건 잔존','def'],
+    ['2.6.1','네트워크 접근 — 관리자 페이지 외부 노출','def'],
+    ['2.9.4','로그 및 접속기록 관리 — 월간 점검 기록 없음','chk'],
+    ['3.1.1','개인정보 수집·이용 — 가입 화면 동의 항목 일치','ok'],
+    ['3.1.5','개인정보 간접수집 — SNS 로그인 수집 항목 고지 누락','def'],
+    ['3.2.3','이용자 단말기 접근 보호 — 앱 권한 고지 확인','ok'],
+    ['3.3.1','개인정보 제3자 제공 — 제공 목적 기재 불명확','chk'],
+    ['3.3.2','개인정보 처리업무 위탁 — 수탁사 1곳 처리방침 미기재','def'],
+    ['3.4.1','개인정보의 파기 — 보유기간 경과 회원 파기 증적 확인','ok'],
+    ['3.5.3','정보주체에 대한 통지 — 이용내역 통지 주기 확인','chk'],
+    ['3.5.1','개인정보처리방침 공개 — 첫 화면 링크 글자 크기 미흡','def']
   ];
-  var i = 0;
-  function fmt(n){ return n.toLocaleString('ko-KR'); }
+  var i = 0, n = 0, ok = 0, chk = 0, def = 0;
+  var labels = {ok:'적합', chk:'확인', def:'결함'};
   function push(){
-    var s = samples[i++ % samples.length];
-    var d = new Date();
-    var t = [d.getHours(), d.getMinutes(), d.getSeconds()].map(function(n){return String(n).padStart(2,'0');}).join(':');
-    var li = document.createElement('li');
-    li.className = 'new';
-    li.innerHTML = '<span class="t">'+t+'</span><span class="sev sev-'+s[0].toLowerCase()+'">'+s[0]+'</span><span class="m"></span>';
-    li.querySelector('.m').textContent = s[1];
-    log.appendChild(li);
-    while (log.children.length > 7) log.removeChild(log.firstChild);
-    evtCount += 900 + Math.floor(Math.random()*2200);
-    evt.textContent = fmt(evtCount);
-    if (s[0] !== 'OK') { alertCount += 1; alerts.textContent = fmt(alertCount); }
-    if (s[0] === 'P1' || s[0] === 'P2') { notifyCount += 1; notified.textContent = fmt(notifyCount); }
+    var it = items[i % items.length]; i++;
+    var li = document.createElement('li'); li.className = 'new';
+    li.innerHTML = '<span class="k">'+it[0]+'</span><span class="m"></span><span class="sev sev-'+it[2]+'">'+labels[it[2]]+'</span>';
+    li.querySelector('.m').textContent = it[1];
+    rows.appendChild(li);
+    while (rows.children.length > 7) rows.removeChild(rows.firstChild);
+    n = Math.min(101, n + 7 + Math.floor(Math.random()*5));
+    done.textContent = n; fill.style.width = (n/101*100) + '%';
+    if (it[2]==='ok') cOk.textContent = ++ok; else if (it[2]==='chk') cChk.textContent = ++chk; else cDef.textContent = ++def;
+    if (n >= 101) { n = 0; ok = chk = def = 0; }
   }
-  if (!reduce) setInterval(push, 3200);
+  for (var k = 0; k < 5; k++) push();
+  if (!reduce) setInterval(push, 2600);
 
-  // 문의 폼: 백엔드 없이 메일 작성 창으로 연결
   var form = document.getElementById('leadForm');
   form.addEventListener('submit', function(e){
     e.preventDefault();
     var f = new FormData(form);
-    var body = ['회사명: '+f.get('company'), '담당자: '+f.get('name'), '연락처: '+f.get('phone'),
-                '규모: '+f.get('size'), '관심 서비스: '+f.get('interest'), '', f.get('msg')||''].join('\n');
-    window.location.href = 'mailto:sales@rocketsec.kr?subject='+encodeURIComponent('[무료 보안진단 신청] '+f.get('company'))+'&body='+encodeURIComponent(body);
+    var body = ['회사명: '+f.get('company'), '도메인: '+f.get('domain'), '담당자: '+f.get('name'), '연락처: '+f.get('phone'),
+                '관심 서비스: '+f.get('interest'), '', f.get('msg')||''].join('\n');
+    window.location.href = 'mailto:contact@aplusnet.net?subject='+encodeURIComponent('[무료 사전점검 신청] '+f.get('company'))+'&body='+encodeURIComponent(body);
     document.getElementById('formMsg').classList.add('show');
   });
 })();
