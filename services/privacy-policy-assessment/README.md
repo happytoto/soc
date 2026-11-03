@@ -51,7 +51,11 @@ services/privacy-policy-assessment/
 │   └── access-control.md     열람 권한·보관·파기·OSINT 안전 수칙
 ├── scripts/
 │   ├── new_case.sh           케이스 폴더 생성 (템플릿 복사)
-│   └── osint_collect.sh      수동(passive) 공개정보 수집 래퍼
+│   ├── osint_collect.sh      수동(passive) 공개정보 수집 래퍼
+│   ├── parse_crtsh.py        crt.sh JSON → subdomains.txt / subdomains.md (osint_collect.sh가 호출, 단독 실행 가능)
+│   ├── render_diagram.sh     Mermaid → PNG/SVG
+│   ├── export_pdf.sh         Markdown → PDF
+│   └── score.py              체크리스트 → 점수 자동 산정
 └── cases/                    고객별 작업 폴더 (git 제외, 암호화 보관)
 ```
 

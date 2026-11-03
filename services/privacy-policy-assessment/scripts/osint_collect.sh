@@ -36,24 +36,19 @@ log "$DOMAIN" "dig A/AAAA/MX/NS/TXT/CNAME" "dns_*.txt"
 # 2. WHOIS
 if command -v whois >/dev/null; then whois "$DOMAIN" > "$OUT/whois.txt" 2>/dev/null || true; log "$DOMAIN" "whois" "whois.txt"; else log "$DOMAIN" "whois" "도구 없음"; fi
 
-# 3. 인증서 투명성 로그 (서브도메인 단서)
+# 3. 인증서 투명성 로그 (서브도메인 단서) → scripts/parse_crtsh.py 로 정리
 code=$(fetch "https://crt.sh/?q=%25.$DOMAIN&output=json" "$OUT/crtsh.json")
 log "crt.sh" "GET json" "HTTP $code"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if command -v python3 >/dev/null && [ -s "$OUT/crtsh.json" ]; then
-  python3 - "$OUT/crtsh.json" "$OUT/subdomains.txt" <<'PY' || true
-import json,sys
-try:
-    data=json.load(open(sys.argv[1]))
-except Exception:
-    sys.exit(0)
-names=set()
-for e in data:
-    for n in str(e.get("name_value","")).split("\n"):
-        n=n.strip().lower().lstrip("*.")
-        if n: names.add(n)
-open(sys.argv[2],"w").write("\n".join(sorted(names))+"\n")
-PY
-  [ -f "$OUT/subdomains.txt" ] && log "crt.sh" "서브도메인 정리" "$(wc -l < "$OUT/subdomains.txt")건"
+  if n=$(python3 "$SCRIPT_DIR/parse_crtsh.py" "$DOMAIN" "$OUT/crtsh.json" "$OUT" 2>"$OUT/crtsh.err"); then
+    log "crt.sh" "서브도메인 정리(parse_crtsh.py)" "${n}건 → subdomains.txt, subdomains.md"
+  else
+    log "crt.sh" "서브도메인 정리(parse_crtsh.py)" "실패: $(head -c 120 "$OUT/crtsh.err" | tr '\n' ' ')"
+  fi
+  rm -f "$OUT/crtsh.err"
+else
+  log "crt.sh" "서브도메인 정리" "건너뜀 (응답 없음 또는 python3 없음)"
 fi
 
 # 4. robots.txt / sitemap.xml / 메인 헤더
