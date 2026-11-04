@@ -28,7 +28,7 @@
 
 작업 환경(Claude Code 클라우드)의 네트워크 정책에서 law.go.kr, pipc.go.kr, korea.kr, casenote.kr 등 국내 사이트 DNS가 차단되어 원문 대조가 불가했다. 환경 설정 → Network access → Allowed domains에 `www.law.go.kr`, `law.go.kr`, `www.pipc.go.kr`, `www.korea.kr`를 추가하면 일일 루틴이 `검증완료`까지 올릴 수 있다. 허용 전에는 검색 결과(2차)로만 갱신한다.
 
-2026-11-03 재확인: `curl https://www.law.go.kr/` → 000(프록시 CONNECT 403), `curl https://www.pipc.go.kr/` → 000(프록시 CONNECT 403), WebFetch → `getaddrinfo ENOTFOUND www.law.go.kr`. 여전히 차단 상태로 L-01~03 원문 대조 미수행. 같은 날 2차(일일 루틴)에서도 두 사이트 모두 000/CONNECT 403.
+2026-11-03 재확인: `curl https://www.law.go.kr/` → 000(프록시 CONNECT 403), `curl https://www.pipc.go.kr/` → 000(프록시 CONNECT 403), WebFetch → `getaddrinfo ENOTFOUND www.law.go.kr`. 여전히 차단 상태로 L-01~03 원문 대조 미수행. 같은 날 2차(일일 루틴)에서도 두 사이트 모두 000/CONNECT 403. 2026-11-04 일일 루틴: 동일(000/CONNECT 403).
 
 ## 검증 방법 (일일 루틴용)
 

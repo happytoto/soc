@@ -52,6 +52,8 @@ services/privacy-policy-assessment/
 ├── scripts/
 │   ├── new_case.sh           케이스 폴더 생성 (템플릿 복사)
 │   ├── osint_collect.sh      수동(passive) 공개정보 수집 래퍼
+│   ├── fetch_policy.sh       처리방침 URL 자동 탐색(푸터 링크) + 본문 저장 → input/policy_<날짜>.md
+│   ├── find_policy_links.py  HTML에서 처리방침 링크 후보 점수화 (fetch_policy.sh가 호출)
 │   ├── parse_crtsh.py        crt.sh JSON → subdomains.txt / subdomains.md (osint_collect.sh가 호출, 단독 실행 가능)
 │   ├── render_diagram.sh     Mermaid → PNG/SVG
 │   ├── export_pdf.sh         Markdown → PDF
@@ -67,6 +69,8 @@ services/privacy-policy-assessment/scripts/new_case.sh "㈜예시" example.co.kr
 
 # 2. 공개정보 수집 (passive only)
 services/privacy-policy-assessment/scripts/osint_collect.sh example.co.kr cases/2026-11-02_예시
+#    처리방침 원문 저장 (메인 1회·robots 1회·방침 1회 GET)
+services/privacy-policy-assessment/scripts/fetch_policy.sh example.co.kr cases/2026-11-02_예시
 
 # 3. MANUAL.md Phase 2~6 수행 → templates 채우기
 # 4. quality/qa-gate.md 통과 → 승인 후 고객 전달
