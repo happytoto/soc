@@ -17,11 +17,11 @@ TODAY="$(date +%F)"
 ts(){ date '+%F %H:%M:%S'; }
 log(){ echo "| $(ts) | $1 | $2 | $3 |" >> "$LOG"; }
 fetch(){ sleep "$SLEEP"; curl -sS -L --max-redirs 5 --max-time 20 -A "$UA" -o "$2" -w '%{http_code}' "$1" 2>/dev/null || echo "ERR"; }
-[ -f "$LOG" ] || printf '# 공개정보 수집 로그\n\n| 시각 | 대상 | 방법 | 결과 |\n|---|---|---|---|\n' > "$LOG"
 
 # 1. 입력 해석: 방침 URL 직접 지정 / 메인 URL / 도메인
 if [[ "$TARGET" =~ ^https?:// ]]; then BASE="$TARGET"; else BASE="https://$TARGET/"; fi
 ORIGIN="$(echo "$BASE" | sed -E 's#^(https?://[^/]+).*#\1#')"
+[ -f "$LOG" ] || printf '# 공개정보 수집 로그 — %s\n방식: passive only (로그인·인증·폼 제출·스캔 없음). 요청 간격 %s초.\n\n| 시각 | 대상 | 방법 | 결과 |\n|---|---|---|---|\n' "$ORIGIN" "$SLEEP" > "$LOG"
 POLICY_URL=""
 if [[ "$BASE" =~ (privacy|policy|개인정보) ]]; then POLICY_URL="$BASE"; fi
 

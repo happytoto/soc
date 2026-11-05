@@ -55,8 +55,11 @@ def main(path: str) -> int:
         print(f"| {sec} | {k['있음']} | {k['없음']} | {k['불명확']} | {k['해당없음']} | {k['미판정']} | {pts} |")
     print(f"| D | 불일치 {mismatch}건 | | | | | {d} |")
     print(f"| **합계** | | | | | | **{total} / 100** |")
+    empty = [s for s in ("A", "B", "C") if sum(counts[s].values()) == 0]
+    if empty:
+        print(f"\n경고: {'·'.join(empty)} 섹션에 판정 행이 없음(0건 → 0점). 체크리스트 ID 행을 채운 뒤 다시 산정.")
     unjudged = sum(counts[s]["미판정"] for s in ("A", "B", "C"))
-    if unjudged:
+    if unjudged or empty:
         print(f"\n경고: 미판정 {unjudged}건. 모두 판정하기 전에는 전달 불가.")
         return 2
     return 0
