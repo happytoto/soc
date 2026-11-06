@@ -2,7 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    # github-pages 환경은 저장소 기본 브랜치에서만 배포를 허용한다.
+    # 기본 브랜치가 main으로 바뀌기 전까지는 작업 브랜치에서 배포한다.
+    branches: [main, claude/homepage-sales-example-t27l8g]
   workflow_dispatch:
 
 permissions:
