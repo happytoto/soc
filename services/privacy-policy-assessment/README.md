@@ -50,7 +50,8 @@ services/privacy-policy-assessment/
 ├── security/
 │   └── access-control.md     열람 권한·보관·파기·OSINT 안전 수칙
 ├── scripts/
-│   ├── new_case.sh           케이스 폴더 생성 (템플릿 복사)
+│   ├── new_case.sh           케이스 폴더 생성 (템플릿 복사 + 03 보고서에 체크리스트 행 사전 생성)
+│   ├── prefill_report.py     체크리스트 A·B·C·E 행 → 03 보고서 §2·§3·§4·§6 표 (new_case.sh가 호출)
 │   ├── osint_collect.sh      수동(passive) 공개정보 수집 래퍼
 │   ├── fetch_policy.sh       처리방침 URL 자동 탐색(푸터 링크) + 본문 저장 → input/policy_<날짜>.md
 │   ├── find_policy_links.py  HTML에서 처리방침 링크 후보 점수화 (fetch_policy.sh가 호출)

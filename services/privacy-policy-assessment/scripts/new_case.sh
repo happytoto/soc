@@ -26,6 +26,8 @@ for t in "$BASE"/templates/0*.md; do
   { cat "$BASE/templates/_cover-block.md" "$t"; } | sed -e "s/{{기업명}}/$COMPANY/g" -e "s/{{도메인}}/$DOMAIN/g" -e "s/{{YYYY-MM-DD}}/$(date +%F)/g" > "$CASE_DIR/output/$(basename "$t")"
 done
 cp "$BASE/review/cross-check-prompt.md" "$CASE_DIR/review/" 2>/dev/null || true
+# 평가분석 보고서(03)에 체크리스트 ID 행 사전 생성 (판정 칸은 비움)
+python3 "$BASE/scripts/prefill_report.py" "$BASE/checklists/policy-eval-checklist.md" "$CASE_DIR/output/03_policy-evaluation-report.md" || echo "경고: 보고서 사전 생성 실패 (수동으로 체크리스트 ID 행 복사)" >&2
 
 cat > "$CASE_DIR/00_intake.md" <<EOF
 # 접수 (Intake)
