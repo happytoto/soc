@@ -13,11 +13,13 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:
   deploy:
+    # 기본 브랜치에서 온 실행만 배포한다. 다른 브랜치 실행은 건너뛰어 보호 규칙 실패와 상호 취소를 막는다.
+    if: github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     environment:
       name: github-pages
