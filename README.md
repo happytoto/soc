@@ -14,3 +14,11 @@
 python3 -m http.server 8080
 # http://localhost:8080
 ```
+
+## 공개 주소 (GitHub Pages)
+
+| 페이지 | 주소 |
+|---|---|
+| 로켓보안 홈페이지 | https://happytoto.github.io/soc/ |
+| KoDT 서브페이지 | https://happytoto.github.io/soc/kodt/ |
+| 빵집 데모 | https://happytoto.github.io/soc/examples/milsi-bakery.html |
