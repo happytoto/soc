@@ -1,0 +1,9 @@
+.agents
+.claude
+.github
+services
+node_modules
+skills-lock.json
+README.md
+.gitignore
+.nojekyll
