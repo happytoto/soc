@@ -90,4 +90,6 @@ SHA="$(sha256sum "$RAW" | cut -c1-16)"
 } > "$MD"
 log "$POLICY_URL" "Markdown 변환" "input/$STEM.md ($(wc -l < "$MD")줄)"
 echo "저장: $MD"
+# 03 보고서 "대상"·"비교 버전" 행 자동 기입 (보고서가 있을 때만, 이미 채운 칸은 유지)
+if [ -f "$CASE_DIR/output/03_policy-evaluation-report.md" ]; then python3 "$SCRIPT_DIR/fill_target_row.py" "$CASE_DIR" || true; fi
 echo "다음: 본문을 눈으로 확인하고 이전 버전 링크가 있으면 같은 방식으로 저장 (scripts/fetch_policy.sh <이전버전URL> \"$CASE_DIR\")"

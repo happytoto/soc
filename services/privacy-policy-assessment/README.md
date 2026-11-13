@@ -55,6 +55,7 @@ services/privacy-policy-assessment/
 │   ├── osint_collect.sh      수동(passive) 공개정보 수집 래퍼
 │   ├── fetch_policy.sh       처리방침 URL 자동 탐색(푸터 링크) + 본문 저장 → input/policy_<날짜>.md
 │   ├── find_policy_links.py  HTML에서 처리방침 링크 후보 점수화 (fetch_policy.sh가 호출)
+│   ├── fill_target_row.py    input/policy_*.md 헤더 → 03 보고서 '대상'·'비교 버전' 행 (fetch_policy.sh가 호출)
 │   ├── parse_crtsh.py        crt.sh JSON → subdomains.txt / subdomains.md (osint_collect.sh가 호출, 단독 실행 가능)
 │   ├── render_diagram.sh     Mermaid → PNG/SVG
 │   ├── export_pdf.sh         Markdown → PDF
