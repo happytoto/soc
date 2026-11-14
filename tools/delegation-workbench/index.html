@@ -1,0 +1,911 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>위임 작업실</title>
+<style>
+
+:root{color-scheme:light;--ink:#172c2b;--muted:#566865;--green:#126352;--deep:#11483e;--pale:#e7f2ed;--border:#dce5e0;--subtle:#f5f8f6;--paper:#fff;--page:#f5f7f4;--sand:#f6efe2;--alert:#914631;font-family:"Instrument Sans","Malgun Gothic","맑은 고딕",sans-serif;color:var(--ink);background:var(--page);font-size:15px;line-height:1.58}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0}
+button,input,textarea,select{font:inherit}
+button,select,input[type=file]{cursor:pointer}
+a{color:var(--green);text-decoration:none}
+a:hover{text-decoration:underline}
+button{color:inherit}
+:focus-visible{outline:3px solid #338875;outline-offset:3px}
+.skip{position:fixed;z-index:10;left:12px;top:10px;transform:translateY(-200%);background:white;padding:10px}
+.skip:focus{transform:none}
+.top{height:67px;background:var(--paper);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 clamp(20px,4.45vw,70px);gap:15px;position:sticky;top:0;z-index:4}
+.brand{font-weight:800;letter-spacing:-.065em;font-size:21px;display:inline-flex;align-items:center;gap:10px;color:var(--ink);white-space:nowrap}
+.brand:hover{text-decoration:none}
+.mark{display:grid;place-content:center;gap:3px;width:33px;height:33px;border-radius:9px;background:var(--deep)}
+.mark i{display:block;background:#c8e7d6;width:14px;height:2px;border-radius:2px}
+.mark i:nth-child(2){width:11px}.mark i:nth-child(3){width:8px}
+.top-divider{width:1px;height:19px;background:#dde5e0;margin-left:4px}
+.top-sub,.saved{color:var(--muted);font-size:12px;white-space:nowrap}.saved b{display:inline-block;width:7px;height:7px;margin:0 5px 1px 0;background:#498673;border-radius:100%}.saved.warn b{background:var(--alert)}
+.top-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+.top-actions .saved{margin-right:11px}
+.frame{display:grid;grid-template-columns:241px minmax(0,1fr);gap:clamp(24px,3.15vw,54px);width:min(1320px,91%);margin:36px auto 72px;align-items:start}
+.sidebar{position:sticky;top:98px;min-width:0}
+.project{display:flex;align-items:center;gap:12px;padding:3px 10px 22px;border-bottom:1px solid var(--border)}
+.project div{min-width:0}.project strong,.project small{display:block;overflow-wrap:anywhere}.project strong{font-size:15px}.project small{font-size:11px;color:var(--muted);margin-top:1px}
+.project-icon{width:37px;height:37px;flex:0 0 37px;border:1px solid #d3e4dc;border-radius:10px;background:var(--pale);display:grid;place-content:center;color:var(--green);font-size:21px}
+.progress{margin:19px 10px 19px}.progress div{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);gap:10px}.progress strong{color:var(--green)}progress{appearance:none;display:block;width:100%;height:6px;margin-top:9px;border:0;border-radius:9px;background:#e1e9e4;overflow:hidden}progress::-webkit-progress-bar{background:#e1e9e4}progress::-webkit-progress-value{background:#317b65}progress::-moz-progress-bar{background:#317b65}
+#nav{display:grid;gap:5px}.nav-button{border:1px solid transparent;background:transparent;text-align:left;width:100%;display:flex;align-items:center;gap:11px;border-radius:9px;padding:9px 10px;color:#425653;min-height:55px}.nav-button:hover{background:#edf3ee}.nav-button[aria-current=step]{border-color:#d3e4db;background:#e5f0e9;color:var(--deep)}.nav-button:disabled{opacity:.6;cursor:default;background:transparent}.step-no{flex:0 0 29px;width:29px;height:29px;display:grid;place-content:center;background:#edf2ee;border:1px solid #dce6df;border-radius:7px;font-size:11px;font-weight:750}.nav-button[aria-current=step] .step-no{color:white;background:var(--deep);border-color:var(--deep)}.nav-button.done .step-no{color:var(--green)}.nav-title{display:block;font-weight:750;font-size:13px}.nav-desc{display:block;font-size:11px;color:var(--muted);line-height:1.4}.side-bottom{border-top:1px solid var(--border);margin-top:23px;padding:15px 10px 0;display:flex;flex-wrap:wrap;gap:9px 15px;font-size:12px}.side-bottom > *{white-space:nowrap}
+#workspace{min-width:0;outline:none}
+.hero{position:relative;isolation:isolate;overflow:hidden;padding:28px 32px 30px;border-radius:15px;background:#153e36;color:#f3faf3;margin-bottom:23px;min-height:153px}
+.hero::after{content:"";position:absolute;z-index:-1;inset:0 0 0 52%;background:repeating-radial-gradient(ellipse at 82% 132%,transparent 0 24px,#a8dab52e 25px 26px,transparent 27px 45px);mask-image:linear-gradient(90deg,transparent,#000 60%)}
+.hero p{margin:7px 0 0;color:#d1e7dc;font-size:13px;max-width:600px}
+.hero .eyebrow{margin:0 0 5px;color:#acd7c3;font-size:11px;font-weight:750}
+h1,h2,h3,p{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;letter-spacing:-.045em}h1{font-size:clamp(25px,3vw,39px);margin:0;font-weight:800}h2{font-size:21px;margin:0 0 7px}h3{font-size:16px;margin:0 0 7px}
+.columns{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(240px,1fr);gap:19px;align-items:start}
+.stack{display:grid;gap:16px;min-width:0}.card{border:1px solid var(--border);border-radius:13px;background:var(--paper);padding:22px;min-width:0;box-shadow:0 2px 4px #143d3006}.intro{color:var(--muted);margin:0 0 17px;font-size:13px}.help{color:var(--muted);font-size:12px;margin:5px 0 0}.info{background:#ecf4ef;border:1px solid #d9e8df;border-radius:11px;padding:13px 14px;color:#31554b;font-size:12px}.info p,.warning p{margin:0}.warning{background:#fbf0e8;border:1px solid #efd8ca;border-radius:10px;padding:13px 14px;color:#773e30;font-size:13px}.fine{font-size:12px;color:var(--muted);margin:12px 0 0}
+.field{display:block;min-width:0;margin:0 0 15px}.field > span:first-child{display:block;font-weight:750;font-size:13px;margin:0 0 6px}.field input,.field textarea,.field select,.inline-input{width:100%;border:1px solid #cddcd4;border-radius:8px;background:#fcfdfc;color:var(--ink);padding:9px 11px;font-size:14px}.field textarea{display:block;resize:vertical;min-height:78px}.field input::placeholder,.field textarea::placeholder{color:#667773}.field input[type=file]{font-size:12px}.field input[type=file]::file-selector-button{border:1px solid var(--border);border-radius:5px;background:var(--pale);padding:4px 8px;color:var(--deep);margin-right:8px}.field select{padding-right:24px}.field .help{display:block}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.two > *{min-width:0}.field:last-child{margin-bottom:0}.field.check{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;font-size:13px}.field.check span{margin:0;font-weight:650}.field.check input{width:auto;margin:4px 0 0;accent-color:var(--green)}
+.actions,.line-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.actions{margin-top:19px}.actions .push{margin-left:auto}.button,.quiet{border:1px solid var(--border);background:white;border-radius:8px;padding:8px 13px;min-height:37px;font-size:13px;font-weight:750;display:inline-flex;align-items:center;justify-content:center;gap:6px}.quiet{padding:5px 10px;min-height:33px;font-size:12px}.button.primary{color:white;background:var(--deep);border-color:var(--deep)}.button.primary:hover{background:#1e6555}.button:not(.primary):hover,.quiet:hover{background:var(--subtle);border-color:#aac2b5}.button:disabled{opacity:.5;cursor:default}.link-button{border:0;padding:0;background:none;color:var(--green);font-size:inherit;text-align:left}.link-button:hover{text-decoration:underline}
+.sample{width:100%;border:1px solid var(--border);background:#f9fbf9;text-align:left;border-radius:10px;padding:12px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;margin:8px 0 0}.sample:hover{border-color:#80a898;background:#edf5ef}.sample strong,.sample small{display:block}.sample strong{font-size:13px}.sample small{color:var(--muted);font-size:11px;margin-top:2px}.sample b{color:var(--green);font-weight:600}.aside-title{font-size:17px;margin-bottom:7px}.good-list{padding:0;margin:12px 0 0;list-style:none;display:grid;gap:7px}.good-list li{font-size:12px;display:flex;gap:7px;align-items:baseline}.good-list li::before{content:"✓";color:var(--green);font-weight:800}
+.dots{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin:4px 0 19px}.dots span{border-radius:10px;height:4px;background:#e5ece8}.dots .done{background:#6d9f8e}.dots .active{background:var(--deep)}
+.mini{font-size:11px;font-weight:750;color:var(--green);margin:0 0 6px}.draft{white-space:pre-wrap;overflow-wrap:anywhere;background:#edf5ef;border-radius:10px;padding:12px 14px;margin:10px 0 0;color:#264c42;font-size:13px}.tall textarea{min-height:160px}.preview{margin:12px 0 0;padding:14px;background:#f6f8f6;border:1px solid var(--border);border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.65 "IBM Plex Mono",Consolas,"Malgun Gothic",monospace;max-height:400px;overflow:auto}
+.rule,.record{border:1px solid var(--border);border-radius:9px;padding:13px;margin:10px 0;background:#fcfdfc}.record strong{overflow-wrap:anywhere}.record p{margin:5px 0;color:var(--muted);font-size:13px;white-space:pre-wrap}.tag{display:inline-block;font-size:11px;background:var(--pale);border-radius:5px;color:var(--deep);padding:2px 7px}.tag.bad{background:#fae9e2;color:#783f2a}.tag.pending{background:var(--sand);color:#75531f}.rule-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:8px}.rule-head .quiet{min-height:28px}.rule .field,.record .field{margin-bottom:8px}.rule .field:last-child,.record .field:last-child{margin-bottom:0}details{border-top:1px solid var(--border);padding:10px 0 0;margin-top:11px}summary{cursor:pointer;font-size:13px;font-weight:750;color:var(--deep)}details[open] summary{margin-bottom:9px}
+dialog{padding:22px;border:1px solid var(--border);border-radius:14px;background:white;color:var(--ink);width:min(620px,92vw);max-height:88vh;overflow:auto;box-shadow:0 14px 80px #183a3250}dialog::backdrop{background:#17382c74}.modal-title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:11px}.modal-title h2{margin:0}.modal-title .quiet{width:34px}
+#notice{position:fixed;bottom:21px;right:21px;max-width:min(390px,calc(100% - 42px));z-index:8;background:var(--deep);color:white;padding:9px 14px;border-radius:8px;font-size:13px;box-shadow:0 4px 15px #0002}#notice:empty{display:none}
+@media(max-width:1000px){.frame{grid-template-columns:195px minmax(0,1fr);gap:21px}.columns{grid-template-columns:minmax(0,1.5fr) minmax(200px,1fr);gap:12px}.card{padding:17px}.hero{padding:24px}}
+@media(max-width:800px){.columns{grid-template-columns:1fr}.frame{grid-template-columns:167px minmax(0,1fr)}.nav-button{gap:7px}.nav-desc{font-size:10px}}
+@media(max-width:600px){.top{height:57px;padding:0 12px;gap:6px}.top-sub,.top-divider,.top-actions .saved{display:none}.brand{font-size:18px}.frame{display:block;width:auto;margin:14px 12px 46px}.sidebar{position:static;margin:0 0 14px}.project{padding:0 3px 7px}.progress{margin:8px 3px 7px}.progress progress{margin-top:4px}#nav{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.nav-button{padding:4px;min-height:34px}.step-no{width:19px;height:19px;flex-basis:19px;font-size:9px}.nav-title{font-size:11px}.nav-desc{display:none}.side-bottom{padding:6px 3px 0;margin-top:7px}.hero{padding:16px;min-height:0;margin-bottom:12px;border-radius:11px}.hero p{font-size:12px}.card{padding:14px}.actions .push{margin-left:0}.two{gap:8px}}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#workspace">작업 영역으로 건너뛰기</a>
+<header class="top">
+  <a class="brand" href="#workspace" aria-label="위임 작업실"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>위임 작업실</a>
+  <span class="top-divider"></span><span class="top-sub">업무 매뉴얼 편집기</span>
+  <a class="quiet" href="../../">로켓보안 홈</a>
+  <div class="top-actions"><span id="save-status" class="saved"><b></b> 이 기기에 자동 저장</span><button class="quiet" data-action="backup">백업</button><button class="quiet" data-action="restore">불러오기</button></div>
+</header>
+<div class="frame">
+  <aside class="sidebar">
+    <div class="project"><span class="project-icon" aria-hidden="true">▤</span><div><strong id="project-name">새 위임 매뉴얼</strong><small id="project-slug">업무 하나 · 매뉴얼 하나</small></div></div>
+    <div class="progress"><div><span>매뉴얼 작성</span><strong id="progress-label">0 / 5</strong></div><progress id="progress" max="5" value="0"></progress></div>
+    <nav id="nav" aria-label="작성 단계"></nav>
+    <div class="side-bottom"><a href="https://sdk-kim-builds.com/guides/ai-delegation-loop-playbook/" target="_blank" rel="noopener noreferrer">원본 플레이북 ↗</a><button class="link-button" data-action="survey">사용성 설문</button><button class="link-button" data-action="fresh">새 매뉴얼</button></div>
+  </aside>
+  <main id="workspace" tabindex="-1"></main>
+</div>
+<div id="notice" role="status" aria-live="polite"></div>
+<dialog id="modal"><div id="modal-content"></div></dialog>
+<input id="backup-input" type="file" accept=".json,application/json" hidden>
+<noscript>위임 작업실을 사용하려면 JavaScript를 켜 주세요.</noscript>
+<script>
+
+"use strict";
+
+const PLAN = [
+  ["업무 설정", "업무와 참고 자료", "위임할 업무를 고르세요", "반복하는 일 하나와 참고 자료를 적으면, 입력한 문맥에서 인터뷰 답변을 제안합니다."],
+  ["프로세스", "인터뷰와 SKILL.md", "업무 판단을 매뉴얼로", "질문을 하나씩 검토합니다. 실제 사례와 판단 기준을 적으면 SKILL.md에 반영됩니다."],
+  ["툴박스", "첫 실행과 파일 저장", "잘된 산출물을 다시 쓰기", "업무를 한 번 실행하고 승인한 산출물을 재사용 가능한 파일로 저장하세요."],
+  ["증명", "검증 항목과 재실행", "증거로 완료 확인하기", "외부 근거로 실패를 판정할 수 있는 기준을 세우고, 저장된 파일을 써서 다시 실행하세요."],
+  ["개선 루프", "원인 진단과 다시 실행", "문제가 생기면 매뉴얼을 고치기", "실패한 레이어를 찾고 필요한 부분을 수정한 뒤 같은 업무를 처음부터 다시 실행하세요."],
+  ["최종 매뉴얼", "파일 검토와 다운로드", "내 업무의 위임 매뉴얼", "확정한 답변, 재사용 파일, 검증 기준 및 수정 기록을 한 폴더로 받으세요."]
+];
+const QUESTIONS = [
+  ["어떤 계기로 이 일을 시작하고, 얼마나 자주 하나요?", "실제로 AI에게 입력할 요청 문장과 반복 주기도 적어주세요.", ["계기","빈도","주기","시작","요일","매주","매일","trigger"]],
+  ["어떤 입력이 필요하고 정확히 어디에 있나요?", "파일명, 폴더 경로, 기기나 도구 안의 메뉴를 적어주세요.", ["입력","자료","위치","경로","폴더","파일","전사","대시보드","source"]],
+  ["실제 일하는 순서를 처음부터 끝까지 적어주세요.", "한 줄에 한 동작을 적으면 SKILL.md에 번호가 붙습니다.", ["순서","단계","진행","처리","흐름","절차","step"]],
+  ["어떤 상황에서 어떤 결정을 내리나요?", "조건 → 행동 형태로, 이유나 판단 근거도 같이 적어주세요.", ["판단","결정","조건","기준","경우","하면","이면","규칙"]],
+  ["끝났다고 말하기 전에 무엇을 확인하나요?", "어디에서 무엇을 대조하고 무엇을 남기는지 적어주세요.", ["완료","확인","검증","납품","결과물","증적","품질"]],
+  ["예전에 잘못됐던 사례와 대응은 무엇인가요?", "실제로 발생한 상황과 다음에도 적용할 대응을 적어주세요.", ["예외","오류","실패","누락","사례","문제","중단"]],
+  ["결과물의 톤과 형식은 어떤 기준을 따르나요?", "좋았던 결과의 문장이나 형식 예시를 함께 적어주세요.", ["톤","스타일","형식","문체","자막","편집","표기","길이"]],
+  ["한눈에 알아보는 나쁜 결과의 특징은 무엇인가요?", "실패한 결과가 무엇을 빠뜨렸거나 잘못했는지 적어주세요.", ["나쁜","금지","반려","부적절","과장","실수","제외"]]
+];
+const EXAMPLES = {
+  shorts:{
+    title:"골프 쇼츠 제작",slug:"golf-shorts",
+    context:"계기: 주 2회, 검토할 골프 클립이 준비되면 시작한다. 실제 호출 문구는 ‘이 골프 클립으로 쇼츠 대본과 패키지 만들어줘’.\n입력: 작업 폴더 input/clip.mp4와 input/transcript.txt, 자료 폴더 brand-voice.md.\n순서: 원본과 전사를 대조한다. 첫 장면에서 확인되는 동작을 고른다. 후킹·본문·CTA를 작성한다. 제목과 자막을 원본에 대조한다. 편집 담당자에게 초안을 넘긴다.\n판단: 화면에서 볼 수 없는 선수명·거리·결과는 확인될 때까지 보류한다.\n완료: 제목, 후킹, CTA가 있고 자막 인용이 원본과 일치한다.\n예외: 클립과 전사가 어긋나면 타임코드를 표시하고 편집을 중단한다.\n톤: 첫 줄은 짧고 구어체로, 자막 한 줄은 18자 이내.\n나쁜 결과: 근거 없는 거리나 기록을 단정하거나 같은 CTA를 반복한다.",
+    answers:["주 2회, 검토할 골프 클립이 준비되면 시작한다. 요청 문구는 ‘이 골프 클립으로 쇼츠 대본과 패키지 만들어줘’.","작업 폴더의 input/clip.mp4와 input/transcript.txt, 자료 폴더의 brand-voice.md를 사용한다.","원본과 전사를 대조한다.\n첫 장면에서 확인되는 동작을 고른다.\n후킹·본문·CTA를 작성한다.\n제목과 자막을 원본에 대조한다.\n편집 담당자에게 초안을 넘긴다.","화면과 전사에서 선수명·거리·결과를 확인할 수 없으면 해당 표현을 빼거나 근거 확인까지 보류한다.","제목, 후킹, CTA가 포함돼야 한다. 자막 인용은 원본에 대조하고 타임코드를 남긴다.","클립과 전사가 어긋나면 타임코드를 기록하고 일치하는 자료를 받기까지 편집을 보류한다.","첫 줄은 짧고 구어체로 쓴다. 자막은 한 줄 18자 이내로 하고 brand-voice.md의 금지어를 확인한다.","근거 없이 기록이나 거리를 단정하는 대본, 클립과 다른 자막, 같은 CTA를 반복하는 대본은 반려한다."],
+    tool:{type:"template",name:"shorts-template.md",purpose:"쇼츠 대본 형식 통일",step:"3",when:"후킹·본문·CTA를 작성할 때",unless:"원본 또는 전사가 누락됐을 때",content:"# [제목]\n- 후킹: [첫 장면에서 확인되는 동작]\n- 본문: [원본에 있는 설명]\n- CTA: [시청자에게 남길 질문]\n- 근거: [원본 타임코드]",example:"제목: 홀 바로 앞에서 휘어진 퍼트\n후킹: 이 공, 홀을 지나갈 것 같죠?\nCTA: 여러분은 이 라인 어떻게 읽으세요?\n근거: 예시 영상 00:03"},
+    rules:[["제목·후킹·CTA 표기가 모두 있다","산출물 본문","contains","제목\n후킹\nCTA"],["기록과 거리 주장이 원본 근거에 대응한다","클립 타임코드 또는 전사 위치","manual",""],["자막 한 줄이 18자를 넘지 않는다","내보낸 자막과 실제 글자 수","manual",""],["원문 인용의 문구가 전사와 일치한다","원본 전사 파일과 비교 문구","manual",""],["금지어가 자막과 제목에 없다","brand-voice.md와 결과 대조표","manual",""]]
+  },
+  audit:{
+    title:"ISMS-P 증적 검토",slug:"isms-p-evidence-review",
+    context:"계기: 주간 증적 검토 일정과 제출 자료 수신 시 검토를 시작한다. 호출 문구는 ‘이번 주 제출 증적을 검토표로 정리해줘’.\n입력: 심사 프로젝트의 증적 목록, 증적 파일, 적용 기준, 인터뷰 메모. 승인된 저장소의 실제 경로와 역추적 가능한 ID를 기재한다.\n순서: 검토 범위를 확정한다. 통제별 증적을 매핑한다. 원본에서 날짜와 범위를 대조한다. 불일치와 추가 확인을 적는다. 검토표를 확인한다.\n판단: 증적을 확인할 수 없으면 미확인으로 기록한다. 판정은 조직이 지정한 승인 절차를 따른다.\n완료: 각 항목에 통제 ID, 근거 위치, 상태와 추가 확인이 연결된다.\n예외: 첨부에 민감정보가 포함되면 공유 범위와 승인 절차를 먼저 확인한다.\n톤: 원본 위치와 관찰 사실을 짧게 작성한다.\n나쁜 결과: 원본 ID 없이 단정하거나 다른 기간의 증적을 현재 검토에 반영한다.",
+    tool:{type:"template",name:"evidence-review-template.md",purpose:"통제와 증적의 검토 구조 통일",step:"2",when:"통제별 증적을 매핑하는 동안",unless:"대상 통제와 검토 기간이 미확정일 때",content:"| 통제 ID | 증적 ID/위치 | 검토 기간 | 관찰 사항 | 상태 |\n|---|---|---|---|---|\n| [통제 ID] | [증적 ID] | [검토 기간] | [관찰 사실] | [상태] |",example:"통제 C-01 / 증적 EV-03 p.2 / 표본 기간 10월 / 검토 대상 계정 1건 확인 / 추가 확인"},
+    rules:[["통제 ID·증적 ID·상태 표기가 있다","검토표 열 이름","contains","통제 ID\n증적 ID\n상태"],["기록한 증적 ID가 증적 목록에 있다","원본 목록과 행 번호","manual",""],["증적 기간이 검토 대상 기간과 일치한다","원본 날짜 필드","manual",""],["관찰 사항을 원본에서 다시 확인할 수 있다","페이지 또는 로그 위치","manual",""],["추가 확인이 필요한 항목마다 상태가 표시된다","검토표와 인터뷰 메모","manual",""]]
+  },
+  client:{
+    title:"주간 고객 업데이트",slug:"weekly-client-update",
+    context:"계기: 매주 월요일, ‘지난주 고객 업데이트를 작성해줘’ 요청을 받으면 시작한다.\n입력: 업무 폴더의 metrics.csv, plan.md, last-update.md, client-names.md.\n순서: 지표를 추출한다. 계획 및 지난주와 비교한다. 가장 크게 변한 지표부터 요약한다. 약속한 후속 조치를 확인한다.\n판단: 원본에 없는 수치와 확인되지 않은 원인 추정은 제외한다.\n완료: 수치와 고객 이름을 원본 대조하고 200단어 이하인지 확인한다.\n예외: 지표 파일이 없으면 확인을 요청한다.\n톤: 숫자 중심으로 짧고 정직하게 쓴다.\n나쁜 결과: 수치 없이 성과를 과장하거나 지난주 후속 조치를 빠뜨린다.",
+    tool:{type:"template",name:"update-template.md",purpose:"고객 업데이트 구성 통일",step:"3",when:"검증된 지표를 요약할 때",unless:"지표 원본을 확보하지 못했을 때",content:"[고객명]님, 지난주 업데이트입니다.\n가장 큰 변화: [지표와 수치]\n계획 대비: [실제 수치 / 목표 수치]\n후속 조치: [지난주에 약속한 조치와 진행 상태]",example:"고객 A / 가입 42건 / 목표 40건 / 지난주 요청한 이벤트 태그 점검 완료"},
+    rules:[["200단어 이하","작성된 고객 업데이트","maxWords","200"],["모든 수치가 원본 파일에 있다","metrics.csv와 수치 위치","manual",""],["고객 이름 표기가 참조와 일치한다","client-names.md의 고객 이름","manual",""],["지난주에 약속한 조치가 포함된다","last-update.md와 대응 문장","manual",""],["성과를 나타내는 표현에 수치가 함께 있다","업데이트의 해당 문장과 수치","manual",""]]
+  }
+};
+const TYPES = {
+  script:["스크립트","automation.py"],template:["템플릿","output-template.md"],reference:["참조 데이터","reference.md"],
+  example:["완성 예시","good-example.md"],rules:["규칙","format-rules.md"],prompt:["하위 프롬프트","step-prompt.md"]
+};
+const METHODS={manual:"근거 직접 확인",contains:"필수 문구 모두 포함",forbid:"금지 문구 모두 없음",maxWords:"최대 단어 수",maxChars:"한 줄 최대 글자 수"};
+const LAYERS={process:"프로세스",toolbox:"툴박스",proof:"증명"};
+const q = v => String(v ?? "").trim();
+function today() { return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date()); }
+function toolDraft() { return {type:"template",name:"",purpose:"",step:"",when:"",unless:"",content:"",example:"",approved:false,reusable:false,safe:false}; }
+function issueDraft() {return {issue:"",diagnosis:"",layer:"process",why:"",key:"",repeat:false,rule:"",target:"decisions",change:"",proofEvidence:"",before:"",after:"",reran:false};}
+function blank() {
+  return {
+    version:1,stage:0,job:{title:"",slug:"",context:"",mode:"folder",preset:"",criteria:[false,false,false]},
+    sources:[],answers:Array(8).fill(""),question:0,interviewDone:false,wrong:"",missing:"",reviewed:false,
+    process:null,run1:"",tool:toolDraft(),tools:[],skipTools:false,
+    rules:[],trial:{output:"",used:"",rebuilt:"",next:"",manual:[],first:null,result:null,cause:"",fix:"",history:[]},
+    issue:issueDraft(),pendingPatch:null,notes:[],noIssue:false,surveys:[]
+  };
+}
+function slugOk(s) {return /^[\p{L}\p{N}][\p{L}\p{N}-]{0,63}$/u.test(s)&&!reserved(s);}
+function reserved(name){return /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i.test(name);}
+function slugFor(s) {return q(s).toLowerCase().replace(/[^\p{L}\p{N} -]/gu,"").replace(/\s+/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"").slice(0,64);}
+function nameOk(name) {return /^[\p{L}\p{N}][\p{L}\p{N}_.-]{0,95}\.[a-z0-9]{1,10}$/iu.test(name)&&!reserved(name)&&!/^index\.md$/i.test(name)&&!/\d{4}[-_.]\d{2}|(?:^|[-_.])v\d+(?:[._-]|$)/i.test(name);}
+function contextText(s) {return [s.job.context,...s.sources.map(x=>x.name+"\n"+x.text)].join("\n");}
+function draftAnswer(s,i) {
+  const text=contextText(s);
+  const section = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  const headers = ["계기","입력","순서","판단","완료","예외","톤","나쁜 결과"];
+  const fieldPattern=/^(계기|입력|순서|판단|완료|예외|톤|나쁜 결과)\s*[:：]\s*/;
+  const exact=[]; let matchesQuestion=false;
+  for(const line of section){
+    const match=line.match(fieldPattern);
+    if(match){matchesQuestion=match[1]===headers[i];if(matchesQuestion)exact.push(line.slice(match[0].length));continue;}
+    if(matchesQuestion&&/^(?:[-*]|\d+[.)])\s/.test(line))exact.push(line);
+  }
+  if(exact.length&&exact.some(q)) {
+    let answer=exact.filter(q).join("\n");
+    if(i===2) answer=answer.replace(/\.\s+(?=[가-힣A-Z])/g,".\n");
+    return {text:answer.slice(0,1800),source:"업무 자료에서 해당 항목을 가져왔습니다."};
+  }
+  const scored=section.map(l=>({text:l,score:QUESTIONS[i][2].filter(k=>l.toLowerCase().includes(k)).length}))
+    .filter(x=>x.score).sort((a,b)=>b.score-a.score).slice(0,3);
+  if(scored.length) return {text:scored.map(x=>x.text).join("\n").slice(0,1800),source:"관련성이 높은 문장을 골랐습니다. 질문과 맞는지 검토해 주세요."};
+  const title=s.job.title||"이 업무";
+  const templates=[
+    title+"은(는) [실제 시작 계기]에 시작하고 [빈도]마다 반복한다.\n실제 요청 문구: ‘["+title+"을 요청할 때 쓰는 문장]’.",
+    title+"에 필요한 입력: [자료 이름] — [저장소/폴더/파일의 정확한 위치].",
+    "[입력 자료와 범위]를 확인한다.\n["+title+"의 핵심 작업]을 실제 순서대로 수행한다.\n[원본과 결과]를 대조하고 [담당자]에게 넘긴다.",
+    "[판단이 필요한 조건]이면 [처리 방법]을 적용한다. 판단 근거는 [기준 또는 원본]이다.",
+    "["+title+" 산출물]을 [원본/규칙]과 대조하고 [완료 증거]를 남긴다.",
+    "[과거 문제 상황]이 생기면 [당시 효과가 있었던 처리]를 하고 [필요시 확인 요청]한다.",
+    "["+title+" 산출물]은 [대상 독자]에게 맞는 [톤]으로 쓰고 [길이·형식·표기]를 지킨다.",
+    "[자주 반려되는 결과의 특징]이 보이면 [반려 이유 또는 고치는 기준]을 적용한다."
+  ];
+  return {text:templates[i],source:"자료에서 답을 찾기 어려워 입력 예시를 만들었습니다. 대괄호를 실제 정보로 채워 주세요."};
+}
+function prepareProcess(s) {
+  const a=s.answers;
+  return {purpose:s.job.title+" 업무를 일관되게 수행한다.",trigger:a[0],inputs:a[1],steps:a[2],decisions:a[3],done:a[4],exceptions:a[5],tone:a[6],bad:a[7],extra:""};
+}
+const PROCESS_KEYS={purpose:"목적",trigger:"언제 쓰는지",inputs:"입력과 위치",steps:"순서",decisions:"결정 규칙",done:"완료의 정의",exceptions:"예외 사례",tone:"톤과 기준",bad:"나쁜 결과",extra:"추가 규칙"};
+function processSteps(s){return q(s.process?.steps).split(/\r?\n/).map(l=>l.trim().replace(/^\d+[.)]\s*/,"")).filter(Boolean);}
+function renderSkill(s) {
+  const p=s.process||prepareProcess(s);
+  const lines=["# "+s.job.title,"","## 목적",p.purpose,"","## 언제 쓰는지",p.trigger,"","## 입력",p.inputs,"","## 순서"];
+  const steps=p.steps.trim().split(/\r?\n/).map(x=>x.trim().replace(/^\d+[.)]\s*/,"")).filter(Boolean);
+  for(const [i,step] of steps.entries()) {
+    lines.push((i+1)+". "+step);
+    for(const t of s.tools.filter(t=>Number(t.step)===i+1)) {
+      lines.push("   - "+t.name+" — 사용: "+t.when+". 제외: "+t.unless+".");
+    }
+  }
+  lines.push("","## 결정",p.decisions,"","## 완료의 정의",p.done);
+  if(s.rules.length){
+    lines.push("","### 증명 기준");
+    for(const [i,r] of s.rules.entries()){
+      lines.push((i+1)+". "+r.name+" — 근거: "+r.evidence+(r.method==="manual"?"":" / "+METHODS[r.method]+": "+r.value.split("\n").join(" · ")));
+    }
+    lines.push("","결과물을 전달하기 전에 모든 항목을 실행한다. 실패한 부분을 수정하고 전 항목을 다시 실행한다. 항목마다 상태와 근거를 한 줄에 기록한다. 확인할 수 없는 항목은 그 이유를 남기고 미확인으로 둔다. 첫 실행에서 세 항목 이상 실패하면 산출물 수정에 앞서 멈추고 원인이 된 업무 단계를 고친다.");
+  }
+  lines.push("","## 예외 사례",p.exceptions,"","### 톤과 형식",p.tone,"","### 반려 기준",p.bad);
+  if(q(p.extra)) lines.push("","### 추가 적용 규칙",p.extra);
+  if(s.tools.length) lines.push("","## 재사용 파일","files/INDEX.md에서 파일의 용도와 등록일을 확인한다. 승인된 완성 예시는 examples/를 참고한다. 매월 사용하지 않는 파일과 중복 용도를 점검한다.");
+  lines.push("","## 개선 기록","notes.md를 매월 읽고 반복되는 실패 레이어를 점검한다.");
+  return lines.join("\n")+"\n";
+}
+function toolError(t,s,skip=-1) {
+  if(!t.approved||!t.reusable||!t.safe) return "승인, 재사용 가능, 민감정보 제외를 모두 확인해 주세요.";
+  if(!nameOk(t.name)) return "확장자가 있는 설명적인 파일명을 적어 주세요. 날짜·버전과 INDEX.md는 제외합니다.";
+  if(!q(t.purpose)||!q(t.when)||!q(t.unless)||!q(t.content)||!q(t.example)) return "내용과 채워진 예시, 용도, 사용·제외 조건을 적어 주세요.";
+  const n=Number(t.step);
+  if(!Number.isInteger(n)||n<1||n>processSteps(s).length) return "실제 프로세스의 단계 번호를 골라 주세요.";
+  if(t.type==="template"&&!/\[[^\]\n]+\]/.test(t.content)) return "템플릿에는 대괄호 자리표시자를 하나 이상 넣어 주세요.";
+  if(s.tools.some((x,i)=>i!==skip&&(x.name.toLowerCase()===t.name.toLowerCase()||q(x.purpose).toLowerCase()===q(t.purpose).toLowerCase()))) return "파일명 또는 용도가 이미 있습니다. 기존 파일을 수정해 주세요.";
+  if(/(?:sk-(?:proj-)?[A-Za-z0-9_-]{22,}|AKIA[A-Z0-9]{16}|-----BEGIN [A-Z ]*PRIVATE KEY-----|\b(?:password|api_key|secret)\s*[:=]\s*["']?[A-Za-z0-9_!@#-]{12,})/i.test(t.content+"\n"+t.example)) return "내용에서 자격증명으로 보이는 패턴을 찾았습니다. 제거한 후 다시 확인해 주세요.";
+  return "";
+}
+function newRule(name="",evidence="",method="manual",value="") {return {name,evidence,method,value};}
+function proposeRules(s) {
+  if(s.job.preset&&EXAMPLES[s.job.preset]?.title===s.job.title) return EXAMPLES[s.job.preset].rules.map(r=>newRule(...r));
+  const out=processSteps(s);
+  const basis=q(s.process?.done).split("\n").filter(Boolean)[0]||"업무의 완료 기준";
+  const input=q(s.process?.inputs).split("\n").filter(Boolean)[0]||"등록된 원본 자료";
+  return [
+    newRule("필수 산출 항목이 확인된다",basis+"에 대응하는 산출물의 구체적인 위치"),
+    newRule("핵심 값 또는 인용을 원본에서 찾을 수 있다",input+"의 파일명, 행 또는 타임코드"),
+    newRule("검증 대상의 범위와 입력 범위가 일치한다","산출물 범위와 원본의 대상, 기간 또는 항목 ID"),
+    newRule("예외 처리와 미확인 사항이 기록돼 있다","예외 기록의 실제 문구와 출처 또는 검토 위치"),
+    newRule("마지막 업무 단계의 결과를 재현할 수 있다",(out.at(-1)||"마지막 단계")+"의 산출물 또는 실행 로그")
+  ];
+}
+function rulesError(s) {
+  if(s.rules.length<5||s.rules.length>10) return "검증 항목을 5~10개로 유지해 주세요.";
+  if(s.rules.some(r=>!q(r.name)||!q(r.evidence)||!Object.hasOwn(METHODS,r.method))) return "각 항목에 검증 조건과 근거 위치를 적어 주세요.";
+  if(new Set(s.rules.map(r=>q(r.name).toLowerCase())).size!==s.rules.length) return "같은 검증 항목을 하나로 정리해 주세요.";
+  if(s.rules.some(r=>r.method!=="manual"&&(!q(r.value)||(["maxWords","maxChars"].includes(r.method)&&(!/^\d+$/.test(q(r.value))||Number(r.value)<1))))) return "문구 또는 1 이상의 개수 기준을 적어 주세요.";
+  return "";
+}
+function evaluate(r,out,m) {
+  if(r.method==="manual"){
+    if(!q(m?.evidence)) return {state:"unknown",evidence:"근거 또는 미확인 사유를 입력해 주세요."};
+    return {state:m.state,evidence:m.evidence};
+  }
+  if(!q(out)) return {state:"unknown",evidence:"검증할 산출물이 없습니다."};
+  if(r.method==="maxWords"||r.method==="maxChars"){
+    const max=Number(r.value);
+    const count=r.method==="maxWords"?out.trim().split(/\s+/u).length:out.split(/\r?\n/).reduce((max,line)=>Math.max(max,Array.from(line).length),0);
+    return {state:count<=max?"pass":"fail",evidence:count+" / 허용 "+max+(r.method==="maxWords"?"단어 (공백 기준)":"자 (최장 줄)")};
+  }
+  const terms=r.value.split("\n").map(q).filter(Boolean);
+  const bad=terms.filter(t=>r.method==="contains"?!out.includes(t):out.includes(t));
+  return {state:bad.length?"fail":"pass",evidence:bad.length?(r.method==="contains"?"누락: ":"검출: ")+bad.join(", "):"산출물에서 대조: "+terms.join(", ")};
+}
+function evaluateRun(s) {return s.rules.map((r,i)=>({...evaluate(r,s.trial.output,s.trial.manual[i]),name:r.name}));}
+const countState=(run,state)=>run?.filter(r=>r.state===state).length||0;
+function proofPassed(s){
+  return !rulesError(s)&&s.trial.result?.length===s.rules.length&&s.trial.result.every((r,i)=>r.state==="pass"&&r.name===s.rules[i].name&&q(r.evidence));
+}
+function proofBlocked(s){return countState(s.trial.first,"fail")>=3&&!q(s.trial.cause);}
+function canExport(s){return accessStage(s)===5;}
+function accessStage(s){if(!q(s.job.title)||!slugOk(s.job.slug))return 0;if(!s.reviewed)return 1;if(!q(s.run1)||(!s.tools.length&&!s.skipTools))return 2;if(!proofPassed(s))return 3;if((!s.notes.length&&!s.noIssue)||q(s.issue.issue)||s.pendingPatch)return 4;return 5;}
+function resetProof(s,full=false) {
+  if(full&&s.trial.first) s.trial.history.unshift({date:today(),cause:s.trial.cause,first:s.trial.first,result:s.trial.result});
+  if(full){s.trial.first=null;s.trial.cause="";s.trial.fix="";s.trial.manual=[];}
+  s.trial.result=null;s.noIssue=false;
+}
+const stateLabel={pass:"통과",fail:"실패",unknown:"미확인"};
+function exportFiles(s) {
+  const files = new Map();
+  files.set("SKILL.md",renderSkill(s));
+  const index=["# 재사용 파일","","| 파일명 | 용도 | 등록일 |","|---|---|---|"];
+  for(const t of s.tools){
+    const relative=(t.type==="example"?"examples/":"files/")+t.name;
+    const file=t.type==="example"?t.content:(t.content+(t.type==="script"?"":"\n\n## 채워진 예시\n"+t.example));
+    files.set(relative,file.trimEnd()+"\n");
+    if(t.type==="script"){
+      let exampleName=t.name+".example.md";
+      while(s.tools.some(x=>x.name.toLowerCase()===exampleName.toLowerCase())) exampleName="example-"+exampleName;
+      files.set("files/"+exampleName,"# "+t.name+" 사용 예시\n\n"+t.example+"\n");
+      index.push("| "+exampleName+" | "+t.name+" 사용 예시 | "+t.date+" |");
+    }
+    index.push("| "+relative.replace(/^files\//,"")+" | "+t.purpose.replace(/[\n|]/g," ")+" | "+t.date+" |");
+  }
+  files.set("files/INDEX.md",index.join("\n")+"\n");
+  const notes=["# 수정 기록","","최신 기록부터 읽는다. 월 1회 반복 실패와 툴박스 파일을 검토한다.",""];
+  for(const n of s.notes) {
+    notes.push("- "+n.date+" · "+LAYERS[n.layer]+" · "+n.issue.replace(/\n/g," ")+" → "+n.change.replace(/\n/g," "));
+    notes.push("  - 진단: "+n.why.replace(/\n/g," "), "  - 수정 전: "+n.before.replace(/\n/g," "), "  - 재실행 후: "+n.after.replace(/\n/g," "));
+    if(n.repeat) notes.push("  - 반복 방지 규칙: "+n.rule.replace(/\n/g," "));
+  }
+  files.set("notes.md",notes.join("\n")+"\n");
+  const audit=["# 업무 재실행 검증","","## 재사용 결과","- 사용한 파일: "+s.trial.used,"- 다시 만든 것: "+s.trial.rebuilt,"- 다음 툴박스 후보: "+s.trial.next];
+  for(const [title,run] of [["첫 판정",s.trial.first],["최종 판정",s.trial.result]]){
+    if(!run) continue;
+    audit.push("","## "+title,...run.map(r=>"- "+stateLabel[r.state]+" · "+r.name+" — "+r.evidence.replace(/\n/g," ")));
+  }
+  if(q(s.trial.cause)) audit.push("","중단 시 원인 단계: "+s.trial.cause);
+  if(q(s.trial.fix)) audit.push("","수정 후 다시 실행한 내용: "+s.trial.fix);
+  for(const old of s.trial.history){
+    audit.push("","## 이전 검증 기록 · "+old.date);
+    if(q(old.cause)) audit.push("- 원인 단계: "+old.cause);
+    for(const r of old.result||old.first||[]) audit.push("- "+stateLabel[r.state]+" · "+r.name+" — "+r.evidence.replace(/\n/g," "));
+  }
+  files.set("verification.md",audit.join("\n")+"\n");
+  return files;
+}
+function crc32(bytes) {
+  let crc=0xffffffff;
+  for(const value of bytes){crc^=value;for(let i=0;i<8;i++) crc=(crc>>>1)^((crc&1)?0xedb88320:0);}
+  return (crc^0xffffffff)>>>0;
+}
+function zip(s,files) {
+  const encoder=new TextEncoder();
+  const parts=[],directory=[];let offset=0,endSize=0;
+  const entries=[[s.job.slug+"/",null],[s.job.slug+"/files/",null],[s.job.slug+"/examples/",null],
+    ...Array.from(files,([name,body])=>[s.job.slug+"/"+name,body])];
+  for(const [name,body] of entries) {
+    const path=encoder.encode(name),bytes=encoder.encode(body??""),crc=crc32(bytes);
+    const local=new Uint8Array(30+path.length), header=new DataView(local.buffer);
+    header.setUint32(0,0x04034b50,true);header.setUint16(4,20,true);header.setUint16(6,0x800,true);
+    header.setUint32(14,crc,true);header.setUint32(18,bytes.length,true);header.setUint32(22,bytes.length,true);
+    header.setUint16(26,path.length,true);local.set(path,30);
+    const central=new Uint8Array(46+path.length), cd=new DataView(central.buffer);
+    cd.setUint32(0,0x02014b50,true);cd.setUint16(4,20,true);cd.setUint16(6,20,true);cd.setUint16(8,0x800,true);
+    cd.setUint32(16,crc,true);cd.setUint32(20,bytes.length,true);cd.setUint32(24,bytes.length,true);cd.setUint16(28,path.length,true);
+    if(body===null) cd.setUint32(38,16,true);
+    cd.setUint32(42,offset,true);central.set(path,46);
+    parts.push(local,bytes);directory.push(central);offset+=local.length+bytes.length;endSize+=central.length;
+  }
+  const end=new Uint8Array(22), dv=new DataView(end.buffer);
+  dv.setUint32(0,0x06054b50,true);dv.setUint16(8,entries.length,true);dv.setUint16(10,entries.length,true);
+  dv.setUint32(12,endSize,true);dv.setUint32(16,offset,true);
+  return new Blob([...parts,...directory,end],{type:"application/zip"});
+}
+
+
+const el=id=>document.getElementById(id);
+const STORAGE="delegation-workbench-v1";
+const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+const selected=(a,b)=>a===b?" selected":"";
+const checked=v=>v?" checked":"";
+const btn=(label,action,attrs="",kind="")=>'<button type="button" class="button '+kind+'" data-action="'+action+'" '+attrs+'>'+label+'</button>';
+const field=(label,key,value,options={})=>{
+  const attr='data-model="'+key+'" '+(options.placeholder?'placeholder="'+esc(options.placeholder)+'" ':'')+(options.attrs||"");
+  const control=options.items?'<select '+attr+'>'+Object.entries(options.items).map(([v,l])=>'<option value="'+esc(v)+'"'+selected(String(value),v)+'>'+esc(l)+'</option>').join("")+'</select>':
+    options.rows?'<textarea rows="'+options.rows+'" '+attr+'>'+esc(value)+'</textarea>':
+    '<input type="'+(options.type||"text")+'" '+attr+' value="'+esc(value)+'">';
+  return '<label class="field '+(options.className||"")+'"><span>'+esc(label)+'</span>'+control+(options.help?'<small class="help">'+esc(options.help)+'</small>':'')+'</label>';
+};
+const check=(label,key,value)=>'<label class="field check"><input type="checkbox" data-model="'+key+'"'+checked(value)+'><span>'+esc(label)+'</span></label>';
+const card=(title,body,desc="")=>'<section class="card"><h2>'+title+'</h2>'+(desc?'<p class="intro">'+desc+'</p>':'')+body+'</section>';
+const side=(title,body)=>'<section class="card"><h2 class="aside-title">'+title+'</h2>'+body+'</section>';
+const info=body=>'<div class="info">'+body+'</div>';
+const warning=body=>'<div class="warning">'+body+'</div>';
+const preview=text=>'<pre class="preview" tabindex="0">'+esc(text)+'</pre>';
+const actions=(...buttons)=>'<div class="actions">'+buttons.join("")+'</div>';
+const columns=(main,aside)=>'<div class="columns"><div class="stack">'+main+'</div><div class="stack">'+aside+'</div></div>';
+const captions=["주 1회 이상 반복합니다","나쁜 결과를 바로 알아볼 수 있습니다","신입에게 20분 안에 설명할 수 있습니다"];
+const labels={shorts:"클립에서 대본·자막·CTA 만들기",audit:"통제별 증적과 근거 정리",client:"원본 수치에서 주간 보고 작성"};
+let s=blank(),toastTimer,storageFault=false,activeFile="SKILL.md";
+try {
+  const stored=localStorage.getItem(STORAGE);
+  if(stored) s=validateBackup(JSON.parse(stored));
+} catch {storageFault=true;}
+function nav() {
+  const unlocked=accessStage(s);
+  el("project-name").textContent=q(s.job.title)||"새 위임 매뉴얼";
+  el("project-slug").textContent=q(s.job.slug)||"업무 하나 · 매뉴얼 하나";
+  el("progress").value=unlocked;
+  el("progress-label").textContent=unlocked+" / 5";
+  el("nav").innerHTML=PLAN.map(([title,desc],i)=>'<button type="button" class="nav-button '+(i<unlocked?"done":"")+'" data-action="nav" data-index="'+i+'" '+(i===s.stage?'aria-current="step"':'')+' '+(i>unlocked?"disabled":"")+'><span class="step-no">'+(i<unlocked&&i!==s.stage?"✓":String(i+1).padStart(2,"0"))+'</span><span><span class="nav-title">'+title+'</span><span class="nav-desc">'+desc+'</span></span></button>').join("");
+}
+function save() {
+  const status=el("save-status");
+  try{localStorage.setItem(STORAGE,JSON.stringify(s));storageFault=false;}
+  catch{storageFault=true;}
+  status.classList.toggle("warn",storageFault);
+  status.lastChild.textContent=storageFault?" 자동 저장 제한 · 백업 사용":" 이 기기에 자동 저장";
+}
+function toast(msg) {
+  el("notice").textContent=msg;
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{el("notice").textContent="";},5800);
+}
+function render(focus=false) {
+  s.stage=Math.min(s.stage,accessStage(s));
+  const [, ,title,description]=PLAN[s.stage];
+  el("workspace").innerHTML='<section class="hero"><p class="eyebrow">단계 '+(s.stage+1)+' / '+PLAN.length+'</p><h1>'+title+'</h1><p>'+description+'</p></section>'+[setup,interview,toolbox,proof,improve,finalView][s.stage]();
+  nav(); save();
+  if(focus){el("workspace").focus({preventScroll:true});window.scrollTo({top:0});}
+}
+function go(step){s.stage=Math.min(step,accessStage(s));if(s.stage===3&&!s.rules.length)s.rules=proposeRules(s);render(true);}
+function folderHint(){
+  return s.job.mode==="chat"?"기준 폴더에 새 파일을 저장한 뒤 ChatGPT 또는 Claude 프로젝트에서 이전 파일을 삭제하고 최신 파일로 교체하세요. 업로드된 Drive 파일도 별도 사본입니다.":"내보낸 파일을 실제 업무 폴더에 풀고 AI 작업 도구에서 그 폴더를 열어 사용하세요. 기준 폴더 하나를 유지하세요.";
+}
+function setup(){
+  const j=s.job;
+  const body=field("업무 이름","job.title",j.title,{placeholder:"예: 골프 쇼츠 대본 제작",attrs:'maxlength="80" autocomplete="off"'})+
+    '<div class="two">'+field("폴더 이름","job.slug",j.slug,{placeholder:"예: golf-shorts",help:"문자·숫자·하이픈, 업무마다 다른 이름",attrs:'maxlength="64" autocomplete="off"'})+
+    field("사용 환경","job.mode",j.mode,{items:{folder:"파일을 쓰는 AI 도구",chat:"채팅·프로젝트 전용 AI"}})+'</div>'+
+    field("업무 설명과 참고 자료","job.context",j.context,{rows:5,help:"계기, 입력, 순서, 판단, 완료, 예외, 톤, 나쁜 결과를 적으면 해당 질문에서 바로 제안합니다.",placeholder:"예: 매주 화요일, 원본 클립과 전사를 받아 후킹·대본·CTA를 작성합니다. 화면에 없는 기록은 확인 전까지 제외합니다.",attrs:'maxlength="24000"'})+
+    '<label class="field"><span>텍스트 참고 파일</span><input type="file" id="sources" multiple accept=".txt,.md,.csv,.json,.log,.tsv,.yaml,.yml"><small class="help">텍스트 파일 최대 6개. 파일당 200 KB까지 읽습니다.</small></label>'+
+    (s.sources.length?'<div class="stack">'+s.sources.map((x,i)=>'<div class="line-actions"><span class="tag">'+esc(x.name)+'</span>'+btn("빼기","remove-source",'data-index="'+i+'" aria-label="'+esc(x.name)+' 빼기"')+'</div>').join("")+'</div>':'')+
+    actions(btn("인터뷰 시작 →","start","",'primary'));
+  const samples=Object.entries(EXAMPLES).map(([k,x])=>'<button type="button" class="sample" data-action="sample" data-key="'+k+'"><span><strong>'+x.title+'</strong><small>'+labels[k]+'</small></span><b aria-hidden="true">↗</b></button>').join("");
+  return columns(card("업무 정보",body),side("예시로 시작하기",'<p class="intro">불러온 예시는 업무에 맞게 수정할 수 있습니다.</p>'+samples)+
+    side("첫 업무를 고르는 기준",'<p class="intro">해당하는 항목을 확인해 보세요.</p>'+captions.map((c,i)=>check(c,"job.criteria."+i,j.criteria[i])).join(""))+
+    info('<p id="folder-hint">'+esc(folderHint())+'</p>'));
+}
+function interview(){
+  if(s.interviewDone){
+    const p=s.process;
+    const inputs=Object.entries(PROCESS_KEYS).map(([key,label])=>field(label,"process."+key,p[key],{rows:key==="purpose"?0:key==="steps"?5:2,help:key==="steps"?"한 줄에 한 단계":undefined})).join("");
+    return columns(card("SKILL.md 검토",inputs+actions(btn("인터뷰 답변 보기","reopen"),btn(s.reviewed?"검토 저장 · 툴박스로 →":"검토 완료 · 툴박스로 →","process-ok","",'primary'))),
+      side("초안에서 확인할 점",field("잘못 옮긴 부분","wrong",s.wrong,{rows:2,placeholder:"예: 보고서를 먼저 전달하는 것이 아니라 승인 후 공유합니다."})+
+      field("빠뜨린 부분","missing",s.missing,{rows:2,placeholder:"예: 대체 입력 자료의 위치"})+
+      '<p class="help">위에서 수정할 내용을 확인한 뒤 왼쪽의 해당 항목을 고쳐 저장하세요.</p>')+
+      side("SKILL.md 미리보기",'<div id="process-preview">'+preview(renderSkill(s))+'</div>'));
+  }
+  const i=s.question,d=draftAnswer(s,i);
+  const dots='<div class="dots" aria-hidden="true">'+s.answers.map((a,n)=>'<span class="'+(n===i?"active":q(a)?"done":"")+'"></span>').join("")+'</div>';
+  const body='<p class="mini">인터뷰 '+(i+1)+' / 8</p>'+dots+'<h3>'+QUESTIONS[i][0]+'</h3><p class="intro">'+QUESTIONS[i][1]+'</p>'+
+    field("내 답변","answers."+i,s.answers[i],{rows:5,placeholder:"제안된 초안을 불러오거나 직접 적어 주세요.",className:"tall"})+
+    actions(i?btn("← 이전 질문","prev-question"):"",btn(i===7?"인터뷰 마치기 · 초안 만들기 →":"다음 질문 →","next-question","",'primary push'));
+  return columns(card("업무 인터뷰",body),side("추천 답변 초안",'<p class="help">'+esc(d.source)+'</p><div class="draft">'+esc(d.text)+'</div>'+actions(btn("이 초안으로 작성","use-answer")))+
+    side("작성 방법",'<ul class="good-list"><li>기억나는 실제 사례를 적으세요.</li><li>입력은 파일명과 정확한 위치를 적으세요.</li><li>대괄호는 실제 업무 정보로 바꾸세요.</li></ul>'));
+}
+function toolFields(t,prefix){
+  const stepItems={"":"단계를 골라 주세요",...Object.fromEntries(processSteps(s).map((l,i)=>[i+1,(i+1)+". "+l.slice(0,58)]))};
+  return '<div class="two">'+field("파일 유형",prefix+".type",t.type,{items:Object.fromEntries(Object.entries(TYPES).map(([k,v])=>[k,v[0]]))})+
+    field("적용할 업무 단계",prefix+".step",t.step,{items:stepItems})+'</div>'+
+    '<div class="two">'+field("파일명",prefix+".name",t.name,{placeholder:"예: update-template.md",attrs:'maxlength="100"'})+
+    field("파일 용도",prefix+".purpose",t.purpose,{placeholder:"예: 대본 형식 통일"})+'</div>'+
+    '<div class="two">'+field("언제 쓰나요?",prefix+".when",t.when,{placeholder:"예: 대본을 작성하는 동안"})+
+    field("언제 제외하나요?",prefix+".unless",t.unless,{placeholder:"예: 원본 영상이 없을 때"})+'</div>'+
+    field("재사용할 파일 내용",prefix+".content",t.content,{rows:5,help:"사례마다 달라지는 항목은 [대괄호 자리표시자]로 표시하세요."})+
+    field("값을 채운 실제 예시",prefix+".example",t.example,{rows:3})+
+    check("검토한 산출물을 승인합니다",prefix+".approved",t.approved)+
+    check("다음 실행에서도 재사용합니다",prefix+".reusable",t.reusable)+
+    check("비밀번호·API 키·미승인 초안을 제외했습니다",prefix+".safe",t.safe);
+}
+function toolbox(){
+  const list=s.tools.map((t,i)=>'<div class="record"><div class="rule-head"><strong>'+esc(t.name)+'</strong><span class="tag">'+TYPES[t.type][0]+'</span></div><p>'+esc(t.purpose)+' · 업무 '+esc(t.step)+'단계</p>'+
+    '<details><summary>이 파일 수정</summary>'+toolFields(t,"tools."+i)+actions(btn("수정 저장","save-tool",'data-index="'+i+'"','primary'),btn("목록에서 제거","delete-tool",'data-index="'+i+'"'))+'</details></div>').join("");
+  return columns(card("업무 첫 실행",field("첫 실행 결과 또는 실행 기록","run1",s.run1,{rows:4,placeholder:"실제 첫 실행 후 산출물과 어디에 저장했는지 기록하세요."})+
+      actions(btn("첫 실행 요청문","run-prompt",'data-key="first"')))+
+    card("재사용 파일 등록",toolFields(s.tool,"tool")+actions(btn("파일 초안 제안","suggest-tool"),btn("승인 파일 추가","add-tool","",'primary')))+
+    (list?card("저장된 재사용 파일",list):"")+
+    card("두 번째 실행 준비",check("첫 실행에서 저장할 재사용 파일이 아직 없었습니다","skipTools",s.skipTools)+actions(btn("← 프로세스","nav",'data-index="1"'),btn("검증 기준 작성 →","tool-next","",'primary'))),
+    side("툴박스에 넣을 자료",'<ul class="good-list">'+Object.values(TYPES).map(([l,n])=>'<li>'+l+' · '+n+'</li>').join("")+'</ul><p class="fine">첫 실행에서 잘된 결과를 저장합니다. 두 번째 실행에서 다시 만든 것이 다음 후보입니다. 매달 중복 파일과 쓰지 않는 파일을 점검하세요.</p>')+
+    info('<p>'+esc(folderHint())+'</p>'));
+}
+function report(run){
+  if(!run) return '<p class="help">기록된 검증 결과가 없습니다.</p>';
+  return run.map(r=>'<div class="record"><span class="tag '+(r.state==="fail"?"bad":r.state==="unknown"?"pending":"")+'">'+stateLabel[r.state]+'</span> <strong>'+esc(r.name)+'</strong><p>'+esc(r.evidence)+'</p></div>').join("");
+}
+function proof(){
+  const list=s.rules.map((r,i)=>'<div class="rule"><div class="rule-head"><span class="mini">검증 '+(i+1)+'</span><button type="button" class="quiet" data-action="remove-rule" data-index="'+i+'" aria-label="검증 '+(i+1)+' 삭제">삭제</button></div>'+
+    field("통과 조건","rules."+i+".name",r.name)+field("증거의 위치나 비교 대상","rules."+i+".evidence",r.evidence,{rows:2})+
+    field("검증 방법","rules."+i+".method",r.method,{items:METHODS})+
+    (r.method==="manual"?"":field(r.method.startsWith("max")?"허용 최대치":"대조할 문구 (한 줄에 하나)","rules."+i+".value",r.value,{rows:r.method.startsWith("max")?0:2,type:r.method.startsWith("max")?"number":"text",attrs:r.method.startsWith("max")?'min="1"':""}))+'</div>').join("");
+  const manual=s.rules.map((r,i)=>{
+    if(r.method!=="manual")return "";
+    const trial=s.trial.manual[i]||{state:"unknown",evidence:""};
+    return '<div class="rule"><h3>'+esc(r.name||"검증 "+(i+1))+'</h3><p class="help">'+esc(r.evidence)+'</p>'+
+      field("판정","trial.manual."+i+".state",trial.state,{items:{unknown:"미확인",pass:"통과",fail:"실패"}})+
+      field("실제 근거 또는 미확인 사유","trial.manual."+i+".evidence",trial.evidence,{rows:2,placeholder:"예: metrics.csv 12행과 보고서 첫 문장에서 동일한 수치 확인"})+'</div>';
+  }).join("");
+  const blocked=proofBlocked(s),failed=countState(s.trial.first,"fail"),rerun=s.trial.first&&(!s.trial.result||!proofPassed(s));
+  const stop=failed>=3?warning('<p>첫 검증에서 '+failed+'개가 실패했습니다. 산출물 수정을 멈추고 어떤 업무 단계에서 실패가 시작됐는지 기록하세요.</p>')+
+    field("원인이 된 업무 단계와 이유","trial.cause",s.trial.cause,{rows:2,placeholder:"예: 1단계에서 조회 기간을 확인하지 않아 다른 주의 지표를 추출함"}):"";
+  const fixes=rerun?field("수정한 내용과 전체 업무 재실행 기록","trial.fix",s.trial.fix,{rows:2,placeholder:"무엇을 고쳤고 어떻게 업무를 다시 실행했는지 기록"}):"";
+  const output=field("두 번째 실행의 실제 산출물","trial.output",s.trial.output,{rows:5,attrs:blocked?"disabled":"",help:"산출물을 수정하면 직접 판정과 근거를 다시 입력해야 합니다.",placeholder:"업무를 다시 실행해 실제 산출물을 붙여넣으세요."})+
+    field("사용한 저장 파일","trial.used",s.trial.used,{placeholder:"예: update-template.md / 없음"})+
+    field("처음부터 다시 만든 것","trial.rebuilt",s.trial.rebuilt,{placeholder:"예: 지표 분류표 / 없음"})+
+    field("다음에 저장할 후보","trial.next",s.trial.next,{placeholder:"예: 지표 분류표 / 없음"})+
+    (manual?'<details '+(s.trial.first?"":"open")+'><summary>직접 확인하는 항목과 근거</summary>'+manual+'</details>':"")+
+    actions(btn("재실행 요청문","run-prompt",'data-key="second"'),btn(s.trial.first?"수정 후 전체 재검증":"검증 실행","evaluate","","primary"));
+  return columns(card("증명 기준",list||'<p class="intro">업무 순서와 입력에서 검증 항목 다섯 개를 제안합니다.</p>',
+    "5~10개를 작성하세요. 원본 대조, 개수, 화면, 실행 로그처럼 결과에서 실제로 확인할 수 있는 근거를 지정하세요.")+
+    card("검증 기준 편집",actions(btn("검증 초안 제안","suggest-rules"),btn("항목 추가","add-rule",s.rules.length>=10?"disabled":"")))+
+    card("업무 다시 실행",stop+fixes+output)+
+    card("검증 결과",'<div id="proof-results">'+report(s.trial.result||s.trial.first)+'</div>'+actions(btn("← 툴박스","nav",'data-index="2"'),btn("개선 루프로 →","proof-next","","primary"))),
+    side("실행 순서",'<ul class="good-list"><li>모든 검증을 실행합니다.</li><li>실패 항목을 고치고 전체를 다시 실행합니다.</li><li>각 항목에 판정과 증거를 남깁니다.</li><li>근거를 얻지 못하면 미확인과 사유를 남깁니다.</li></ul>')+
+    side("첫 검증에서 3개 이상 실패",'<p class="help">원인이 된 단계를 먼저 기록하세요. 원인 수정과 업무 재실행을 거쳐야 검증을 다시 돌릴 수 있습니다.</p>'));
+}
+function improve(){
+  const i=s.issue, layerItems=LAYERS;
+  const edit=i.layer==="process"?field("수정할 SKILL.md 항목","issue.target",i.target,{items:PROCESS_KEYS}):
+    i.layer==="toolbox"?field("수정할 저장 파일","issue.target",i.target,{items:{"":"파일 선택",...Object.fromEntries(s.tools.map((t,n)=>[n,t.name]))}}):
+    field("고칠 검증 기준 또는 새 기준","issue.target",i.target,{items:{new:"새 검증 추가",...Object.fromEntries(s.rules.map((r,n)=>[n,r.name]))}});
+  return columns(card("잘못된 결과 기록",field("무엇이 어떻게 잘못됐나요?","issue.issue",i.issue,{rows:3,placeholder:"예: 대본에 원본에서 확인되지 않는 거리가 기록됐습니다."})+
+    actions(btn("원인과 수정 초안 제안","diagnose"))+
+    field("실패한 레이어","issue.layer",i.layer,{items:layerItems})+
+    field("진단과 이유 (두 문장)","issue.why",i.why,{rows:3})+
+    field("같은 실수를 식별할 이름","issue.key",i.key,{placeholder:"예: 원본 거리 근거 누락",help:"같은 실수가 반복되면 같은 이름을 쓰세요."})+
+    check("이미 두 번 이상 발생했습니다","issue.repeat",i.repeat)+
+    field("명시적인 반복 방지 규칙","issue.rule",i.rule,{rows:2,help:"두 번째부터 필요합니다. 조건과 실행할 행동을 적으세요."})+
+    edit+
+    field(i.layer==="proof"?"검증 기준 문구 (수정 후)":"선택한 항목 또는 파일의 수정된 전체 내용","issue.change",i.change,{rows:4})+
+    (i.layer==="proof"?field("실제 증거의 위치나 비교 대상","issue.proofEvidence",i.proofEvidence,{rows:2}):"")+
+    actions(btn("수정 적용 · 재실행 준비","apply-issue","","primary")))+
+    card("같은 업무 재실행과 비교",field("수정 전 산출물·문제 증거","issue.before",i.before,{rows:3})+
+      field("수정 후 실제 산출물·증거","issue.after",i.after,{rows:3})+
+      check("수정한 매뉴얼로 같은 일을 처음부터 다시 실행했습니다","issue.reran",i.reran)+
+      actions(btn("재실행 요청문","run-prompt",'data-key="improvement" '+(s.pendingPatch?"":"disabled")),btn("수정 기록 저장","log-issue","","primary")))+
+    card("최종본 확인",actions(btn("문제 없음 · 최종 매뉴얼 →","no-issue"),s.notes.length?btn("매뉴얼 보기 →","nav",'data-index="5"','primary'):"")),
+    side("실패 레이어 찾기",'<ul class="good-list"><li>프로세스 · 단계나 결정 규칙 누락</li><li>툴박스 · 중복 작업, 오래되거나 잘못된 파일</li><li>증명 · 검출할 검증이 빠짐</li></ul>')+
+    side("수정 기록",s.notes.length?s.notes.map(n=>'<div class="record"><span class="tag">'+esc(n.date)+' · '+LAYERS[n.layer]+'</span><p>'+esc(n.issue)+'</p><p>'+esc(n.change)+'</p></div>').join(""):'<p class="help">저장한 수정은 notes.md에 최신순으로 남습니다.</p>'));
+}
+function finalView(){
+  const files=exportFiles(s);
+  if(!files.has(activeFile))activeFile="SKILL.md";
+  const opts=Array.from(files.keys()).map(key=>'<option value="'+esc(key)+'"'+selected(activeFile,key)+'>'+esc(key)+'</option>').join("");
+  return columns(card("최종 파일",'<label class="field"><span>미리 볼 파일</span><select id="open-file">'+opts+'</select></label><div id="final-preview">'+preview(files.get(activeFile))+'</div>'+
+    actions(btn("매뉴얼 폴더 ZIP 다운로드","download","","primary"),btn("SKILL.md 다운로드","download-skill"),btn("보이는 파일 복사","copy-file"))),
+    side("업무 폴더",preview([s.job.slug+"/","  SKILL.md","  files/",...Array.from(files.keys()).filter(n=>n.startsWith("files/")).map(n=>"    "+n.slice(6)),"  examples/",...Array.from(files.keys()).filter(n=>n.startsWith("examples/")).map(n=>"    "+n.slice(9)),"  notes.md","  verification.md"].join("\n")))+
+    info('<p>'+esc(folderHint())+'</p>')+
+    side("사용성 설문",'<p class="help">작성, 수정, 검증이 쉬웠는지 알려주세요. 응답은 이 기기에 저장됩니다.</p>'+actions(btn("설문 작성","survey"))));
+}
+
+
+const toolEdits=new Map();
+function message(value){toast(value);return false;}
+function modal(title,body){
+  el("modal-content").innerHTML='<div class="modal-title"><h2>'+esc(title)+'</h2><button class="quiet" data-action="close" aria-label="닫기">×</button></div>'+body;
+  if(!el("modal").open)el("modal").showModal();
+}
+function needsReplace(value){
+  return !q(value)||/\[(?:실제 시작 계기|빈도|[^\]\n]*요청할 때 쓰는 문장|자료 이름|저장소\/폴더\/파일의 정확한 위치|입력 자료와 범위|[^\]\n]*의 핵심 작업|원본과 결과|담당자|판단이 필요한 조건|처리 방법|기준 또는 원본|[^\]\n]*산출물|원본\/규칙|완료 증거|과거 문제 상황|당시 효과가 있었던 처리|필요시 확인 요청|대상 독자|톤|길이·형식·표기|자주 반려되는 결과의 특징|반려 이유 또는 고치는 기준|문제가 생기는 조건|재발을 막는 조치)\]/u.test(value);
+}
+function sample(key){
+  const x=EXAMPLES[key];
+  if(!x)return;
+  if((q(s.job.title)||q(s.job.context)||s.sources.length)&&!window.confirm("현재 작성 중인 매뉴얼을 예시로 교체하시겠습니까? 필요한 경우 먼저 취소하고 백업하세요."))return;
+  const surveys=s.surveys;
+  s=blank();s.surveys=surveys;toolEdits.clear();
+  Object.assign(s.job,{title:x.title,slug:x.slug,context:x.context,preset:key});
+  render();toast("예시 업무를 불러왔습니다.");
+}
+function processOK(){
+  if(!s.interviewDone||s.answers.some(needsReplace)||Object.keys(PROCESS_KEYS).filter(k=>k!=="extra").some(k=>needsReplace(s.process[k])))return message("인터뷰 답변과 SKILL.md의 필수 항목을 실제 업무 정보로 채워 주세요.");
+  const orphan=s.tools.find(t=>Number(t.step)>processSteps(s).length);
+  if(orphan)return message(orphan.name+"의 적용 단계가 없어졌습니다. 해당 단계를 본문에 복구한 뒤 툴박스에서 참조를 조정하세요.");
+  s.reviewed=true;go(2);
+}
+function suggestedTool(){
+  const type=s.tool.type, sample=EXAMPLES[s.job.preset];
+  if(type==="template"&&sample?.title===s.job.title) return {...sample.tool,step:String(Math.min(processSteps(s).length,Number(sample.tool.step)))};
+  const output=q(s.process?.done), example=q(s.run1);
+  const drafts={
+    script:["[입력 파일]의 [반복할 계산 또는 변환]을 수행하는 스크립트","명령, 입력 파일, 실제 출력 값을 적으세요."],
+    template:["# ["+s.job.title+" 제목]\n\n## [업무 대상 / 기간]\n[핵심 결과]\n\n## 근거\n[원본 위치와 식별자]\n\n## 후속 조치\n[담당자와 다음 행동]",""],
+    reference:["# "+s.job.title+" 참조 목록\n\n| 이름 또는 ID | 실제 값 | 원본 위치 |\n|---|---|---|\n| [이름] | [표준 값] | [원본 위치] |",""],
+    example:[example,"완성 예시에서 다시 적용할 판단과 형식을 적으세요."],
+    rules:["# "+s.job.title+" 작업 기준\n\n"+q(s.process?.tone)+"\n\n## 반려 기준\n"+q(s.process?.bad),""],
+    prompt:["["+s.job.title+" 입력]을 사용해 [반복 단계]를 수행해 주세요.\n"+output+"\n원본 위치와 미확인 항목을 함께 기록하세요.",""]
+  };
+  const [content,fallback]=drafts[type];
+  return {type,name:TYPES[type][1],purpose:s.job.title+" · "+TYPES[type][0],step:"",when:"",unless:"",content,example:type==="example"?fallback:(example||fallback)};
+}
+function formatRunPrompt(kind){
+  const repeat=kind!=="first";
+  const model=kind==="improvement"&&s.pendingPatch?structuredClone(s):s;
+  if(model!==s)applyPatch(model,s.pendingPatch);
+  const context=model.sources.map(x=>"### "+x.name+"\n"+x.text).join("\n\n");
+  return [
+    "업무: "+s.job.title,
+    kind==="improvement"?"같은 업무를 수정된 매뉴얼로 처음부터 다시 실행합니다. 수정 전후 차이를 원본 증거와 비교해 적습니다.":repeat?"매뉴얼의 업무를 처음부터 다시 실행합니다. 어떤 파일을 썼고 무엇을 처음부터 다시 만들었는지, 다음에 저장할 후보가 무엇인지 적습니다.":"매뉴얼에 따라 업무를 한 번 실행합니다. 재사용할 산출물을 식별하고 승인을 위해 내용과 근거를 보여줍니다.",
+    "첨부 또는 입력에 없는 실제 자료, 실행 결과, 검증 근거는 추정하지 말고 미확인 사유를 기록합니다.",
+    kind==="improvement"&&s.pendingPatch?"적용한 수정: "+s.pendingPatch.change:"",
+    renderSkill(model),
+    q(s.job.context)?"## 업무 참고 문맥\n"+s.job.context:"",
+    context?"## 첨부 자료\n"+context:"",
+    repeat&&model.tools.length?"## 등록된 재사용 파일\n"+model.tools.map(t=>"### "+t.name+"\n"+t.content+"\n\n채워진 예시:\n"+t.example).join("\n\n"):""
+  ].filter(Boolean).join("\n\n");
+}
+function runPrompt(kind){
+  const prompt=formatRunPrompt(kind);
+  modal("업무 실행 요청문",'<p class="intro">업무를 실행할 AI 도구에 복사하세요. 실행 결과를 이 작업실에 붙여넣어 다음 단계로 진행합니다.</p>'+
+    preview(prompt)+actions(btn("요청문 복사","copy-prompt",'data-key="'+kind+'"','primary'),btn("닫기","close")));
+}
+async function copyText(text){
+  try{await navigator.clipboard.writeText(text);toast("복사했습니다.");}
+  catch{
+    const box=document.createElement("textarea");
+    (el("modal").open?el("modal"):document.body).append(box);
+    box.value=text;box.select();
+    const copied=document.execCommand("copy");box.remove();
+    toast(copied?"복사했습니다.":"복사가 제한됐습니다. 표시된 텍스트를 선택해 복사하세요.");
+  }
+}
+function download(content,name,type="text/markdown;charset=utf-8"){
+  const url=URL.createObjectURL(content instanceof Blob?content:new Blob([content],{type}));
+  const a=document.createElement("a");a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
+}
+function survey(){
+  const options={1:"1 · 매우 어려움",2:"2 · 어려움",3:"3 · 보통",4:"4 · 쉬움",5:"5 · 매우 쉬움"};
+  const tasks=["위임할 업무와 참고 자료를 입력하기","추천 답변을 수정해 SKILL.md에 반영하기","검증 결과를 보고 다음 행동을 파악하기","완성한 매뉴얼 폴더를 받기"];
+  modal("작업실 사용성 설문",'<p class="intro">직접 해본 항목만 평가해 주세요. 응답은 이 브라우저에 저장되며 밖으로 보내지 않습니다.</p>'+
+    '<form id="survey-form">'+tasks.map((t,i)=>'<label class="field"><span>'+t+'</span><select name="task'+i+'"><option value="">선택 안 함 / 해보지 않음</option>'+
+    Object.entries(options).map(([k,v])=>'<option value="'+k+'">'+v+'</option>').join("")+'</select></label>').join("")+
+    '<label class="field"><span>가장 막힌 단계와 그 이유</span><textarea name="feedback" rows="3" maxlength="2000"></textarea></label>'+
+    '<div class="actions"><button class="button primary" type="submit">응답 저장</button>'+btn("응답 JSON 내려받기","download-survey",s.surveys.length?"":"disabled")+'</div>'+
+    '<p class="fine">이 기기에 저장된 응답 '+s.surveys.length+'개</p></form>');
+}
+function diagnose(){
+  const issue=q(s.issue.issue);
+  if(!issue)return message("실제로 어떤 결과가 나왔고 무엇이 틀렸는지 적어 주세요.");
+  const layer=/(다시 만들|중복|오래된|낡|템플릿|참조 파일|스크립트|툴박스|저장.*파일)/i.test(issue)?"toolbox":
+    /(검증|확인되지|근거|원본.*없|잘못된 수치|지어낸|통과|일치하)/i.test(issue)?"proof":"process";
+  const reasons={
+    process:"프로세스에서 필요한 순서 또는 판단 규칙이 빠졌을 수 있습니다. 이 결과가 처음 발생한 단계를 찾아 해당 단계나 결정 규칙을 수정하세요.",
+    toolbox:"툴박스에서 재사용할 파일의 내용이나 사용 조건을 확인해야 합니다. 해당 파일 한 개의 내용과 SKILL.md 연결 조건을 먼저 검토하세요.",
+    proof:"증명에서 이 오류를 발견할 근거 대조가 빠졌을 수 있습니다. 실제 산출물과 원본의 차이를 판정할 검사 하나를 추가하거나 수정하세요."
+  };
+  Object.assign(s.issue,{layer,why:reasons[layer],key:s.issue.key||issue.replace(/\s+/g," ").slice(0,80),target:layer==="process"?"decisions":layer==="proof"?"new":s.tools.length?"0":"",before:s.issue.before||issue});
+  if(layer==="process")s.issue.change=s.process.decisions+"\n[문제가 생기는 조건]이면 [재발을 막는 조치]를 수행한다.";
+  if(layer==="toolbox")s.issue.change=s.tools[0]?.content||"";
+  if(layer==="proof")s.issue.change="문제가 된 값이 해당 원본에 있는지 대조한다.";
+  render();toast("진단 초안을 만들었습니다. 실제 원인과 수정 문구를 확인하세요.");
+}
+function issuePlan(){
+  const i=s.issue;
+  const repeated=i.repeat||s.notes.some(n=>q(n.key).toLowerCase()===q(i.key).toLowerCase());
+  if(!q(i.issue)||!q(i.why)||!q(i.key)||!q(i.change)||(i.layer!=="toolbox"&&needsReplace(i.change)))return message("문제와 진단, 실수 이름, 적용할 구체적인 수정 내용을 적어 주세요.");
+  if(repeated&&needsReplace(i.rule))return message("같은 문제가 반복됐습니다. 조건과 행동을 담은 명시적인 방지 규칙을 작성하세요.");
+  if(i.layer==="process"&&!Object.hasOwn(PROCESS_KEYS,i.target))return message("수정할 프로세스 항목을 골라 주세요.");
+  if(i.layer==="toolbox"){
+    if(!q(i.target)||!s.tools[Number(i.target)])return message("수정할 재사용 파일을 골라 주세요.");
+    const error=toolError({...s.tools[Number(i.target)],content:i.change},s,Number(i.target));
+    if(error)return message(error);
+  }
+  if(i.layer==="proof"&&needsReplace(i.proofEvidence))return message("검증에 사용할 구체적인 원본 파일, 위치 또는 비교 근거를 적으세요.");
+  if(i.layer==="proof"&&i.target==="new"&&s.rules.length>=10)return message("이미 검증 10개를 사용하고 있습니다. 고칠 기존 검증 항목을 골라 주세요.");
+  if(i.layer==="proof"&&i.target!=="new"&&!s.rules[Number(i.target)])return message("수정할 검증 항목을 골라 주세요.");
+  return {...i,repeat:repeated};
+}
+function applyPatch(target,i){
+  if(i.layer==="process")target.process[i.target]=i.change;
+  if(i.layer==="toolbox")target.tools[Number(i.target)].content=i.change;
+  if(i.layer==="proof"){
+    if(i.target==="new")target.rules.push(newRule(i.change,q(i.proofEvidence)||"문제가 발생한 산출물과 원본 또는 실행 증거의 정확한 위치"));
+    else {const previous=target.rules[Number(i.target)];target.rules[Number(i.target)]={...previous,name:i.change,evidence:i.proofEvidence};}
+  }
+  if(i.repeat)target.process.extra=[q(target.process.extra),q(i.rule)].filter(Boolean).join("\n");
+}
+function logIssue(){
+  const plan=issuePlan();
+  if(!plan)return;
+  const pending=s.pendingPatch;
+  const signature=({layer,target,change,rule,proofEvidence,repeat})=>JSON.stringify([layer,target,change,rule,proofEvidence,repeat]);
+  if(!pending||signature(pending)!==signature(plan))return message("수정안을 먼저 적용 준비하고 재실행 요청문을 사용하세요.");
+  if(!q(plan.before)||!q(plan.after)||!plan.reran)return message("수정 전후 증거를 적고 같은 업무를 처음부터 다시 실행했는지 확인해 주세요.");
+  const next=structuredClone(s);
+  applyPatch(next,plan);
+  const invalidTools=next.tools.some(t=>Number(t.step)>processSteps(next).length);
+  if(invalidTools)return message("수정 이후 기존 툴박스 단계 참조가 사라집니다. 단계 번호를 유지하거나 툴박스 참조를 먼저 조정하세요.");
+  const invalidRules=rulesError(next);if(invalidRules)return message(invalidRules);
+  s=next;
+  s.notes.unshift({...plan,date:today()});
+  s.issue=issueDraft();s.pendingPatch=null;
+  resetProof(s,true);
+  s.trial.output=plan.after;
+  go(3);toast("수정을 저장했습니다. 수정 후 산출물을 다시 검증하세요.");
+}
+function validateBackup(input){
+  const base=blank();
+  if(!input||input.version!==1||!input.job||!Array.isArray(input.answers)||input.answers.length!==8)throw Error("지원하는 매뉴얼 백업 형식이 아닙니다.");
+  let fields=0;
+  function clean(value,example,depth=0){
+    if(++fields>20000||depth>12)throw Error("백업 데이터가 너무 큽니다.");
+    if(typeof example==="string")return typeof value==="string"?value.slice(0,240000):example;
+    if(typeof example==="boolean")return typeof value==="boolean"?value:example;
+    if(typeof example==="number")return Number.isInteger(value)?value:example;
+    if(example===null)return null;
+    if(Array.isArray(example))return example.map((def,i)=>clean(value?.[i],def,depth+1));
+    return Object.fromEntries(Object.keys(example).map(key=>[key,clean(value?.[key],example[key],depth+1)]));
+  }
+  const restored=clean(input,base);
+  const list=(value,schema,max)=>Array.isArray(value)?value.slice(0,max).map(v=>clean(v,schema)):[];
+  const op={...toolDraft(),date:""};
+  const run={state:"unknown",evidence:"",name:""};
+  const manual={state:"unknown",evidence:""};
+  restored.stage=Math.min(5,Math.max(0,restored.stage));
+  restored.question=Math.min(7,Math.max(0,restored.question));
+  if(!["folder","chat"].includes(restored.job.mode))restored.job.mode="folder";
+  restored.sources=list(input.sources,{name:"",text:""},6);
+  restored.process=input.process?clean(input.process,prepareProcess(restored)):null;
+  if(!restored.process){restored.interviewDone=false;restored.reviewed=false;}
+  restored.tools=list(input.tools,op,120).filter(t=>Object.hasOwn(TYPES,t.type)&&nameOk(t.name));
+  restored.rules=list(input.rules,newRule(),10).filter(r=>Object.hasOwn(METHODS,r.method));
+  restored.trial.manual=list(input.trial?.manual,manual,10).map(m=>({...m,state:Object.hasOwn(stateLabel,m.state)?m.state:"unknown"}));
+  const runs=v=>Array.isArray(v)?list(v,run,10).filter(r=>Object.hasOwn(stateLabel,r.state)):null;
+  restored.trial.first=runs(input.trial?.first);restored.trial.result=runs(input.trial?.result);
+  restored.trial.history=Array.isArray(input.trial?.history)?input.trial.history.slice(0,120).map(h=>({date:q(h?.date),cause:q(h?.cause),first:runs(h?.first),result:runs(h?.result)})):[];
+  restored.pendingPatch=input.pendingPatch&&Object.hasOwn(LAYERS,input.pendingPatch.layer)?clean(input.pendingPatch,issueDraft()):null;
+  restored.notes=list(input.notes,{...issueDraft(),date:""},120).filter(n=>Object.hasOwn(LAYERS,n.layer));
+  restored.surveys=list(input.surveys,{date:"",scores:[0,0,0,0],feedback:""},120);
+  if(!Object.hasOwn(TYPES,restored.tool.type))restored.tool.type="template";
+  if(!Object.hasOwn(LAYERS,restored.issue.layer))restored.issue.layer="process";
+  return restored;
+}
+function canEditRules(){
+  return !proofBlocked(s)||message("첫 검증에서 세 항목 이상 실패했습니다. 검증 기준을 변경하기 전에 원인이 된 업무 단계와 이유를 기록하세요.");
+}
+function requestEval(){
+  const err=rulesError(s);if(err)return message(err);
+  if(!q(s.trial.output)||!q(s.trial.used)||!q(s.trial.rebuilt)||!q(s.trial.next))return message("두 번째 실행 산출물, 사용 또는 재작성한 자료, 다음 후보를 기록해 주세요. 없으면 ‘없음’을 적으세요.");
+  if(s.trial.first&&!proofPassed(s)){
+    if(proofBlocked(s))return message("처음부터 결과가 어긋난 업무 단계와 이유를 먼저 기록해 주세요.");
+    if(!q(s.trial.fix))return message("수정과 전체 업무 재실행 내용 혹은 새로 검증 근거를 확보한 내용을 적어 주세요.");
+  }
+  const run=evaluateRun(s);
+  if(!s.trial.first)s.trial.first=run;
+  s.trial.result=run;
+  if(countState(run,"fail")||countState(run,"unknown"))s.noIssue=false;
+  render();
+  if(proofBlocked(s))toast("세 항목 이상 실패했습니다. 원인이 된 업무 단계를 먼저 확인하세요.");
+  else if(proofPassed(s))toast("모든 항목에 통과 근거를 기록했습니다.");
+  else toast("실패 또는 미확인 항목의 근거를 보완해 다시 검증하세요.");
+}
+const action={
+  nav:b=>go(Number(b.dataset.index)),
+  start:()=>{
+    s.job.title=q(s.job.title);
+    s.job.slug=q(s.job.slug)||slugFor(s.job.title);
+    if(!s.job.title||!slugOk(s.job.slug))return message("업무 이름과 올바른 폴더 이름을 입력해 주세요.");
+    if(s.job.criteria.filter(Boolean).length!==3)toast("첫 업무 선정 기준을 확인해 보세요. 업무를 정했다면 인터뷰를 이어갈 수 있습니다.");
+    go(1);
+  },
+  sample:b=>sample(b.dataset.key),
+  "remove-source":b=>{s.sources.splice(Number(b.dataset.index),1);render();},
+  "use-answer":()=>{
+    const value=draftAnswer(s,s.question).text;
+    if(q(s.answers[s.question])&&s.answers[s.question]!==value&&!window.confirm("작성한 답변을 추천 초안으로 교체할까요?"))return;
+    s.answers[s.question]=value;render();
+    document.querySelector('[data-model="answers.'+s.question+'"]').focus();
+  },
+  "prev-question":()=>{s.question=Math.max(0,s.question-1);render(true);},
+  "next-question":()=>{
+    if(needsReplace(s.answers[s.question]))return message("대괄호 예시를 실제 정보로 바꾸고 답변을 입력해 주세요.");
+    if(s.question<7){s.question++;render(true);return;}
+    if(s.answers.some(needsReplace)){s.question=s.answers.findIndex(needsReplace);render(true);return message("이 질문의 답변을 완료해 주세요.");}
+    s.interviewDone=true;
+    s.process=s.process||prepareProcess(s);
+    render(true);toast("SKILL.md 초안이 준비됐습니다.");
+  },
+  reopen:()=>{s.interviewDone=false;s.question=0;render(true);},
+  "process-ok":processOK,
+  "run-prompt":b=>runPrompt(b.dataset.key),
+  "copy-prompt":b=>copyText(formatRunPrompt(b.dataset.key)),
+  "suggest-tool":()=>{
+    if(q(s.tool.content)&&!window.confirm("작성 중인 파일 내용을 새 초안으로 교체할까요?"))return;
+    s.tool={...toolDraft(),...suggestedTool()};render();toast("파일 초안을 채웠습니다.");
+  },
+  "add-tool":()=>{
+    if(s.tools.length>=120)return message("재사용 파일은 최대 120개까지 등록할 수 있습니다.");
+    if(!q(s.run1))return message("업무 첫 실행 결과를 먼저 기록하세요.");
+    const t={...s.tool,name:q(s.tool.name),purpose:q(s.tool.purpose),date:today()};
+    const err=toolError(t,s);if(err)return message(err);
+    s.tools.push(t);s.tool=toolDraft();s.skipTools=false;resetProof(s,true);render();toast(t.name+"을 등록했습니다.");
+  },
+  "save-tool":b=>{
+    const i=Number(b.dataset.index),original=s.tools[i],edit=toolEdits.get(i)||original;
+    const t={...edit,name:q(edit.name),purpose:q(edit.purpose)};
+    const err=toolError(t,s,i);if(err)return message(err);
+    s.tools[i]=t;toolEdits.delete(i);resetProof(s,true);render();toast("재사용 파일 수정을 저장했습니다.");
+  },
+  "delete-tool":b=>{
+    if(!window.confirm("이 재사용 파일과 SKILL.md의 연결을 제거할까요?"))return;
+    s.tools.splice(Number(b.dataset.index),1);toolEdits.clear();resetProof(s,true);render();
+  },
+  "tool-next":()=>{
+    if(!q(s.run1))return message("실제 업무를 한 번 실행하고 결과를 기록해 주세요.");
+    if(!s.tools.length&&!s.skipTools)return message("사용을 승인한 파일을 추가하거나 저장할 파일이 없었음을 확인해 주세요.");
+    if(!s.rules.length)s.rules=proposeRules(s);
+    go(3);
+  },
+  "suggest-rules":()=>{
+    if(!canEditRules())return;
+    if(s.rules.some(r=>q(r.name))&&!window.confirm("작성한 검증 기준을 새 초안으로 교체할까요?"))return;
+    resetProof(s,true);s.rules=proposeRules(s);render();toast("업무 문맥을 반영한 검증 초안을 만들었습니다.");
+  },
+  "add-rule":()=>{if(!canEditRules()||s.rules.length>=10)return;resetProof(s,true);s.rules.push(newRule());render();},
+  "remove-rule":b=>{if(!canEditRules())return;resetProof(s,true);s.rules.splice(Number(b.dataset.index),1);render();},
+  evaluate:requestEval,
+  "proof-next":()=>proofPassed(s)?go(4):message("모든 검증에 통과와 근거를 기록해야 다음 단계로 갈 수 있습니다."),
+  diagnose,
+  "apply-issue":()=>{
+    const p=issuePlan();if(!p)return;
+    s.pendingPatch=p;render();
+    modal("수정안 재실행 준비",'<p class="intro">아래 요청문에 수정된 매뉴얼이 반영됐습니다. 같은 업무를 처음부터 실행해 수정 전후 증거를 수집하세요.</p>'+preview(formatRunPrompt("improvement"))+
+      actions(btn("수정된 요청문 복사","copy-prompt",'data-key="improvement"','primary'),btn("닫기","close")));
+  },
+  "log-issue":logIssue,
+  "no-issue":()=>{
+    if(q(s.issue.issue)||s.pendingPatch)return message("작성 중인 수정 내용을 비우거나, 수정과 재실행을 기록하세요.");
+    s.noIssue=true;go(5);
+  },
+  download:()=>{if(canExport(s))download(zip(s,exportFiles(s)),s.job.slug+".zip");},
+  "download-skill":()=>{if(canExport(s))download(renderSkill(s),"SKILL.md");},
+  "copy-file":()=>copyText(exportFiles(s).get(activeFile)),
+  backup:()=>download(JSON.stringify(s,null,2),(s.job.slug||"delegation-workbench")+".json","application/json;charset=utf-8"),
+  restore:()=>el("backup-input").click(),
+  fresh:()=>{
+    if((q(s.job.title)||q(s.job.context)||s.sources.length)&&!window.confirm("현재 매뉴얼을 지우고 새로 작성할까요? 필요한 경우 먼저 취소하고 백업하세요."))return;
+    const surveys=s.surveys;s=blank();s.surveys=surveys;toolEdits.clear();render(true);
+  },
+  survey,
+  "download-survey":()=>download(JSON.stringify(s.surveys,null,2),"usability-survey.json","application/json;charset=utf-8"),
+  close:()=>el("modal").close()
+};
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button[data-action]");
+  if(b&&!b.disabled&&Object.hasOwn(action,b.dataset.action))action[b.dataset.action](b);
+});
+document.addEventListener("input",e=>{
+  const key=e.target.dataset.model;
+  if(!key)return;
+  const parts=key.split("."),leaf=parts.pop();
+  const value=e.target.type==="checkbox"?e.target.checked:e.target.value;
+  if(parts[0]==="tools"){
+    const i=Number(parts[1]);
+    const buffer=toolEdits.get(i)||{...s.tools[i]};buffer[leaf]=value;toolEdits.set(i,buffer);return;
+  }
+  let target=s;
+  for(const p of parts){if(!target[p])target[p]=p.match(/^\d+$/)?{state:"unknown",evidence:""}:{};target=target[p];}
+  if(target[leaf]===value)return;
+  if(parts[0]==="rules"&&!canEditRules()){e.target.value=target[leaf];return;}
+  target[leaf]=value;
+  if(key==="job.title"||key==="job.slug"){
+    if(s.reviewed){s.reviewed=false;resetProof(s,true);}
+    nav();
+  }
+  if(key.startsWith("process.")){
+    s.reviewed=false;resetProof(s,true);el("process-preview").innerHTML=preview(renderSkill(s));nav();
+  }
+  if(parts[0]==="answers"&&s.process){
+    const keys=["trigger","inputs","steps","decisions","done","exceptions","tone","bad"];
+    s.process[keys[Number(leaf)]]=value;s.reviewed=false;resetProof(s,true);nav();
+  }
+  if(parts[0]==="rules"){s.trial.manual=[];resetProof(s);el("proof-results").innerHTML='<p class="help">기준이 변경됐습니다. 전체 항목을 다시 검증하세요.</p>';nav();}
+  if(key==="run1"||key==="skipTools"){resetProof(s,true);nav();}
+  if(parts[0]==="issue"&&!["before","after","reran"].includes(leaf)){s.noIssue=false;if(leaf==="issue"&&!q(value))s.pendingPatch=null;nav();}
+  if(parts[0]==="trial"){
+    if(["trial.output","trial.used","trial.rebuilt","trial.next","trial.cause","trial.fix"].includes(key)||parts[1]==="manual"){
+      if(key==="trial.output"&&s.trial.manual.length){
+        s.trial.manual=[];
+        for(const control of document.querySelectorAll('[data-model^="trial.manual."]')) control.value=control.tagName==="SELECT"?"unknown":"";
+      }
+      resetProof(s);
+      const results=el("proof-results");
+      if(results)results.innerHTML='<p class="help">판정에 사용한 입력이 변경됐습니다. 전체 항목을 다시 검증하세요.</p>';
+      nav();
+    }
+  }
+  if(key==="job.mode"&&el("folder-hint"))el("folder-hint").textContent=folderHint();
+  save();
+});
+document.addEventListener("change",async e=>{
+  const {id,dataset}=e.target;
+  if(dataset.model?.endsWith(".method"))render();
+  if(dataset.model==="issue.layer"){
+    s.issue.target=s.issue.layer==="process"?"decisions":s.issue.layer==="proof"?"new":"";
+    s.issue.change="";s.pendingPatch=null;render();
+  }
+  if(dataset.model==="trial.cause"){
+    const output=document.querySelector('[data-model="trial.output"]');
+    if(output)output.disabled=proofBlocked(s);
+  }
+  if(id==="open-file"){activeFile=e.target.value;el("final-preview").innerHTML=preview(exportFiles(s).get(activeFile));}
+  if(id==="sources"){
+    const files=Array.from(e.target.files),project=s,effects=[];
+    for(const file of files){
+      if(project.sources.length>=6){effects.push("최대 6개까지 첨부할 수 있습니다.");break;}
+      if(file.size>204800||!/\.(txt|md|csv|json|log|tsv|yaml|yml)$/i.test(file.name)){effects.push(file.name+" · 지원 형식 또는 크기 확인");continue;}
+      try{
+        const text=await file.text();
+        if(text.includes("\u0000")){effects.push(file.name+" · 텍스트로 읽을 수 없음");continue;}
+        if(!project.sources.some(x=>x.name===file.name&&x.text===text))project.sources.push({name:file.name,text});
+      }catch{effects.push(file.name+" · 파일 읽기 실패");}
+    }
+    if(project===s){render();toast(effects.join(" / ")||"텍스트 참고 자료를 추가했습니다.");}
+  }
+  if(id==="backup-input"){
+    const file=e.target.files[0];e.target.value="";
+    if(!file)return;
+    try{
+      if(file.size>12000000)throw Error("이 백업은 12 MB 이하여야 합니다.");
+      const next=validateBackup(JSON.parse(await file.text()));
+      if(q(s.job.title)&&!window.confirm("현재 매뉴얼을 불러온 백업으로 교체할까요?"))return;
+      s=next;activeFile="SKILL.md";pending=null;toolEdits.clear();render(true);toast("매뉴얼을 불러왔습니다.");
+    }catch(error){toast("백업을 불러올 수 없습니다. "+error.message);}
+  }
+});
+document.addEventListener("submit",e=>{
+  if(e.target.id!=="survey-form")return;
+  e.preventDefault();const form=new FormData(e.target);
+  const scores=[0,1,2,3].map(i=>Number(form.get("task"+i)));
+  const feedback=q(form.get("feedback"));
+  if(!scores.some(Boolean)&&!feedback)return message("해본 항목의 점수나 개선 의견을 적어 주세요.");
+  s.surveys.unshift({date:today(),scores,feedback});save();el("modal").close();toast("사용성 응답을 저장했습니다.");
+});
+render();
+
+</script>
+</body>
+</html>
