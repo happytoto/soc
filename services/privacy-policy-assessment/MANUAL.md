@@ -106,7 +106,7 @@
 
 ## 7. Phase 6 — 승인 및 전달
 
-1. 전달본은 PDF로 변환하고 파일명에 버전·날짜를 넣는다. 원본(md)은 케이스 폴더에 보관.
+1. 전달본은 PDF로 변환하고 파일명에 버전·날짜를 넣는다. 원본(md)은 케이스 폴더에 보관. 변환 전 `python3 scripts/check_placeholders.py <케이스폴더>`가 '통과'(종료코드 0)여야 한다. `확인 필요` 표기 수는 정보로만 보고되며 남아 있어도 된다.
 2. **사람 승인 게이트**: 승인자 이름·일시를 `delivery/approval.md`에 기록한 뒤에만 발송.
 3. 발송 후 고객 피드백·질의를 `delivery/feedback.md`에 기록 → `improvement/BACKLOG.md`에 반영.
 

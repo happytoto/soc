@@ -59,7 +59,8 @@ services/privacy-policy-assessment/
 │   ├── parse_crtsh.py        crt.sh JSON → subdomains.txt / subdomains.md (osint_collect.sh가 호출, 단독 실행 가능)
 │   ├── render_diagram.sh     Mermaid → PNG/SVG
 │   ├── export_pdf.sh         Markdown → PDF
-│   └── score.py              체크리스트 → 점수 자동 산정
+│   ├── score.py              체크리스트 → 점수 자동 산정
+│   └── check_placeholders.py 전달 전 치환자·참조표시·표 열 수 검사 (QA Q-3·Q-4)
 └── cases/                    고객별 작업 폴더 (git 제외, 암호화 보관)
 ```
 
