@@ -68,7 +68,7 @@ services/privacy-policy-assessment/
 
 ```bash
 # 1. 케이스 생성
-services/privacy-policy-assessment/scripts/new_case.sh "㈜예시" example.co.kr
+CONSULTANT="담당자 이름" services/privacy-policy-assessment/scripts/new_case.sh "㈜예시" example.co.kr   # 접수 양식의 법령 기준일·담당자 자동 기입
 
 # 2. 공개정보 수집 (passive only)
 services/privacy-policy-assessment/scripts/osint_collect.sh example.co.kr cases/2026-11-02_예시

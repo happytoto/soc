@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # 케이스 폴더 생성: 템플릿을 복사하고 접수 양식을 만든다.
 # 사용: scripts/new_case.sh "<기업명>" <도메인> [--mode new|upgrade]
+# 작성자: 환경변수 CONSULTANT (예: CONSULTANT="홍길동" scripts/new_case.sh ...). 없으면 "미기재".
+#        클라우드 세션의 whoami(root)는 사람 이름이 아니므로 쓰지 않는다.
 set -euo pipefail
 
 if [ $# -lt 2 ]; then
@@ -10,6 +12,7 @@ fi
 
 COMPANY="$1"; DOMAIN="$2"; MODE="new"
 if [ "${3:-}" = "--mode" ] && [ -n "${4:-}" ]; then MODE="$4"; fi
+CONSULTANT="${CONSULTANT:-미기재}"
 
 BASE="$(cd "$(dirname "$0")/.." && pwd)"
 SAFE_NAME="$(echo "$COMPANY" | tr -cd '[:alnum:]가-힣_-' )"
@@ -21,6 +24,19 @@ if [ -e "$CASE_DIR" ]; then
 fi
 
 mkdir -p "$CASE_DIR"/{input,osint/captures,review,delivery,output}
+# 법령 기준일: law-watch.md 확인일 칸의 가장 최근 날짜와 검증완료 건수 (사람이 읽는 표에서 계산, 없으면 '확인 필요')
+LAW_BASE="$(python3 -I - "$BASE/checklists/law-watch.md" <<'PY'
+import re,sys
+rows=[l for l in open(sys.argv[1],encoding='utf-8') if re.match(r'^\| L-\d+ \|',l)]
+dates=[]; done=0
+for r in rows:
+    c=[x.strip() for x in r.strip().strip('|').split('|')]
+    if len(c)>=6:
+        if c[4].startswith('검증완료'): done+=1
+        if re.fullmatch(r'\d{4}-\d{2}-\d{2}',c[5]): dates.append(c[5])
+print(f"{max(dates)} (law-watch 검증완료 {done}/{len(rows)}건)" if dates else "확인 필요")
+PY
+)" || LAW_BASE="확인 필요"
 # 표준 표지 블록을 각 산출물 템플릿 앞에 붙여 복사 (_cover-block.md 자체는 제외)
 for t in "$BASE"/templates/0*.md; do
   { cat "$BASE/templates/_cover-block.md" "$t"; } | sed -e "s/{{기업명}}/$COMPANY/g" -e "s/{{도메인}}/$DOMAIN/g" -e "s/{{YYYY-MM-DD}}/$(date +%F)/g" > "$CASE_DIR/output/$(basename "$t")"
@@ -43,8 +59,8 @@ cat > "$CASE_DIR/00_intake.md" <<EOF
 | 고객 담당자 | |
 | 계약 범위 (policy / flow / full) | |
 | 납기 | |
-| 법령 기준일 (law-watch) | |
-| 담당 컨설턴트 / 검증자 | |
+| 법령 기준일 (law-watch) | $LAW_BASE |
+| 담당 컨설턴트 / 검증자 | $CONSULTANT / |
 | 이해충돌 확인 (심사 참여 금지 대상) | |
 
 ## 처리방침 평가 대상 해당 가능성 (사전 진단)
@@ -72,7 +88,7 @@ cat > "$CASE_DIR/access-log.md" <<EOF
 # 열람 기록
 | 일시 | 이름 | 목적 |
 |---|---|---|
-| $(date '+%F %H:%M') | $(whoami) | 케이스 생성 |
+| $(date '+%F %H:%M') | $CONSULTANT | 케이스 생성 |
 EOF
 
 cat > "$CASE_DIR/interview-questions.md" <<EOF
