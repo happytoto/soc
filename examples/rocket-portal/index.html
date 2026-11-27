@@ -6,7 +6,16 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <title>로켓보안 | 고객 포털 체험</title>
+<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/SUIT-Variable.woff2" crossorigin>
 <style>
+@font-face {
+  font-family: "SUIT Variable";
+  src: url("../../assets/fonts/SUIT-Variable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
   --chalk: #f8f8f4;
@@ -20,7 +29,7 @@
   --gutter: clamp(18px, 4.5vw, 54px);
 }
 * { box-sizing: border-box; }
-body { margin: 0; color: var(--ink); background: var(--chalk); font: 400 1rem/1.62 "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif; word-break: keep-all; overflow-wrap: anywhere; }
+body { margin: 0; color: var(--ink); background: var(--chalk); font: 400 1rem/1.62 "SUIT Variable", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif; word-break: keep-all; overflow-wrap: anywhere; }
 header { border-bottom: 1px solid var(--rule); }
 header .shell, main, footer { max-width: 1180px; margin: 0 auto; padding-inline: var(--gutter); }
 header .shell { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
