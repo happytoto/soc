@@ -1,0 +1,297 @@
+name: Public pentest service and advisory review
+on:
+  push:
+    branches: ['qa/rocket-knowledge-review']
+    paths: ['.github/workflows/rocket-knowledge-review.yml']
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: c63d2b2060750032ea91f77dfd1123f83631955e
+          path: soc
+          persist-credentials: false
+      - name: Validate local links and stable document anchors
+        shell: python
+        run: |
+          from pathlib import Path
+          from html.parser import HTMLParser
+          from urllib.parse import urljoin, urlsplit, unquote
+          class Doc(HTMLParser):
+              def __init__(self):
+                  super().__init__(); self.ids=[]; self.refs=[]
+              def handle_starttag(self,tag,pairs):
+                  attrs=dict(pairs)
+                  if 'id' in attrs: self.ids.append(attrs['id'])
+                  if tag in ('a','link','script','img'):
+                      ref=attrs.get('href') or attrs.get('src')
+                      if ref: self.refs.append(ref)
+          root=Path('soc').resolve()
+          pages=('index.html','response/index.html','response/guides.html','methodology/index.html','faq/index.html')
+          docs={}
+          def document(file):
+              if file not in docs:
+                  d=Doc(); d.feed(file.read_text()); docs[file]=d
+              return docs[file]
+          for path in pages:
+              file=root/path; doc=document(file)
+              assert len(doc.ids)==len(set(doc.ids)), 'duplicate id in '+path
+              for ref in doc.refs:
+                  u=urlsplit(urljoin('https://qa.test/soc/'+path,ref))
+                  if u.hostname!='qa.test' or not u.path.startswith('/soc/'): continue
+                  dest=(root/unquote(u.path.removeprefix('/soc/'))).resolve()
+                  assert dest==root or root in dest.parents,(path,ref)
+                  if dest.is_dir(): dest=dest/'index.html'
+                  assert dest.is_file(),(path,ref)
+                  if u.fragment and dest.suffix=='.html':
+                      assert unquote(u.fragment) in document(dest).ids,(path,ref,'missing anchor')
+              print('local links ok',path,len(doc.refs))
+      - name: Check the public service and knowledge hub in headless Chrome
+        if: always()
+        shell: python
+        run: |
+          from pathlib import Path
+          import base64
+          import functools
+          import http.server
+          import json
+          import os
+          import subprocess
+          import threading
+          import time
+          import urllib.request
+          import urllib.error
+          
+          def request(method, path, body=None):
+              data = None if body is None else json.dumps(body, ensure_ascii=False).encode()
+              req = urllib.request.Request("http://127.0.0.1:9515" + path, method=method, data=data, headers={"Content-Type":"application/json"})
+              try:
+                  with urllib.request.urlopen(req,timeout=18) as response:
+                      return json.load(response)["value"]
+              except urllib.error.HTTPError as error:
+                  raise RuntimeError(error.read(1500).decode()) from error
+          
+          fixture_mode = "live"
+          feed_reads = []
+          class QuietServer(http.server.SimpleHTTPRequestHandler):
+              def end_headers(self):
+                  self.send_header("Cache-Control","no-store")
+                  super().end_headers()
+              def do_GET(self):
+                  global fixture_mode
+                  if self.path.split("?")[0].endswith("/response/data/advisories.json"):
+                      feed_reads.append(fixture_mode)
+                      if fixture_mode == "unavailable":
+                          self.send_error(503, "Source unavailable during fixture")
+                          return
+                      if fixture_mode in ("stale", "long"):
+                          payload=json.loads(Path("soc/response/data/advisories.json").read_text())
+                          if fixture_mode=="stale":
+                              payload["checkedAt"]="2000-01-01T00:00:00Z"
+                              for src in payload["sources"]:
+                                  src["lastSuccessAt"]="2000-01-01T00:00:00Z"
+                          else:
+                              payload["items"][0]["title"]="DataProductRelease"*45
+                          raw=json.dumps(payload,ensure_ascii=False).encode()
+                          self.send_response(200); self.send_header("Content-Type","application/json; charset=utf-8"); self.send_header("Content-Length",str(len(raw))); self.end_headers(); self.wfile.write(raw)
+                          return
+                  super().do_GET()
+              def log_message(self, *args):
+                  pass
+          
+          server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(QuietServer, directory="."))
+          threading.Thread(target=server.serve_forever,daemon=True).start()
+          base = f"http://127.0.0.1:{server.server_port}" + "/soc/"
+          driver = subprocess.Popen(["chromedriver","--port=9515"], stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          try:
+              for _ in range(50):
+                  try:
+                      if request("GET", "/status")["ready"]:
+                          break
+                  except OSError:
+                      time.sleep(.15)
+              session = request("POST","/session",{"capabilities":{"alwaysMatch":{"browserName":"chrome","goog:chromeOptions":{"args":["--headless=new","--disable-dev-shm-usage","--no-sandbox","--lang=ko-KR"]}, "goog:loggingPrefs":{"browser":"ALL"}}}})
+              path = "/session/" + session["sessionId"]
+              print("Browser",session["capabilities"]["browserName"],session["capabilities"]["browserVersion"],flush=True)
+              def post(endpoint, **args):
+                  return request("POST",path+endpoint,args)
+              def js(code):
+                  return post("/execute/sync",script=code,args=[])
+              out = Path(os.environ["RUNNER_TEMP"]) / "rocket-browser"
+              out.mkdir(exist_ok=True)
+              failures = []
+              eid = "element-6066-11e4-a52e-4f735466cecf"
+              def element(css):
+                  return post("/element",using="css selector",value=css)[eid]
+              def click(css):
+                  post("/element/"+element(css)+"/click")
+              def key(css,char):
+                  post("/element/"+element(css)+"/value",text=char,value=[char])
+              def check(name,value,got=None):
+                  if not value:
+                      failures.append(f"{width}px {name}: {got}")
+                  print("CHECK",width,name, "PASS" if value else f"FAIL {got}",flush=True)
+              def page(label):
+                  loaded=post("/execute/async",script="const cb=arguments[0]; document.fonts.ready.then(()=>cb([...document.fonts].filter(f=>f.status==='loaded').map(f=>f.family)));",args=[])
+                  def cdp(command, params):
+                      return post("/goog/cdp/execute",cmd=command,params=params)
+                  cdp("DOM.enable",{})
+                  cdp("CSS.enable",{})
+                  root=cdp("DOM.getDocument",{})["root"]["nodeId"]
+                  heading=cdp("DOM.querySelector",{"nodeId":root,"selector":"h1"})["nodeId"]
+                  fonts=cdp("CSS.getPlatformFontsForNode",{"nodeId":heading})["fonts"]
+                  print("FONTS",width,label,json.dumps({"used":fonts,"loaded":sorted(set(loaded))},ensure_ascii=False),flush=True)
+                  check(label+" self-hosted Korean glyphs",any(f["isCustomFont"] and "suit" in f["familyName"].lower() and f["glyphCount"]>=3 for f in fonts),fonts)
+                  dimensions=js("""return {viewport:window.innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,title:document.title,h1:document.querySelector('h1')?.innerText,broken:[...document.images].filter(i=>i.complete&&!i.naturalWidth).map(i=>i.getAttribute('src')),wide:[...document.querySelectorAll('main *')].filter(e=>e.getBoundingClientRect().right>innerWidth+1).slice(0,8).map(e=>[e.tagName,e.className,Math.round(e.getBoundingClientRect().right)])};""")
+                  print("VIEW",width,label,json.dumps(dimensions,ensure_ascii=False),flush=True)
+                  check(label+" heading",bool(dimensions["h1"]),dimensions)
+                  type_metrics=js("""const h=document.querySelector('h1'),p=[...document.querySelectorAll('main p')].find(e=>e.getClientRects().length&&e.textContent.trim().length>20);function metrics(e){if(!e)return null;const s=getComputedStyle(e);return {px:s.fontSize,line:s.lineHeight,spacing:s.letterSpacing,width:Math.round(e.getBoundingClientRect().width),height:Math.round(e.getBoundingClientRect().height),clipped:e.scrollWidth>e.clientWidth+2}}return {heading:metrics(h),copy:metrics(p)}""")
+                  mast=js("""const a=document.querySelector('header a');return {label:a.innerText.trim(),title:document.title,accessible:a.getAttribute('aria-label'),visible:!!a.getClientRects().length}""")
+                  print("BRAND/TYPE",width,label,json.dumps({"brand":mast,"typography":type_metrics},ensure_ascii=False),flush=True)
+                  check(label+" visible Rocket Security brand",mast["visible"] and "로켓보안" in mast["label"] and "APLUSNET" not in mast["label"].upper() and "로켓보안" in mast["title"],mast)
+                  errors=[e["message"] for e in post("/log",type="browser") if e.get("level")=="SEVERE" and "/favicon.ico" not in e.get("message","")]
+                  check(label+" browser console",not errors,errors)
+                  check(label+" viewport/overflow", dimensions["viewport"]==width and dimensions["scroll"]<=dimensions["client"]+1,dimensions)
+                  check(label+" images",not dimensions["broken"],dimensions["broken"])
+                  (out / f"{label}-{width}.png").write_bytes(base64.b64decode(request("GET",path+"/screenshot")))
+              def textof(css):
+                  return js(f"return document.querySelector({json.dumps(css)}).textContent")
+              def select_count(css,value):
+                  js(f"document.querySelector({json.dumps(css)}).scrollIntoView({{block:'center',behavior:'instant'}})")
+                  key(css,"\ue011")
+                  for _ in range(value-1):
+                      key(css,"\ue015")
+              feed=json.loads(Path("soc/response/data/advisories.json").read_text())
+              item_urls={item["url"] for item in feed["items"]}
+              def current_links():
+                  return js("return [...document.querySelectorAll('main a[href]')].map(a=>a.href)")
+              def wait_for(test):
+                  for _ in range(35):
+                      if test():
+                          return True
+                      time.sleep(.10)
+                  return False
+              for width,height in ((320,740),(390,844),(768,1024),(1440,1000)):
+                  try:
+                      post("/goog/cdp/execute",cmd="Emulation.setDeviceMetricsOverride",params={"width":width,"height":height,"deviceScaleFactor":1,"mobile":width<600})
+                      post("/goog/cdp/execute",cmd="Emulation.setEmulatedMedia",params={"features":[{"name":"prefers-reduced-motion","value":"reduce"}]})
+                      post("/url",url=base)
+                      js("sessionStorage.clear()")
+                      page("homepage")
+                      if js("return !!document.querySelector('#menu summary').getClientRects().length"):
+                          key("#menu summary","\ue007")
+                          check("keyboard menu Enter",js("return document.querySelector('#menu').open"))
+                          check("mobile incident entry",js("return [...document.querySelectorAll('#menu a')].some(a=>a.href.includes('/response/') && a.getClientRects().length)"))
+                          active=js("return document.activeElement===document.querySelector('#menu summary')")
+                          check("menu receives focus",active)
+                          key("#menu summary","\ue00c")
+                          check("Escape closes/restores focus",js("return !document.querySelector('#menu').open && document.activeElement===document.querySelector('#menu summary')"))
+                      click(".hero-actions a[href='#report']")
+                      check("hero sample report",js("return location.hash==='#report'"))
+                      for index in (2,3,1):
+                          css=f".pick button:nth-of-type({index})"
+                          key(css,"\ue007")
+                          check("keyboard report "+str(index),js(f"return document.querySelector({json.dumps(css)}).getAttribute('aria-pressed')==='true' && document.querySelectorAll('.pick [aria-pressed=true]').length===1") and textof("#finding-code").endswith(f"0{index}"),textof("#finding-code"))
+                      for number in (2,3,1):
+                          select_count("#count",number)
+                          check("home quote "+str(number),textof("#total")==f"{number*100000:,}원",textof("#total"))
+                      check("home knowledge entry",js("return !!document.querySelector('[data-advisory-teaser]') && [...document.querySelectorAll('a[href]')].some(a=>a.href.includes('/response/#advisories'))"))
+                      for label, target in (("response","response/"),("guide","response/guides.html"),("method","methodology/"),("faq","faq/")):
+                          post("/url",url=base+target)
+                          if label=="response":
+                              check("hub renders upstream source item",wait_for(lambda: bool(item_urls.intersection(current_links()))),current_links()[:8])
+                              check("hub requested published JSON","live" in feed_reads)
+                              check("hub displays freshness",js("return /(?:동기화|확인|갱신|가져온|수집)/.test(document.querySelector('main').innerText)"))
+                              times=js("return [...document.querySelectorAll('time')].map(t=>[t.getAttribute('datetime'),t.textContent])")
+                              print("RENDERED DATE MARKERS",json.dumps(times[:8],ensure_ascii=False))
+                              print("CHECKED SOURCE TIMESTAMP",feed["checkedAt"],textof("#feed-status"))
+                              check("feed status includes actual collection year",feed["checkedAt"][:4] in textof("#feed-status") or any(x[0] and x[0].startswith(feed["checkedAt"][:10]) for x in times),textof("#feed-status"))
+                              state=js("return document.querySelector('[data-advisory-board]')?.dataset.state")
+                              check("initial board ready status",state in ("ready","partial","stale"),state)
+                              check("indexed item listing",js("return document.querySelectorAll('#feed-list li a[href]').length>0"))
+                              js("let e=document.querySelector('#feed-query');e.value='qanonexistentproductzyxwvutsrqpon';e.dispatchEvent(new Event('input',{bubbles:true}))")
+                              check("unmatched query updates row list",wait_for(lambda: js("return document.querySelectorAll('#feed-list li a[href]').length===0")))
+                              check("unmatched query feedback",bool(textof("#feed-result").strip()))
+                              js("let e=document.querySelector('#feed-query');e.value='';e.dispatchEvent(new Event('input',{bubbles:true}))")
+                              check("clearing query restores records",wait_for(lambda: js("return document.querySelectorAll('#feed-list li a[href]').length>0")))
+                              source_ids=js("return [...document.querySelector('#feed-source').options].map(o=>o.value)")
+                              available=next((s["id"] for s in feed["sources"] if s["id"] in source_ids and any(x["sourceId"]==s["id"] for x in feed["items"])),None)
+                              check("source selector includes live source",bool(available),source_ids)
+                              if available:
+                                  js("let e=document.querySelector('#feed-source');e.value="+json.dumps(available)+";e.dispatchEvent(new Event('change',{bubbles:true}));")
+                                  check("source filter respects selected agency",wait_for(lambda: bool(js("return document.querySelectorAll('#feed-list a').length")) and set(js("return [...document.querySelectorAll('#feed-list a')].map(a=>a.href)")) <= {x["url"] for x in feed["items"] if x["sourceId"]==available}))
+                                  js("let e=document.querySelector('#feed-source');e.value='all';e.dispatchEvent(new Event('change',{bubbles:true}))")
+                          page(label)
+                          if label in ("guide","method"):
+                              anchors=["phishing","ransomware","web","evidence"] if label=="guide" else ["scope","evidence","retest"]
+                              check(label+" essential case sections",all(js(f"return Boolean(document.getElementById('{x}'))") for x in anchors))
+                          if label=="faq":
+                              key("main details > summary","\ue007")
+                              check("FAQ native keyboard toggle",js("return document.activeElement.matches('summary')"))
+                              check("FAQ depth",js("return document.querySelectorAll('details').length >= 6"))
+                      if width==390:
+                          fixture_mode="long"
+                          post("/url",url=base+"response/?qa=long")
+                          check("long feed title renders",wait_for(lambda: "DataProductRelease" in textof("main")))
+                          check("long title no page overflow",js("return document.documentElement.scrollWidth<=document.documentElement.clientWidth+1"))
+                          fixture_mode="stale"
+                          post("/url",url=base+"response/?qa=stale")
+                          check("old cached source still readable",wait_for(lambda: bool(item_urls.intersection(current_links()))))
+                          print("STALE UI",js("return document.querySelector('main').innerText.slice(0,2400)"))
+                          check("stale freshness distinguished",js("return document.querySelector('[data-advisory-board]')?.dataset.state==='stale'"),textof("#feed-status"))
+                          fixture_mode="unavailable"
+                          post("/url",url=base+"response/?qa=unavailable")
+                          check("failed download provides guidance",wait_for(lambda: js("return document.querySelector('[data-advisory-board]')?.dataset.state==='unavailable'")),textof("#feed-status"))
+                          check("response guidance remains reachable",any("/response/guides.html" in x for x in current_links()))
+                          fixture_mode="live"
+                          post("/log",type="browser")
+                  except Exception as exc:
+                      import traceback
+                      traceback.print_exc()
+                      failures.append(f"{width}px {exc!r}")
+              if failures:
+                  raise SystemExit("\n".join(failures))
+          finally:
+              driver.terminate()
+              server.shutdown()
+      - name: Save viewport screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rocket-knowledge-browser-c63d2b20
+          path: ${{ runner.temp }}/rocket-browser/*.png
+          retention-days: 3
+          if-no-files-found: ignore
+      - name: Prepare Pillow for public previews
+        if: always()
+        shell: bash
+        run: |
+          python -c 'from PIL import Image' || python -m pip install --disable-pip-version-check --target "$RUNNER_TEMP/rocket-pillow" 'Pillow==12.0.0'
+      - name: Public homepage and knowledge hub image previews
+        if: always()
+        shell: python
+        run: |
+          import base64
+          import io
+          import os
+          import pathlib
+          import sys
+          root = pathlib.Path(os.environ["RUNNER_TEMP"])
+          sys.path.insert(0,str(root / "rocket-pillow"))
+          from PIL import Image
+          for label, page, source, width, budget in (("DESKTOP","homepage",1440,700,27000), ("MOBILE","homepage",390,310,16500), ("HUB_DESKTOP","response",1440,700,24000), ("HUB_MOBILE","response",390,310,16500)):
+              with Image.open(root / "rocket-browser" / f"{page}-{source}.png") as img:
+                  resized = img.convert("RGB").resize((width,round(img.height*width/img.width)),Image.Resampling.LANCZOS)
+              for quality in (87,80,74,67,58,48,35,25,15):
+                  data = io.BytesIO()
+                  resized.save(data,"JPEG",quality=quality,optimize=True)
+                  if len(data.getvalue()) <= budget:
+                      break
+              payload = data.getvalue()
+              assert len(payload) <= 50000
+              encoded = base64.b64encode(payload).decode("ascii")
+              print("QA_PREVIEW_" + label + "=" + encoded,flush=True)
