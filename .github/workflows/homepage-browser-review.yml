@@ -15,6 +15,15 @@ jobs:
           ref: 6269500cc32f1a442cc08f23137c9e45a406183c
           path: soc
           persist-credentials: false
+      - name: Install Korean language support on the test browser host
+        shell: bash
+        run: |
+          if ! fc-list :lang=ko | grep -q .; then
+            sudo apt-get update -qq || true
+            sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+          fi
+          fc-match 'sans-serif:lang=ko'
+          test -n "$(fc-list :lang=ko | head -c 256)"
       - name: Render public sample at desktop and mobile sizes
         shell: python
         run: |
