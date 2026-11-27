@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: c63d2b2060750032ea91f77dfd1123f83631955e
+          ref: fe4df7b80bae21dc41fd2c9731d6e9945e3d93b7
           path: soc
           persist-credentials: false
       - name: Validate local links and stable document anchors
@@ -225,6 +225,25 @@ jobs:
                                   js("let e=document.querySelector('#feed-source');e.value="+json.dumps(available)+";e.dispatchEvent(new Event('change',{bubbles:true}));")
                                   check("source filter respects selected agency",wait_for(lambda: bool(js("return document.querySelectorAll('#feed-list a').length")) and set(js("return [...document.querySelectorAll('#feed-list a')].map(a=>a.href)")) <= {x["url"] for x in feed["items"] if x["sourceId"]==available}))
                                   js("let e=document.querySelector('#feed-source');e.value='all';e.dispatchEvent(new Event('change',{bubbles:true}))")
+                              summary="#feed-list details.review-note > summary"
+                              check("advisory-to-review control",bool(js("return document.querySelector('#feed-list details.review-note > summary')")))
+                              key(summary,"\ue007")
+                              box="#feed-list details.review-note[open] textarea[readonly]"
+                              check("accessible review note opens",wait_for(lambda: js("return Boolean(document.querySelector("+json.dumps(box)+")?.getClientRects().length)")))
+                              memo=js("return document.querySelector("+json.dumps(box)+").value")
+                              matching=[item for item in feed["items"] if item["url"] in memo and item["id"] in memo]
+                              check("memo contains upstream id and original URL",len(matching)==1, memo[:700])
+                              check("memo asks for affected version and retest",("버전" in memo and "재점검" in memo),memo[:700])
+                              copy="#feed-list details.review-note[open] button"
+                              check("copy button label","복사" in textof(copy),textof(copy))
+                              if width==390:
+                                  js("Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw new DOMException('Test permission denied','NotAllowedError')}}})")
+                              click(copy)
+                              feedback=js("return document.querySelector('#feed-list details.review-note[open]').innerText")
+                              success=wait_for(lambda: js("""const d=document.querySelector('#feed-list details.review-note[open]'),e=d.querySelector('textarea');return /(?:복사했습니다|복사되었|복사됐|복사 완료|복사됨|복사했|복사되었습니다)/.test(d.innerText + document.querySelector('#feed-status').textContent + [...document.querySelectorAll('[role=status]')].map(n=>n.textContent).join(' ')) || (document.activeElement===e && e.selectionStart===0 && e.selectionEnd===e.value.length)"""))
+                              check("memo copied or selected in full",success,feedback)
+                              key(summary,"\ue007")
+                              js("window.scrollTo({top:0,behavior:'instant'})")
                           page(label)
                           if label in ("guide","method"):
                               anchors=["phishing","ransomware","web","evidence"] if label=="guide" else ["scope","evidence","retest"]
@@ -262,7 +281,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: rocket-knowledge-browser-c63d2b20
+          name: rocket-knowledge-browser-fe4df7b8
           path: ${{ runner.temp }}/rocket-browser/*.png
           retention-days: 3
           if-no-files-found: ignore
