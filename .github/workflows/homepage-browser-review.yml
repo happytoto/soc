@@ -1,4 +1,4 @@
-name: One-off Chromium review 6269500c
+name: One-off Chromium review 5ca352cc
 on:
   push:
     branches: ['qa/browser-71ce6bd6']
@@ -12,18 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 6269500cc32f1a442cc08f23137c9e45a406183c
+          ref: 5ca352cc55811cfbf7af56eb00ef48181af61a2f
           path: soc
           persist-credentials: false
-      - name: Install Korean language support on the test browser host
-        shell: bash
-        run: |
-          if ! fc-list :lang=ko | grep -q .; then
-            sudo apt-get update -qq || true
-            sudo apt-get install -y --no-install-recommends fonts-noto-cjk
-          fi
-          fc-match 'sans-serif:lang=ko'
-          test -n "$(fc-list :lang=ko | head -c 256)"
       - name: Render public sample at desktop and mobile sizes
         shell: python
         run: |
@@ -37,12 +28,16 @@ jobs:
           import threading
           import time
           import urllib.request
+          import urllib.error
           
           def request(method, path, body=None):
               data = None if body is None else json.dumps(body, ensure_ascii=False).encode()
               req = urllib.request.Request("http://127.0.0.1:9515" + path, method=method, data=data, headers={"Content-Type":"application/json"})
-              with urllib.request.urlopen(req,timeout=18) as response:
-                  return json.load(response)["value"]
+              try:
+                  with urllib.request.urlopen(req,timeout=18) as response:
+                      return json.load(response)["value"]
+              except urllib.error.HTTPError as error:
+                  raise RuntimeError(error.read(1500).decode()) from error
           
           class QuietServer(http.server.SimpleHTTPRequestHandler):
               def log_message(self, *args):
@@ -81,6 +76,16 @@ jobs:
                       failures.append(f"{width}px {name}: {got}")
                   print("CHECK",width,name, "PASS" if value else f"FAIL {got}",flush=True)
               def page(label):
+                  loaded=post("/execute/async",script="const cb=arguments[0]; document.fonts.ready.then(()=>cb([...document.fonts].filter(f=>f.status==='loaded').map(f=>f.family)));",args=[])
+                  def cdp(command, params):
+                      return post("/goog/cdp/execute",cmd=command,params=params)
+                  cdp("DOM.enable",{})
+                  cdp("CSS.enable",{})
+                  root=cdp("DOM.getDocument",{})["root"]["nodeId"]
+                  heading=cdp("DOM.querySelector",{"nodeId":root,"selector":"h1"})["nodeId"]
+                  fonts=cdp("CSS.getPlatformFontsForNode",{"nodeId":heading})["fonts"]
+                  print("FONTS",width,label,json.dumps({"used":fonts,"loaded":sorted(set(loaded))},ensure_ascii=False),flush=True)
+                  check(label+" self-hosted Korean glyphs",any(f["isCustomFont"] and "suit" in f["familyName"].lower() and f["glyphCount"]>=3 for f in fonts),fonts)
                   dimensions=js("""return {viewport:window.innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,title:document.title,h1:document.querySelector('h1')?.innerText,broken:[...document.images].filter(i=>i.complete&&!i.naturalWidth).map(i=>i.getAttribute('src')),wide:[...document.querySelectorAll('main *')].filter(e=>e.getBoundingClientRect().right>innerWidth+1).slice(0,8).map(e=>[e.tagName,e.className,Math.round(e.getBoundingClientRect().right)])};""")
                   print("VIEW",width,label,json.dumps(dimensions,ensure_ascii=False),flush=True)
                   check(label+" heading",bool(dimensions["h1"]),dimensions)
@@ -90,7 +95,10 @@ jobs:
               def textof(css):
                   return js(f"return document.querySelector({json.dumps(css)}).textContent")
               def select_count(css,value):
-                  click(f"{css} option[value='{value}']")
+                  js(f"document.querySelector({json.dumps(css)}).scrollIntoView({{block:'center',behavior:'instant'}})")
+                  key(css,"\ue011")
+                  for _ in range(value-1):
+                      key(css,"\ue015")
               for width,height in ((320,740),(390,844),(1440,1000)):
                   try:
                       post("/goog/cdp/execute",cmd="Emulation.setDeviceMetricsOverride",params={"width":width,"height":height,"deviceScaleFactor":1,"mobile":width<600})
@@ -143,15 +151,17 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: rocket-browser-6269500c
+          name: rocket-browser-5ca352cc
           path: ${{ runner.temp }}/rocket-browser/*.png
           retention-days: 3
           if-no-files-found: ignore
       - name: Prepare Pillow for public previews
+        if: always()
         shell: bash
         run: |
           python -c 'from PIL import Image' || python -m pip install --disable-pip-version-check --target "$RUNNER_TEMP/rocket-pillow" 'Pillow==12.0.0'
       - name: Public homepage image previews
+        if: always()
         shell: python
         run: |
           import base64
