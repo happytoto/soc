@@ -81,6 +81,51 @@
       output.append(line);
     }
   }
+  function reviewNote(item) {
+    const details = elem('details');
+    details.className = 'review-note';
+    const summary = elem('summary', '점검 인계 메모');
+    details.append(summary);
+    details.addEventListener('toggle', () => {
+      if (!details.open || details.querySelector('textarea')) return;
+      const affected = [item.vendor, item.product].filter(Boolean);
+      const subject = affected.length ? [...new Set(affected)].join(' / ') : '원문에서 제품명 확인';
+      const note = [
+        '로켓보안 · 공지 기반 점검 인계',
+        '참조: ' + item.id + ' | ' + item.title,
+        '출처: ' + anchors[item.sourceId].name + ' | ' + dateLabel(item),
+        '기관 원문: ' + item.url,
+        '제품: ' + subject,
+        '영향 버전: [원문에서 확인]',
+        '우리 자산과 설치 버전: [담당자가 내부 기록에 기재]',
+        '판단: [확인 필요 / 적용 대상 / 비대상] · 근거: [자산·배포 기록]',
+        '조치 담당·예정일: [합의 후 기재]',
+        '재점검 조건: [대상 버전 또는 설정과 확인할 증적]'
+      ].join('\n');
+      const label = elem('label', '내부 업무 기록에 복사한 뒤 대괄호를 채워 주세요.');
+      const area = elem('textarea');
+      area.value = note;
+      area.readOnly = true;
+      area.rows = 6;
+      label.append(area);
+      const button = elem('button', '메모 복사');
+      button.type = 'button';
+      const result = elem('span');
+      result.setAttribute('role', 'status');
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(note);
+          result.textContent = '메모를 복사했습니다.';
+        } catch {
+          area.focus();
+          area.select();
+          result.textContent = '메모를 선택했습니다. 기기의 복사 기능을 이용하세요.';
+        }
+      });
+      details.append(label, button, result);
+    });
+    return details;
+  }
   function renderList() {
     if (!board || !snapshot) return;
     const search = byId('feed-query').value.trim().toLocaleLowerCase('ko-KR');
@@ -96,7 +141,7 @@
       const link = elem('a', item.sourceId === 'cisa-kev' ? item.id + ' · ' + item.title : item.title);
       link.href = item.url;
       link.rel = 'external noreferrer';
-      entry.append(label, link);
+      entry.append(label, link, reviewNote(item));
       fragment.append(entry);
     }
     list.replaceChildren(fragment);
