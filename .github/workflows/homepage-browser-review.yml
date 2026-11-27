@@ -1,4 +1,4 @@
-name: Public typography and brand QA 77ef6bdd
+name: Public typography and brand QA f4cdc78f
 on:
   push:
     branches: ['qa/browser-71ce6bd6']
@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 77ef6bddc90867025717a32a05c3473fefaf165a
+          ref: f4cdc78f599d1f291f0cf4e043b88db286322569
           path: soc
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -105,7 +105,7 @@ jobs:
                   dimensions=js("""return {viewport:window.innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,title:document.title,h1:document.querySelector('h1')?.innerText,broken:[...document.images].filter(i=>i.complete&&!i.naturalWidth).map(i=>i.getAttribute('src')),wide:[...document.querySelectorAll('main *')].filter(e=>e.getBoundingClientRect().right>innerWidth+1).slice(0,8).map(e=>[e.tagName,e.className,Math.round(e.getBoundingClientRect().right)])};""")
                   print("VIEW",width,label,json.dumps(dimensions,ensure_ascii=False),flush=True)
                   check(label+" heading",bool(dimensions["h1"]),dimensions)
-                  type_metrics=js("""const h=document.querySelector('h1'),p=[...document.querySelectorAll('main p')].find(e=>getComputedStyle(e).display!=='none'&&e.textContent.trim().length>35);function metrics(e){if(!e)return null;const s=getComputedStyle(e);return {px:s.fontSize,line:s.lineHeight,spacing:s.letterSpacing,width:Math.round(e.getBoundingClientRect().width),height:Math.round(e.getBoundingClientRect().height),clipped:e.scrollWidth>e.clientWidth+2}}return {heading:metrics(h),copy:metrics(p)}""")
+                  type_metrics=js("""const h=document.querySelector('h1'),p=[...document.querySelectorAll('main p')].find(e=>e.getClientRects().length&&e.textContent.trim().length>20);function metrics(e){if(!e)return null;const s=getComputedStyle(e);return {px:s.fontSize,line:s.lineHeight,spacing:s.letterSpacing,width:Math.round(e.getBoundingClientRect().width),height:Math.round(e.getBoundingClientRect().height),clipped:e.scrollWidth>e.clientWidth+2}}return {heading:metrics(h),copy:metrics(p)}""")
                   mast=js("""const a=document.querySelector('header a');return {label:a.innerText.trim(),title:document.title,accessible:a.getAttribute('aria-label'),visible:!!a.getClientRects().length}""")
                   print("BRAND/TYPE",width,label,json.dumps({"brand":mast,"typography":type_metrics},ensure_ascii=False),flush=True)
                   check(label+" visible Rocket Security brand",mast["visible"] and "로켓보안" in mast["label"] and "APLUSNET" not in mast["label"].upper() and "로켓보안" in mast["title"],mast)
@@ -155,7 +155,6 @@ jobs:
                           post("/url",url=base+"examples/rocket-portal/")
                       check("portal link",js("return location.pathname.endsWith('/soc/examples/rocket-portal/')"))
                       page("portal")
-                      check("portal customer account link",js("return [...document.querySelectorAll('a[href]')].some(a=>a.href==='https://rocket-security-account.vercel.app/' && a.getClientRects().length>0)"))
                       click("#findings .request")
                       click(".bar a[href='#tasks']")
                       check("retest status","접수 완료" in textof("#taskList"),textof("#taskList"))
@@ -163,6 +162,7 @@ jobs:
                       select_count("#domains",3)
                       check("portal quote",textof("#estimate")=="300,000원",textof("#estimate"))
                       click(".bar a[href='#billing']")
+                      check("portal customer account link",js("return [...document.querySelectorAll('a[href]')].some(a=>a.href==='https://rocket-security-account.vercel.app/' && a.getClientRects().length>0)"))
                       click("#pay")
                       check("mock receipt", "0원" in textof("#receipt") and "완료" in textof("#billState"),textof("#receipt"))
                       click("#reset")
@@ -190,7 +190,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: rocket-browser-77ef6bdd
+          name: rocket-browser-f4cdc78f
           path: ${{ runner.temp }}/rocket-browser/*.png
           retention-days: 3
           if-no-files-found: ignore
