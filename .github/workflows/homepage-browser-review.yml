@@ -1,4 +1,4 @@
-name: One-off Chromium review 71ce6bd6
+name: One-off Chromium review 6269500c
 on:
   push:
     branches: ['qa/browser-71ce6bd6']
@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 71ce6bd6e3b9a6aa002761a1d54102ea85386c69
+          ref: 6269500cc32f1a442cc08f23137c9e45a406183c
           path: soc
           persist-credentials: false
       - name: Render public sample at desktop and mobile sizes
@@ -134,7 +134,34 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: rocket-browser-71ce6bd6
+          name: rocket-browser-6269500c
           path: ${{ runner.temp }}/rocket-browser/*.png
           retention-days: 3
           if-no-files-found: ignore
+      - name: Prepare Pillow for public previews
+        shell: bash
+        run: |
+          python -c 'from PIL import Image' || python -m pip install --disable-pip-version-check --target "$RUNNER_TEMP/rocket-pillow" 'Pillow==12.0.0'
+      - name: Public homepage image previews
+        shell: python
+        run: |
+          import base64
+          import io
+          import os
+          import pathlib
+          import sys
+          root = pathlib.Path(os.environ["RUNNER_TEMP"])
+          sys.path.insert(0,str(root / "rocket-pillow"))
+          from PIL import Image
+          for label, source, width, budget in (("DESKTOP",1440,700,27000), ("MOBILE",390,310,16500)):
+              with Image.open(root / "rocket-browser" / f"homepage-{source}.png") as img:
+                  resized = img.convert("RGB").resize((width,round(img.height*width/img.width)),Image.Resampling.LANCZOS)
+              for quality in (87,80,74,67,58,48,35,25,15):
+                  data = io.BytesIO()
+                  resized.save(data,"JPEG",quality=quality,optimize=True)
+                  if len(data.getvalue()) <= budget:
+                      break
+              payload = data.getvalue()
+              assert len(payload) <= 50000
+              encoded = base64.b64encode(payload).decode("ascii")
+              print("QA_PREVIEW_" + label + "=" + encoded,flush=True)
