@@ -1,4 +1,4 @@
-name: One-off Chromium review 5ca352cc
+name: Public typography and brand QA 77ef6bdd
 on:
   push:
     branches: ['qa/browser-71ce6bd6']
@@ -12,10 +12,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 5ca352cc55811cfbf7af56eb00ef48181af61a2f
+          ref: 77ef6bddc90867025717a32a05c3473fefaf165a
           path: soc
           persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+      - name: Install customer account test dependencies
+        working-directory: soc/services/customer-account
+        shell: bash
+        run: |
+          if [[ -f package-lock.json ]]; then
+            npm ci --ignore-scripts --no-audit --no-fund
+          else
+            npm install --ignore-scripts --no-audit --no-fund
+          fi
+      - name: Customer account fixture tests
+        working-directory: soc/services/customer-account
+        run: node --test test/*.test.js
       - name: Render public sample at desktop and mobile sizes
+        if: always()
         shell: python
         run: |
           from pathlib import Path
@@ -89,6 +105,12 @@ jobs:
                   dimensions=js("""return {viewport:window.innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,title:document.title,h1:document.querySelector('h1')?.innerText,broken:[...document.images].filter(i=>i.complete&&!i.naturalWidth).map(i=>i.getAttribute('src')),wide:[...document.querySelectorAll('main *')].filter(e=>e.getBoundingClientRect().right>innerWidth+1).slice(0,8).map(e=>[e.tagName,e.className,Math.round(e.getBoundingClientRect().right)])};""")
                   print("VIEW",width,label,json.dumps(dimensions,ensure_ascii=False),flush=True)
                   check(label+" heading",bool(dimensions["h1"]),dimensions)
+                  type_metrics=js("""const h=document.querySelector('h1'),p=[...document.querySelectorAll('main p')].find(e=>getComputedStyle(e).display!=='none'&&e.textContent.trim().length>35);function metrics(e){if(!e)return null;const s=getComputedStyle(e);return {px:s.fontSize,line:s.lineHeight,spacing:s.letterSpacing,width:Math.round(e.getBoundingClientRect().width),height:Math.round(e.getBoundingClientRect().height),clipped:e.scrollWidth>e.clientWidth+2}}return {heading:metrics(h),copy:metrics(p)}""")
+                  mast=js("""const a=document.querySelector('header a');return {label:a.innerText.trim(),title:document.title,accessible:a.getAttribute('aria-label'),visible:!!a.getClientRects().length}""")
+                  print("BRAND/TYPE",width,label,json.dumps({"brand":mast,"typography":type_metrics},ensure_ascii=False),flush=True)
+                  check(label+" visible Rocket Security brand",mast["visible"] and "로켓보안" in mast["label"] and "APLUSNET" not in mast["label"].upper() and "로켓보안" in mast["title"],mast)
+                  errors=[e["message"] for e in post("/log",type="browser") if e.get("level")=="SEVERE" and "/favicon.ico" not in e.get("message","")]
+                  check(label+" browser console",not errors,errors)
                   check(label+" viewport/overflow", dimensions["viewport"]==width and dimensions["scroll"]<=dimensions["client"]+1,dimensions)
                   check(label+" images",not dimensions["broken"],dimensions["broken"])
                   (out / f"{label}-{width}.png").write_bytes(base64.b64decode(request("GET",path+"/screenshot")))
@@ -99,14 +121,14 @@ jobs:
                   key(css,"\ue011")
                   for _ in range(value-1):
                       key(css,"\ue015")
-              for width,height in ((320,740),(390,844),(1440,1000)):
+              for width,height in ((320,740),(390,844),(768,1024),(1440,1000)):
                   try:
                       post("/goog/cdp/execute",cmd="Emulation.setDeviceMetricsOverride",params={"width":width,"height":height,"deviceScaleFactor":1,"mobile":width<600})
                       post("/goog/cdp/execute",cmd="Emulation.setEmulatedMedia",params={"features":[{"name":"prefers-reduced-motion","value":"reduce"}]})
                       post("/url",url=base)
                       js("sessionStorage.clear()")
                       page("homepage")
-                      if width<600:
+                      if js("return !!document.querySelector('#menu summary').getClientRects().length"):
                           key("#menu summary","\ue007")
                           check("keyboard menu Enter",js("return document.querySelector('#menu').open"))
                           active=js("return document.activeElement===document.querySelector('#menu summary')")
@@ -122,9 +144,18 @@ jobs:
                       for number in (2,3,1):
                           select_count("#count",number)
                           check("home quote "+str(number),textof("#total")==f"{number*100000:,}원",textof("#total"))
-                      click(".portal-link")
+                      account_url="https://rocket-security-account.vercel.app/"
+                      account=js("return [...document.querySelectorAll('a[href]')].some(a=>a.href==='https://rocket-security-account.vercel.app/' && a.getClientRects().length>0)")
+                      check("homepage customer account link",account)
+                      sample=js("return [...document.querySelectorAll('a[href]')].filter(a=>a.href.includes('/examples/rocket-portal/') && a.getClientRects().length).map(a=>a.href)")
+                      check("sample portal entry",bool(sample),sample)
+                      if sample:
+                          post("/url",url=sample[0].split("#")[0])
+                      else:
+                          post("/url",url=base+"examples/rocket-portal/")
                       check("portal link",js("return location.pathname.endsWith('/soc/examples/rocket-portal/')"))
                       page("portal")
+                      check("portal customer account link",js("return [...document.querySelectorAll('a[href]')].some(a=>a.href==='https://rocket-security-account.vercel.app/' && a.getClientRects().length>0)"))
                       click("#findings .request")
                       click(".bar a[href='#tasks']")
                       check("retest status","접수 완료" in textof("#taskList"),textof("#taskList"))
@@ -137,7 +168,15 @@ jobs:
                       click("#reset")
                       check("reset",textof("#billState")=="미납" and textof("#requestCount")=="0건",textof("#billState"))
                       errors=[e["message"] for e in post("/log",type="browser") if e.get("level")=="SEVERE" and "/favicon.ico" not in e.get("message","")]
-                      check("browser console",not errors,errors)
+                      check("portal workflow console",not errors,errors)
+                      post("/url",url=base+"consulting.html")
+                      page("consulting")
+                      check("consulting inquiry fields",js("const form=document.querySelector('#leadForm');return !!form&&!!form.querySelector('[name=company]')&&!!form.querySelector('[name=domain]')&&!!form.querySelector('[type=submit]')"))
+                      if js("return !!document.querySelector('#consult-menu summary')?.getClientRects().length"):
+                          key("#consult-menu summary","\ue007")
+                          check("consulting keyboard menu",js("return document.querySelector('#consult-menu').open"))
+                          key("#consult-menu summary","\ue00c")
+                          check("consulting Escape",js("return !document.querySelector('#consult-menu').open && document.activeElement===document.querySelector('#consult-menu summary')"))
                   except Exception as exc:
                       import traceback
                       traceback.print_exc()
@@ -151,7 +190,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: rocket-browser-5ca352cc
+          name: rocket-browser-77ef6bdd
           path: ${{ runner.temp }}/rocket-browser/*.png
           retention-days: 3
           if-no-files-found: ignore
@@ -160,7 +199,7 @@ jobs:
         shell: bash
         run: |
           python -c 'from PIL import Image' || python -m pip install --disable-pip-version-check --target "$RUNNER_TEMP/rocket-pillow" 'Pillow==12.0.0'
-      - name: Public homepage image previews
+      - name: Public homepage and portal image previews
         if: always()
         shell: python
         run: |
@@ -172,8 +211,8 @@ jobs:
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
           sys.path.insert(0,str(root / "rocket-pillow"))
           from PIL import Image
-          for label, source, width, budget in (("DESKTOP",1440,700,27000), ("MOBILE",390,310,16500)):
-              with Image.open(root / "rocket-browser" / f"homepage-{source}.png") as img:
+          for label, page, source, width, budget in (("DESKTOP","homepage",1440,700,27000), ("MOBILE","homepage",390,310,16500), ("PORTAL_DESKTOP","portal",1440,700,24000), ("PORTAL_MOBILE","portal",390,310,16500)):
+              with Image.open(root / "rocket-browser" / f"{page}-{source}.png") as img:
                   resized = img.convert("RGB").resize((width,round(img.height*width/img.width)),Image.Resampling.LANCZOS)
               for quality in (87,80,74,67,58,48,35,25,15):
                   data = io.BytesIO()
