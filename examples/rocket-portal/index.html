@@ -20,12 +20,16 @@
   --gutter: clamp(18px, 4.5vw, 54px);
 }
 * { box-sizing: border-box; }
-body { margin: 0; color: var(--ink); background: var(--chalk); font: 400 1rem/1.62 "Inter", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif; word-break: keep-all; overflow-wrap: anywhere; }
+body { margin: 0; color: var(--ink); background: var(--chalk); font: 400 1rem/1.62 "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif; word-break: keep-all; overflow-wrap: anywhere; }
 header { border-bottom: 1px solid var(--rule); }
 header .shell, main, footer { max-width: 1180px; margin: 0 auto; padding-inline: var(--gutter); }
 header .shell { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .home { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); min-height: 44px; text-decoration: none; font-size: 1.1rem; font-weight: 800; letter-spacing: -.055em; }
-.home .mark { display: grid; place-items: center; width: 28px; height: 28px; color: #fff; background: var(--blue); font: 600 22px/1 system-ui,sans-serif; border-radius: 4px 9px 4px 4px; }
+.mark { width: 31px; height: 29px; display: inline-flex; align-items: end; gap: 2px; padding: 1px 3px 3px 1px; transform: skew(-18deg); color: var(--blue); }
+.mark i { display: block; width: 6.5px; background: currentColor; }
+.mark i:nth-child(1) { height: 9px; }
+.mark i:nth-child(2) { height: 17px; }
+.mark i:nth-child(3) { height: 25px; }
 .home small { margin-inline-start: 2px; color: var(--muted); font-size: .77rem; font-weight: 500; letter-spacing: 0; }
 .demo { font-size: .84rem; color: var(--blue-dark); font-weight: 650; }
 main { padding-top: clamp(28px, 5vw, 68px); }
@@ -104,7 +108,7 @@ footer { padding-block: 24px 48px; font-size: .88rem; color: var(--muted); }
 </style>
 </head>
 <body>
-<header><div class="shell"><a class="home" href="../../" aria-label="로켓보안 홈페이지로 돌아가기"><span class="mark" aria-hidden="true">↗</span>로켓보안 <small>홈페이지로</small></a><span class="demo">고객 포털 체험판</span></div></header>
+<header><div class="shell"><a class="home" href="../../" aria-label="로켓보안 홈페이지로 돌아가기"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>로켓보안 <small>홈페이지로</small></a><span class="demo">고객 포털 체험판</span></div></header>
 <main>
 <div class="case-file"><h1>오름상점 점검 현황</h1><p>가상 고객으로 보고서를 확인하고 재점검을 요청해 보세요.</p></div>
 <dl class="metrics" aria-label="점검 현황 요약"><div><dt>점검 도메인</dt><dd>1개</dd></div><div><dt>재점검 요청</dt><dd id="requestCount">0건</dd></div><div><dt>샘플 미납액</dt><dd id="outstanding">100,000원</dd></div></dl>
