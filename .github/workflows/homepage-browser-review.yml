@@ -1,0 +1,140 @@
+name: One-off Chromium review 71ce6bd6
+on:
+  push:
+    branches: ['qa/browser-71ce6bd6']
+    paths: ['.github/workflows/homepage-browser-review.yml']
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 71ce6bd6e3b9a6aa002761a1d54102ea85386c69
+          path: soc
+          persist-credentials: false
+      - name: Render public sample at desktop and mobile sizes
+        shell: python
+        run: |
+          from pathlib import Path
+          import base64
+          import functools
+          import http.server
+          import json
+          import os
+          import subprocess
+          import threading
+          import time
+          import urllib.request
+          
+          def request(method, path, body=None):
+              data = None if body is None else json.dumps(body, ensure_ascii=False).encode()
+              req = urllib.request.Request("http://127.0.0.1:9515" + path, method=method, data=data, headers={"Content-Type":"application/json"})
+              with urllib.request.urlopen(req,timeout=18) as response:
+                  return json.load(response)["value"]
+          
+          class QuietServer(http.server.SimpleHTTPRequestHandler):
+              def log_message(self, *args):
+                  pass
+          
+          server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(QuietServer, directory="."))
+          threading.Thread(target=server.serve_forever,daemon=True).start()
+          base = f"http://127.0.0.1:{server.server_port}" + "/soc/"
+          driver = subprocess.Popen(["chromedriver","--port=9515"], stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          try:
+              for _ in range(50):
+                  try:
+                      if request("GET", "/status")["ready"]:
+                          break
+                  except OSError:
+                      time.sleep(.15)
+              session = request("POST","/session",{"capabilities":{"alwaysMatch":{"browserName":"chrome","goog:chromeOptions":{"args":["--headless=new","--disable-dev-shm-usage","--no-sandbox","--lang=ko-KR"]}, "goog:loggingPrefs":{"browser":"ALL"}}}})
+              path = "/session/" + session["sessionId"]
+              print("Browser",session["capabilities"]["browserName"],session["capabilities"]["browserVersion"],flush=True)
+              def post(endpoint, **args):
+                  return request("POST",path+endpoint,args)
+              def js(code):
+                  return post("/execute/sync",script=code,args=[])
+              out = Path(os.environ["RUNNER_TEMP"]) / "rocket-browser"
+              out.mkdir(exist_ok=True)
+              failures = []
+              eid = "element-6066-11e4-a52e-4f735466cecf"
+              def element(css):
+                  return post("/element",using="css selector",value=css)[eid]
+              def click(css):
+                  post("/element/"+element(css)+"/click")
+              def key(css,char):
+                  post("/element/"+element(css)+"/value",text=char,value=[char])
+              def check(name,value,got=None):
+                  if not value:
+                      failures.append(f"{width}px {name}: {got}")
+                  print("CHECK",width,name, "PASS" if value else f"FAIL {got}",flush=True)
+              def page(label):
+                  dimensions=js("""return {client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,title:document.title,h1:document.querySelector('h1')?.innerText,broken:[...document.images].filter(i=>i.complete&&!i.naturalWidth).map(i=>i.getAttribute('src')),wide:[...document.querySelectorAll('main *')].filter(e=>e.getBoundingClientRect().right>innerWidth+1).slice(0,8).map(e=>[e.tagName,e.className,Math.round(e.getBoundingClientRect().right)])};""")
+                  print("VIEW",width,label,json.dumps(dimensions,ensure_ascii=False),flush=True)
+                  check(label+" heading",bool(dimensions["h1"]),dimensions)
+                  check(label+" viewport/overflow", dimensions["client"]==width and dimensions["scroll"]<=width+1,dimensions)
+                  check(label+" images",not dimensions["broken"],dimensions["broken"])
+                  (out / f"{label}-{width}.png").write_bytes(base64.b64decode(request("GET",path+"/screenshot")))
+              def textof(css):
+                  return js(f"return document.querySelector({json.dumps(css)}).textContent")
+              def select_count(css,value):
+                  click(f"{css} option[value='{value}']")
+              for width,height in ((320,740),(390,844),(1440,1000)):
+                  try:
+                      post("/goog/cdp/execute",cmd="Emulation.setDeviceMetricsOverride",params={"width":width,"height":height,"deviceScaleFactor":1,"mobile":width<600})
+                      post("/goog/cdp/execute",cmd="Emulation.setEmulatedMedia",params={"features":[{"name":"prefers-reduced-motion","value":"reduce"}]})
+                      post("/url",url=base)
+                      js("sessionStorage.clear()")
+                      page("homepage")
+                      if width<600:
+                          key("#menu summary","\ue007")
+                          check("keyboard menu Enter",js("return document.querySelector('#menu').open"))
+                          active=js("return document.activeElement===document.querySelector('#menu summary')")
+                          check("menu receives focus",active)
+                          key("#menu summary","\ue00c")
+                          check("Escape closes/restores focus",js("return !document.querySelector('#menu').open && document.activeElement===document.querySelector('#menu summary')"))
+                      click(".hero-actions a[href='#report']")
+                      check("hero sample report",js("return location.hash==='#report'"))
+                      for index in (2,3,1):
+                          css=f".pick button:nth-of-type({index})"
+                          key(css,"\ue007")
+                          check("keyboard report "+str(index),js(f"return document.querySelector({json.dumps(css)}).getAttribute('aria-pressed')==='true' && document.querySelectorAll('.pick [aria-pressed=true]').length===1") and textof("#finding-code").endswith(f"0{index}"),textof("#finding-code"))
+                      for number in (2,3,1):
+                          select_count("#count",number)
+                          check("home quote "+str(number),textof("#total")==f"{number*100000:,}원",textof("#total"))
+                      click(".portal-link")
+                      check("portal link",js("return location.pathname.endsWith('/soc/examples/rocket-portal/')"))
+                      page("portal")
+                      click("#findings .request")
+                      click(".bar a[href='#tasks']")
+                      check("retest status","접수 완료" in textof("#taskList"),textof("#taskList"))
+                      click(".bar a[href='#quote']")
+                      select_count("#domains",3)
+                      check("portal quote",textof("#estimate")=="300,000원",textof("#estimate"))
+                      click(".bar a[href='#billing']")
+                      click("#pay")
+                      check("mock receipt", "0원" in textof("#receipt") and "완료" in textof("#billState"),textof("#receipt"))
+                      click("#reset")
+                      check("reset",textof("#billState")=="미납" and textof("#requestCount")=="0건",textof("#billState"))
+                      errors=[e["message"] for e in post("/log",type="browser") if e.get("level")=="SEVERE" and "/favicon.ico" not in e.get("message","")]
+                      check("browser console",not errors,errors)
+                  except Exception as exc:
+                      import traceback
+                      traceback.print_exc()
+                      failures.append(f"{width}px {exc!r}")
+              if failures:
+                  raise SystemExit("\n".join(failures))
+          finally:
+              driver.terminate()
+              server.shutdown()
+      - name: Save viewport screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rocket-browser-71ce6bd6
+          path: ${{ runner.temp }}/rocket-browser/*.png
+          retention-days: 3
+          if-no-files-found: ignore
