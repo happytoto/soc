@@ -7,17 +7,110 @@
 <meta name="referrer" content="no-referrer">
 <title>로켓보안 | 고객 포털 체험</title>
 <style>
-:root{color-scheme:light;--ink:#132d35;--muted:#526971;--line:#cededc;--green:#006959;--bg:#eef4f2}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Malgun Gothic",sans-serif}header{background:#112f38;color:white}header div,main,footer{max-width:1050px;margin:auto;padding:16px 24px}header div,.bar,.row{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}header b{font-size:21px}header span{color:#bde4da;font-size:14px}main{padding-top:34px}h1,h2,h3,p{margin:0 0 12px}h1{font-size:clamp(32px,5vw,54px);letter-spacing:-.065em;line-height:1.18}h2{font-size:22px;letter-spacing:-.035em}h3{font-size:17px}.lead{background:#155653;color:white;padding:clamp(24px,4vw,42px);border-radius:18px}.lead p{color:#d6efea;margin:12px 0 0}.detail,article{background:white;padding:22px;border-radius:13px;border:1px solid var(--line)}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.metrics strong{display:block;font-size:26px}.metrics small,.muted,footer{color:var(--muted)}.bar{margin:22px 0 12px;justify-content:flex-start;gap:6px}.bar a{border-radius:7px;padding:7px 13px;text-decoration:none;color:var(--green);font-weight:700}.bar a[aria-current=page]{color:#fff;background:#143f42}.tag{display:inline-block;background:#e1f1ec;padding:3px 10px;border-radius:20px;color:#155c50;font-size:13px}.entries{display:grid;gap:10px}.entries article{padding:17px}.row p{margin:0}button{cursor:pointer;border:0;border-radius:7px;background:var(--green);color:white;font:inherit;font-weight:650;padding:9px 16px}button:disabled{background:#dce7e4;color:#445c58;cursor:default}.light{background:white;border:1px solid var(--line);color:var(--green)}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d09322;outline-offset:2px}label{display:block;margin:10px 0 3px;font-weight:650}select,input{display:block;width:min(100%,460px);padding:9px;font:inherit;border:1px solid #a9bfb8;border-radius:6px}ul{padding-left:21px}.notice{background:#fff6d9;padding:10px 14px;border-radius:7px}.notice:empty{display:none}footer{font-size:14px}section[hidden]{display:none}.space{margin-top:15px}.sub{margin-bottom:14px;display:block;color:var(--muted)}@media(max-width:620px){main,header div,footer{padding-left:14px;padding-right:14px}.metrics{gap:5px}.metrics article{padding:10px}.metrics strong{font-size:18px}.bar a{padding:7px 9px}.detail{padding:16px}}@media print{header,.lead,.metrics,.bar,footer,button,.notice,#quote,#billing,#tasks,.request{display:none!important}main,.detail,article{padding:6px;border:0}#report{display:block!important}}
+:root {
+  color-scheme: light;
+  --chalk: #f8f8f4;
+  --paper: #fff;
+  --ink: #192526;
+  --muted: #526165;
+  --blue: #243fbe;
+  --blue-dark: #182d88;
+  --wash: #e1e6fb;
+  --rule: #cbd1d1;
+  --gutter: clamp(18px, 4.5vw, 54px);
+}
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: var(--chalk); font: 400 1rem/1.62 "Inter", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif; word-break: keep-all; overflow-wrap: anywhere; }
+header { border-bottom: 1px solid var(--rule); }
+header .shell, main, footer { max-width: 1180px; margin: 0 auto; padding-inline: var(--gutter); }
+header .shell { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.home { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); min-height: 44px; text-decoration: none; font-size: 1.1rem; font-weight: 800; letter-spacing: -.055em; }
+.home .mark { display: grid; place-items: center; width: 28px; height: 28px; color: #fff; background: var(--blue); font: 600 22px/1 system-ui,sans-serif; border-radius: 4px 9px 4px 4px; }
+.home small { margin-inline-start: 2px; color: var(--muted); font-size: .77rem; font-weight: 500; letter-spacing: 0; }
+.demo { font-size: .84rem; color: var(--blue-dark); font-weight: 650; }
+main { padding-top: clamp(28px, 5vw, 68px); }
+h1,h2,h3,p { margin: 0; }
+h1,h2,h3 { line-height: 1.28; letter-spacing: -.055em; }
+h1 { font-size: clamp(2rem, 4.8vw, 4.3rem); line-height: 1.12; }
+h2 { font-size: clamp(1.45rem, 2.6vw, 2.15rem); }
+h3 { font-size: 1.15rem; }
+.case-file { position: relative; background: var(--blue); color: white; border-radius: 0 12px 0 0; padding: clamp(22px, 4vw, 50px); }
+.case-file::before { content: ""; display: block; position: absolute; bottom: calc(100% - 1px); left: 0; width: clamp(90px, 17%, 185px); height: 12px; background: var(--blue); clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%); }
+.case-file p { margin-top: 16px; color: #eef1ff; max-width: 51ch; }
+.metrics { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); margin: 0; background: var(--wash); border-radius: 0 0 8px 8px; padding: 16px 0; }
+.metrics div { min-width: 0; padding-inline: clamp(12px, 3vw, 36px); }
+.metrics div + div { border-left: 1px solid #b6bfd9; }
+.metrics dt { color: #364675; font-size: .85rem; }
+.metrics dd { color: var(--blue-dark); margin: 2px 0 0; font-size: clamp(1.12rem,2.3vw,1.85rem); letter-spacing: -.035em; font-weight: 720; font-variant-numeric: tabular-nums; }
+.bar { display: flex; flex-wrap: wrap; margin: clamp(24px, 4vw, 44px) 0 18px; gap: 4px; border-bottom: 1px solid var(--rule); }
+.bar a { display: flex; align-items: center; justify-content: center; padding: 8px clamp(12px, 2.2vw, 26px); min-height: 46px; text-decoration: none; color: var(--muted); border-bottom: 3px solid transparent; font-weight: 650; }
+.bar a:hover { color: var(--blue); background: #eff1f9; }
+.bar a[aria-current=page] { color: var(--blue); border-color: var(--blue); }
+.detail { background: var(--paper); padding: clamp(20px, 4.3vw, 50px); border: 1px solid var(--rule); border-radius: 8px; }
+.detail > p, .detail > .entries, .detail > ul, .detail > h3 { margin-top: 15px; }
+.detail > .row + .entries { margin-top: 24px; }
+.row { display: flex; justify-content: space-between; gap: 14px; align-items: center; flex-wrap: wrap; }
+.sub,.muted { color: var(--muted); }
+.sub { display: block; margin-top: 6px; font-size: .9rem; }
+.entries article { padding: 22px 0; border-top: 1px solid var(--rule); }
+.entries article:last-child { padding-bottom: 0; }
+.entries h3 { margin-bottom: 10px; }
+.entries dl { margin: 0 0 16px; display: grid; grid-template-columns: max-content 1fr; gap: 5px 16px; }
+.entries dt { color: var(--muted); font-size: .9rem; }
+.entries dd { margin: 0; }
+button,select,input { font: inherit; }
+button { cursor: pointer; min-height: 44px; border: 1px solid var(--blue); border-radius: 5px; padding: 8px 17px; background: var(--blue); color: #fff; font-weight: 650; }
+button:hover { background: var(--blue-dark); }
+.light,.request { background: white; color: var(--blue); border-color: #afbbd9; }
+.light:hover,.request:hover { background: var(--wash); }
+button:disabled { color: #525c65; border-color: #c8ced0; background: #edf0ef; cursor: default; }
+:where(button,a,input,select,[tabindex]):focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+label { display: block; margin: 20px 0 5px; font-weight: 650; }
+select,input { display: block; width: min(100%, 23rem); min-height: 44px; padding: 8px 12px; background: #fff; color: var(--ink); border: 1px solid #879698; border-radius: 5px; }
+.space, #pay { margin-top: 15px; }
+.tag { color: var(--blue-dark); background: var(--wash); padding: 4px 11px; border-radius: 3px; font-weight: 650; }
+#estimate { display: inline-block; margin-inline-start: 8px; color: var(--blue); font-size: 1.4rem; font-variant-numeric: tabular-nums; }
+.notice { margin: 0 0 15px; padding: 11px 16px; background: var(--wash); color: var(--blue-dark); border-inline-start: 3px solid var(--blue); }
+.notice:empty,[hidden],.print-title { display: none; }
+footer { padding-block: 24px 48px; font-size: .88rem; color: var(--muted); }
+@media (max-width: 600px) {
+  .bar { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0; border: 1px solid var(--rule); border-radius: 6px; overflow: visible; }
+  .bar a[aria-current=page] { background: var(--wash); }
+  .metrics { padding-block: 12px; }
+  .metrics dt { font-size: .75rem; }
+  .metrics dd { font-size: clamp(.95rem, 4vw, 1.24rem); }
+  .entries dl { grid-template-columns: 1fr; gap: 0; }
+  .entries dd + dt { margin-top: 8px; }
+}
+@media (max-width: 390px) {
+  .home small { display: none; }
+  .metrics div { padding-inline: 8px; }
+}
+@page { margin: 18mm; }
+@media print {
+  :root { --ink: #111; --muted: #333; --rule: #999; }
+  body { background: #fff; color: #111; font-size: 10pt; }
+  header, .case-file, .metrics, .bar, footer, button, .notice, #quote, #billing, #tasks { display: none !important; }
+  main,.detail { padding: 0; border: 0; margin: 0; max-width: none; }
+  #report,.print-title { display: block !important; }
+  .print-title { margin-bottom: 13pt; color: #222; font-size: 10pt; }
+  h2 { font-size: 20pt; }
+  h3 { font-size: 12pt; }
+  .entries article { break-inside: avoid; padding: 12pt 0; }
+  .entries dl { display: grid; grid-template-columns: max-content 1fr; gap: 3pt 10pt; margin: 0; }
+  .entries dt { font-size: 10pt; }
+  .entries dd + dt { margin: 0; }
+}
 </style>
 </head>
 <body>
-<header><div><b>↗ 로켓보안</b><span>고객 포털 체험판</span></div></header>
+<header><div class="shell"><a class="home" href="../../" aria-label="로켓보안 홈페이지로 돌아가기"><span class="mark" aria-hidden="true">↗</span>로켓보안 <small>홈페이지로</small></a><span class="demo">고객 포털 체험판</span></div></header>
 <main>
-<div class="lead"><h1>오름상점 점검 현황</h1><p>가상 고객으로 보고서를 확인하고 재점검을 요청해 보세요.</p></div>
-<div class="metrics"><article><small>점검 도메인</small><strong>1개</strong></article><article><small>재점검 요청</small><strong id="requestCount">0건</strong></article><article><small>샘플 미납액</small><strong id="outstanding">100,000원</strong></article></div>
+<div class="case-file"><h1>오름상점 점검 현황</h1><p>가상 고객으로 보고서를 확인하고 재점검을 요청해 보세요.</p></div>
+<dl class="metrics" aria-label="점검 현황 요약"><div><dt>점검 도메인</dt><dd>1개</dd></div><div><dt>재점검 요청</dt><dd id="requestCount">0건</dd></div><div><dt>샘플 미납액</dt><dd id="outstanding">100,000원</dd></div></dl>
 <nav class="bar" aria-label="고객 업무"><a href="#report">점검 보고서</a><a href="#tasks">재점검 현황</a><a href="#quote">예상 견적</a><a href="#billing">청구·수납</a></nav>
 <p id="message" class="notice" role="status"></p>
-<section id="report" class="detail"><div class="row"><div><h2>웹 설정 점검 보고서</h2><span class="sub">shop.example.test · 최초 점검 · 예시 자료</span></div><button class="light" id="print" type="button">인쇄 / PDF</button></div>
+<section id="report" class="detail"><p class="print-title">로켓보안 / 오름상점 고객 포털 체험판</p><div class="row"><div><h2>웹 설정 점검 보고서</h2><span class="sub">shop.example.test · 최초 점검 · 예시 자료</span></div><button class="light" id="print" type="button">인쇄 / PDF</button></div>
 <div class="entries" id="findings"></div></section>
 <section id="tasks" class="detail" hidden><h2>재점검 요청 현황</h2><p class="muted">보고서에서 요청한 항목을 확인할 수 있습니다.</p><div id="taskList" class="entries"></div></section>
 <section id="quote" class="detail" hidden><h2>도메인 점검 예상 견적</h2><p>도메인당 100,000원 · 이용 기간 30일 · 같은 범위 재점검 포함</p><label for="domains">예시 도메인 수</label><select id="domains"><option value="1">1개</option><option value="2">2개</option><option value="3">3개</option></select><p class="space">예상 합계 <strong id="estimate">100,000원</strong></p><p class="muted">금액 확인용 예시이며 청구서에는 반영되지 않습니다.</p></section>
@@ -45,7 +138,10 @@ function draw(){
  el('findings').replaceChildren();el('taskList').replaceChildren();
  for(const c of controls){
   const requested=state.requests.includes(c.id);
-  const card=document.createElement('article');card.append(node('h3',c.title),node('p','관측값 · '+c.obs),node('p','개선 권고 · '+c.fix,'muted'));
+  const card=document.createElement('article');
+  const details=document.createElement('dl');
+  details.append(node('dt','관측값'),node('dd',c.obs),node('dt','개선 권고'),node('dd',c.fix));
+  card.append(node('h3',c.title),details);
   const b=node('button',requested?'재점검 요청됨':'이 항목 재점검 요청','request');b.type='button';b.disabled=requested;
   b.onclick=()=>{if(!state.requests.includes(c.id))state.requests.push(c.id);save();draw();el('message').textContent=c.title+' 재점검 요청이 접수되었습니다.';};
   card.append(b);el('findings').append(card);

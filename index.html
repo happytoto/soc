@@ -2,33 +2,95 @@
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>로켓보안 | 웹 모의해킹 · 취약점 점검과 재점검</title>
 <meta name="description" content="웹 모의해킹과 보안점검의 범위를 상담하고, 샘플 보고서에서 관측 근거와 개선 후 재점검 절차를 확인하세요. 로켓보안 고객 포털과 도메인별 예상 견적을 체험할 수 있습니다.">
-<meta name="theme-color" content="#071f24"><meta property="og:type" content="website"><meta property="og:locale" content="ko_KR"><meta property="og:title" content="로켓보안 | 웹 모의해킹과 취약점 점검"><meta property="og:description" content="무엇을 점검하고 어떻게 고칠지, 고객이 받는 보고서부터 확인하세요."><meta property="og:url" content="https://happytoto.github.io/soc/"><link rel="canonical" href="https://happytoto.github.io/soc/">
-<style>:root{color-scheme:light;--ink:#102c33;--paper:#f7f8f3;--white:#fff;--soft:#e7eee9;--line:#c9d7d0;--sub:#425c5e;--forest:#0b3033;--mint:#c2f79a;--dark:#071f24;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;--sans:Inter,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:86px}body{margin:0;font:16px/1.6 var(--sans);color:var(--ink);background:var(--paper);word-break:keep-all;overflow-wrap:anywhere;-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration:none}button,input,select{font:inherit}button,select{cursor:pointer}a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d27727;outline-offset:4px}h1,h2,h3,p,ul,ol,dl,dd,figure{margin:0}h1,h2,h3{line-height:1.2;letter-spacing:-.055em}h2{font-size:clamp(30px,4.3vw,57px);font-weight:760}h3{font-size:clamp(20px,2vw,26px)}.wrap{width:min(calc(100% - 64px),1192px);margin-inline:auto}.skip{position:fixed;top:-100px;left:10px;z-index:20;background:#fff;padding:10px}.skip:focus{top:10px}header{position:sticky;top:0;z-index:5;background:var(--dark);color:#fff;border-bottom:1px solid #315052}.nav,.brand,.navlinks,.cta,.btn,.sheetline,.filing,.switch,.footnav,.hero-links{display:flex;align-items:center}.nav{min-height:70px;justify-content:space-between;gap:24px}.brand{gap:10px;width:max-content;font-size:21px;font-weight:800;letter-spacing:-.055em}.brand small{font:10px var(--mono);letter-spacing:.08em;color:#aac1bb;border-left:1px solid #54716c;padding-left:10px}.brand-icon{font-family:var(--mono);display:grid;place-items:center;background:var(--mint);color:var(--dark);width:31px;height:31px;border-radius:8px 8px 8px 1px;font-size:23px}.navlinks{gap:clamp(15px,2.5vw,35px);font-size:14px;font-weight:650}.navlinks a:hover,.footnav a:hover{text-decoration:underline;text-underline-offset:5px}.nav-cta{font-size:14px!important;padding:9px 14px!important;min-height:38px!important}.mobile{display:none}.btn{display:inline-flex;justify-content:center;gap:12px;min-height:46px;padding:11px 19px;border:1px solid transparent;border-radius:7px;font-weight:750;font-size:15px;line-height:1.3}.btn:hover{filter:brightness(.94)}.lime{background:var(--mint);color:var(--dark)}.outlined{border-color:#78958d;color:#f0f8f4}.solid{background:var(--forest);color:#fff}.textlink{display:inline-block;color:#0a5a50;font-weight:700;text-decoration:underline;text-underline-offset:5px}.hero{background:var(--dark);color:#f7fcf9;position:relative;overflow:hidden}.hero-in{display:grid;grid-template-columns:1.04fr .96fr;align-items:center;gap:clamp(24px,4vw,70px);padding-block:clamp(60px,7.8vw,108px)}.micro,.serial{font:600 11px/1.45 var(--mono);letter-spacing:.12em;text-transform:uppercase}.micro{display:block;color:#315f56;margin-bottom:14px}.hero .micro{color:var(--mint);display:flex;align-items:center;gap:9px}.hero .micro:before{content:"";width:27px;height:2px;background:var(--mint)}.hero h1{font-size:clamp(48px,5.8vw,82px);font-weight:770;letter-spacing:-.08em;line-height:1.12}.hero h1 span{color:var(--mint)}.hero-copy>p{font-size:clamp(16px,1.55vw,20px);line-height:1.75;color:#d2e2dc;max-width:34em;margin:23px 0 29px}.hero-links{gap:12px;flex-wrap:wrap}.scene{position:relative;isolation:isolate;min-width:0;display:grid;place-items:center;padding:23px 24px 27px;background-image:radial-gradient(#62878180 1px,transparent 1px);background-size:17px 17px}.scene:before{content:"";position:absolute;inset:12% 8%;border:1px solid #649382;border-radius:50%;transform:rotate(-25deg) scaleX(1.23);z-index:-1}.paper{width:100%;max-width:420px;position:relative;background:#fbfcf5;color:var(--ink);padding:clamp(20px,2.7vw,36px);border-radius:3px;box-shadow:8px 9px 0 #adcca5,14px 16px 0 #356252,0 26px 48px #0004;transform:rotate(-2deg)}.filing{justify-content:space-between;border-bottom:1px solid #b8cac1;padding-bottom:13px;color:#3c5d54}.serial{font-size:10px}.sample{font-size:11px;border:1px solid #829e87;padding:2px 7px;border-radius:3px}.paper h2{font-size:clamp(25px,2.8vw,37px);line-height:1.23;margin-top:19px}.host{font:13px var(--mono);color:#43635c;margin:8px 0 17px}.sheetline{justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid #d6dfd2;font-size:14px}.sheetline i{display:inline-block;width:7px;height:7px;background:#d97735;margin-right:8px;transform:rotate(45deg)}.sheetline b{font-size:12px;color:#824318}.stub{border-top:1px dashed #a1b4aa;margin-top:10px;padding-top:10px;color:#52635d;font-size:12px}.band{padding-block:clamp(52px,7vw,94px)}.topline{display:grid;grid-template-columns:1.04fr .96fr;gap:28px;align-items:end;margin-bottom:29px}.topline p,.intro,.copy{color:var(--sub)}.topline p{max-width:38em}.workbench{display:grid;grid-template-columns:minmax(210px,.85fr) minmax(0,2fr);border:1px solid var(--line);background:var(--white);border-radius:12px;overflow:hidden}.pick{background:#edf2ed;padding:13px;display:grid;align-content:start;gap:7px}.pick button{background:transparent;border:1px solid transparent;border-radius:7px;text-align:left;color:var(--ink);padding:15px 12px;font-weight:700}.pick button[aria-pressed=true]{background:white;border-color:var(--line);box-shadow:0 2px 6px #132e3112}.pick button span{font:12px var(--mono);color:#52776b;margin-right:8px}.evidence{padding:clamp(22px,4vw,43px);min-width:0}.evidence h3{margin:10px 0 20px}.evrows div{display:grid;grid-template-columns:78px minmax(0,1fr);gap:12px;padding:11px 0;border-top:1px solid #d9e2d9}.evrows dt{font-size:13px;font-weight:750;color:#4e6960}.evrows dd{line-height:1.55}.evidence .textlink{margin-top:16px}.steps{background:#e9f0e9;border-block:1px solid var(--line)}.step-list{list-style:none;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:25px;margin-top:32px}.step-list li{border-top:2px solid #8ca69a;padding-top:14px}.step-list small{font:12px var(--mono);color:#376252}.step-list h3{margin:13px 0 9px}.step-list p{color:var(--sub);max-width:33ch}.price-grid{display:grid;grid-template-columns:1fr 1fr;align-items:start;gap:clamp(24px,5vw,75px)}.price-grid .intro{margin:17px 0}.terms{padding:0;list-style:none}.terms li{padding:9px 0;border-bottom:1px solid var(--line)}.terms b{margin-right:10px}.calc{background:var(--forest);color:#fff;padding:clamp(23px,3.8vw,42px);border-radius:12px}.calc h3{margin-bottom:15px}.calc label{display:block;color:#d3e4da;font-size:14px}.calc select{width:100%;color:var(--ink);border-radius:6px;padding:9px;margin:6px 0 16px;font-size:16px;background:#fff}.amount{display:block;font-size:clamp(32px,4.7vw,52px);letter-spacing:-.05em;font-weight:750;color:var(--mint);font-variant-numeric:tabular-nums}.calc p{color:#c9ddd3;font-size:14px;margin:8px 0 22px}.faq{border-top:1px solid var(--line);padding-top:44px}.faq h2{font-size:clamp(28px,3.2vw,40px);margin-bottom:17px}.faq details{border-bottom:1px solid var(--line);padding:13px 0}.faq summary{cursor:pointer;font-weight:700}.faq details p{color:var(--sub);padding:12px 0 3px;max-width:68ch}.reach{background:#d8edc8;padding-block:clamp(40px,6vw,70px)}.reach .wrap{display:flex;gap:22px;align-items:center;justify-content:space-between;flex-wrap:wrap}.reach p{margin-top:12px;color:var(--sub)}footer{background:var(--dark);color:#e7efe9;padding:30px 0}footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.footnav{list-style:none;gap:15px;flex-wrap:wrap;font-size:14px;color:#c4d8cd;padding:0}footer small{color:#c4d8cd}.legacy{display:block;scroll-margin:100px}
-@media(max-width:880px){.wrap{width:min(calc(100% - 40px),1192px)}.navlinks{gap:14px}.brand small{display:none}.hero-in{gap:12px}.hero h1{font-size:clamp(42px,6.8vw,59px)}.scene{padding:20px 14px}.sheetline{font-size:13px}}
-@media(max-width:720px){.wrap{width:min(calc(100% - 36px),580px)}.nav{min-height:61px;gap:8px}.navlinks{display:none}.mobile{display:block;position:relative;margin-left:auto}.mobile summary{list-style:none;font-size:14px;font-weight:700;cursor:pointer;padding:9px}.mobile summary::-webkit-details-marker{display:none}.mobile nav{position:absolute;top:100%;right:0;background:var(--dark);border:1px solid #4a6562;border-radius:8px;padding:7px;min-width:155px}.mobile nav a{display:block;padding:9px}.hero-in,.topline,.price-grid{grid-template-columns:1fr}.hero-in{padding:45px 0 40px;gap:22px}.hero h1{font-size:clamp(43px,9.5vw,59px)}.hero-copy>p{margin:17px 0 20px}.scene{padding:20px 22px 24px}.paper{max-width:370px}.topline{gap:13px}.workbench{grid-template-columns:1fr}.pick{grid-template-columns:repeat(3,minmax(0,1fr));padding:6px;gap:2px}.pick button{text-align:center;font-size:13px;padding:9px 1px}.pick button span{display:block;margin:0 0 2px}.step-list{grid-template-columns:1fr;gap:19px}.step-list h3{margin:5px 0}.step-list p{max-width:100%}.evrows div{grid-template-columns:64px minmax(0,1fr)}.footer .wrap{align-items:start}.brand{font-size:19px}}
-@media(max-width:370px){.wrap{width:calc(100% - 26px)}.nav-cta{font-size:12px!important}.scene{padding-inline:10px}.hero-links{gap:6px}.btn{padding-inline:12px}.micro{letter-spacing:.05em}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
-@media print{header,footer,.calc,.reach,nav,.btn,.pick,.hero,.steps,.faq,#pricing{display:none}.band{padding:10px 0}.wrap{width:100%}.workbench,.evidence{display:block;border:0}.textlink{display:none}}</style></head>
-<body id="top"><a class="skip" href="#main">본문으로 건너뛰기</a>
-<header><div class="wrap nav"><a href="#top" class="brand" aria-label="로켓보안 홈"><span class="brand-icon" aria-hidden="true">↗</span>로켓보안 <small>APLUSNET</small></a><nav class="navlinks" aria-label="주요 메뉴"><a href="#report">보고서 미리보기</a><a href="#process">진행 절차</a><a href="#pricing">예상 비용</a><a href="./consulting.html">보안 컨설팅</a></nav><details class="mobile" id="menu"><summary>메뉴</summary><nav aria-label="모바일 메뉴"><a href="#report">보고서 미리보기</a><a href="#process">진행 절차</a><a href="#pricing">예상 비용</a><a href="./consulting.html">보안 컨설팅</a></nav></details><a class="btn lime nav-cta" href="./examples/rocket-portal/">고객 포털 체험 <span aria-hidden="true">↗</span></a></div></header>
+<meta name="theme-color" content="#f8f8f4"><meta property="og:type" content="website"><meta property="og:locale" content="ko_KR"><meta property="og:title" content="로켓보안 | 웹 모의해킹과 취약점 점검"><meta property="og:description" content="무엇을 점검하고 어떻게 고칠지, 고객이 받는 보고서부터 확인하세요."><meta property="og:url" content="https://happytoto.github.io/soc/"><link rel="canonical" href="https://happytoto.github.io/soc/">
+<link rel="stylesheet" href="./assets/rocket-edition.css?v=1">
+</head>
+<body id="top">
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="mast">
+  <div class="wrap navbar">
+    <a class="brand" aria-label="로켓보안 홈" href="#top"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span><span>로켓보안</span></a>
+    <nav class="desktop-nav" aria-label="주요 메뉴"><a href="#report">샘플 보고서</a><a href="#process">진행 절차</a><a href="#pricing">예상 비용</a><a href="./consulting.html">보안 컨설팅</a></nav>
+    <a class="portal-link" href="./examples/rocket-portal/">고객 포털 체험<span class="out-arrow" aria-hidden="true">↗</span></a>
+    <details class="mobile-menu" id="menu"><summary aria-label="메뉴"><span class="hamburger" aria-hidden="true"></span></summary><nav aria-label="모바일 메뉴"><a href="#report">샘플 보고서</a><a href="#process">진행 절차</a><a href="#pricing">예상 비용</a><a href="./consulting.html">보안 컨설팅</a></nav></details>
+  </div>
+</header>
 <main id="main">
-<section class="hero" aria-labelledby="headline"><div class="wrap hero-in"><div class="hero-copy"><span class="micro">웹 모의해킹 · 애플리케이션 보안점검</span><h1 id="headline">우리 웹서비스,<br><span>무엇부터 고칠까요?</span></h1><p>점검할 도메인과 기능을 먼저 정합니다. 발견한 문제는 개발팀이 수정할 수 있도록 근거와 개선 방법을 기록하고, 조치 후 다시 확인합니다.</p><div class="hero-links"><a class="btn lime" href="#report">샘플 보고서 보기 <span aria-hidden="true">↓</span></a><a class="btn outlined" href="#contact">점검 범위 상담</a></div></div>
-<div class="scene"><article class="paper" aria-label="웹 보안 점검 보고서 예시 표지"><div class="filing"><span class="serial" lang="en">ROCKET / WEB AUDIT</span><span class="sample">샘플 보고서</span></div><h2>오름상점<br>웹 보안 점검 결과</h2><div class="host">shop.example.test</div><div class="sheetline"><span><i aria-hidden="true"></i>HTTPS 강제 정책</span><b>개선 필요</b></div><div class="sheetline"><span><i aria-hidden="true"></i>스크립트 출처 제한</span><b>개선 필요</b></div><div class="sheetline"><span><i aria-hidden="true"></i>세션 쿠키 보호</span><b>개선 필요</b></div><p class="stub">최초 점검본 · 가상 고객의 응답 설정 기준</p></article></div></div></section>
-<section class="band" id="report"><div class="wrap"><div class="topline"><div><span class="micro">보고서 미리보기</span><h2>발견사항 한 건을<br>끝까지 살펴보세요.</h2></div><p>항목을 선택하면 무엇을 관찰했는지, 어떤 영향이 있는지, 개발팀이 무엇을 바꾸면 되는지 확인할 수 있습니다.</p></div>
-<div class="workbench"><div class="pick" role="group" aria-label="점검 항목 선택"><button type="button" aria-controls="finding-panel" aria-pressed="true"><span>WEB–01</span>전송 보안</button><button type="button" aria-controls="finding-panel" aria-pressed="false"><span>WEB–02</span>브라우저 보호</button><button type="button" aria-controls="finding-panel" aria-pressed="false"><span>WEB–03</span>세션 쿠키</button></div><article class="evidence" id="finding-panel"><div aria-live="polite" aria-atomic="true"><span id="finding-code" class="serial">WEB–01</span><h3 id="finding-title">HTTPS 강제 정책이 유지되지 않습니다</h3><dl class="evrows"><div><dt>관측 근거</dt><dd id="finding-obs">예시 응답에서 HSTS의 max-age 값이 0초입니다.</dd></div><div><dt>예상 영향</dt><dd id="finding-impact">브라우저가 이후 방문에도 HTTPS를 사용하도록 하는 정책이 유지되지 않습니다.</dd></div><div><dt>개선 방법</dt><dd id="finding-fix">HTTPS 적용 범위를 확인한 뒤 HSTS 유지 기간을 설정하고, 변경된 응답 헤더를 다시 확인합니다.</dd></div></dl></div><a class="textlink" href="./examples/rocket-portal/#report">전체 보고서 열기 · PDF 저장 <span aria-hidden="true">↗</span></a></article></div></div></section>
-<section class="band steps" id="process"><div class="wrap"><span class="micro">진행 절차</span><h2>승인한 범위에서 시작해<br>수정 결과까지 확인합니다.</h2><ol class="step-list">
-<li><small>01 / SCOPE</small><h3>대상과 범위 합의</h3><p>도메인, 로그인 후 기능, 제외 경로, 허용 시간대를 정합니다. 실제 점검은 담당자와 서면 승인 범위를 확인한 뒤 진행합니다.</p></li>
-<li><small>02 / REPORT</small><h3>근거가 담긴 보고서</h3><p>확인한 설정과 영향을 항목별로 정리합니다. 개발팀은 권고 사항을 보고 담당자와 수정 순서를 정할 수 있습니다.</p></li>
-<li><small>03 / RETEST</small><h3>개선 후 재점검</h3><p>개선한 항목을 선택해 재점검을 요청합니다. 최초 결과와 개선 후 증적을 비교해 조치 여부를 확인합니다.</p><a class="textlink" href="./examples/rocket-portal/#report">재점검 요청 체험 ↗</a></li></ol></div></section>
-<section class="band" id="pricing"><div class="wrap price-grid"><div><span class="micro">점검 범위와 비용</span><h2>웹 설정 점검,<br>견적부터 확인하세요.</h2><p class="intro">체험 견적은 도메인 단위입니다. 로그인 후 업무 흐름이나 API까지 포함하는 전문가 모의해킹은 대상과 투입 범위를 협의해 별도로 산정합니다.</p><ul class="terms"><li><b>범위</b> 전송 보안·브라우저 보호·세션 쿠키</li><li><b>기간</b> 최초 점검 성공일부터 30일</li><li><b>재점검</b> 이용 기간 내 같은 범위는 추가 요금 0원</li></ul></div>
-<div class="calc"><h3>예상 견적 계산기</h3><label for="count">점검할 도메인 수</label><select id="count"><option value="1">도메인 1개</option><option value="2">도메인 2개</option><option value="3">도메인 3개</option></select><output for="count" id="total" class="amount" aria-live="polite">100,000원</output><p>기본 3개 모듈 기준 예시 금액입니다. 실제 청구는 발생하지 않습니다.</p><a class="btn lime" href="./examples/rocket-portal/#billing">샘플 청구서 보기 <span aria-hidden="true">↗</span></a></div></div></section>
-<div class="wrap"><section class="band faq" id="faq"><h2>자주 묻는 질문</h2>
-<details><summary>고객 포털에서 무엇을 체험할 수 있나요?</summary><p>가상 고객 오름상점의 보고서 열람, PDF 저장, 항목별 재점검 요청과 모의 결제를 체험할 수 있습니다. 체험 내용은 현재 브라우저 탭에 보관됩니다.</p></details>
-<details><summary>도메인을 선택하면 실제 사이트 점검이 시작되나요?</summary><p>공개 페이지에서는 샘플 자료만 사용합니다. 실제 모의해킹은 대상 소유자 확인, 허용 범위와 일정 합의, 서면 승인을 거쳐 진행합니다.</p></details>
-<details><summary>ISMS-P와 개인정보 컨설팅도 받을 수 있나요?</summary><p>인증 준비, 개인정보처리방침 평가와 증적 정리는 기존 컨설팅 안내에서 확인하실 수 있습니다. <a class="textlink" href="./consulting.html#privacy">개인정보·ISMS-P 컨설팅 보기</a></p></details></section></div>
-<section class="reach" id="contact"><div class="wrap"><div><h2>어디까지 점검할지<br>함께 정해 보세요.</h2><p>대상 도메인, 희망 일정, 확인하고 싶은 기능을 알려주세요.</p></div><div><a class="btn solid" href="mailto:contact@aplusnet.net?subject=%5B%EB%A1%9C%EC%BC%93%EB%B3%B4%EC%95%88%5D%20%EC%9B%B9%20%EB%AA%A8%EC%9D%98%ED%95%B4%ED%82%B9%20%EB%B2%94%EC%9C%84%20%EC%83%81%EB%8B%B4&amp;body=%EC%A0%90%EA%B2%80%ED%95%A0%20%EC%84%9C%EB%B9%84%EC%8A%A4%3A%0A%EB%8C%80%EC%83%81%20%EB%8F%84%EB%A9%94%EC%9D%B8%3A%0A%ED%9D%AC%EB%A7%9D%20%EC%9D%BC%EC%A0%95%3A%0A%ED%99%95%EC%9D%B8%ED%95%98%EB%A0%A4%EB%8A%94%20%EA%B8%B0%EB%8A%A5%3A%0A%EC%A0%9C%EC%99%B8%20%EB%B2%94%EC%9C%84%3A">상담 메일 작성 <span aria-hidden="true">↗</span></a><p>contact@aplusnet.net</p></div></div></section>
-</main><footer><div class="wrap"><div><a class="brand" href="#top"><span class="brand-icon" aria-hidden="true">↗</span>로켓보안</a><small>에이플러스넷 · APLUSNET</small></div><nav class="footnav" aria-label="관련 서비스"><a href="./examples/rocket-portal/">고객 포털 체험</a><a href="./consulting.html#services">ISMS-P 컨설팅</a><a href="./consulting.html#privacy">개인정보 평가</a><a href="./tools/delegation-workbench/">위임 작업실</a><a href="#top">맨 위로 ↑</a></nav></div></footer>
+  <section class="hero wrap" aria-labelledby="headline">
+    <div class="hero-copy">
+      <p class="service-line">웹 모의해킹 · 취약점 점검</p>
+      <h1 id="headline">보고서를 열면,<br>고칠 곳이 보입니다.</h1>
+      <p class="lede">어떤 설정에서 문제가 보였는지, 왜 바꿔야 하는지, 수정 후 무엇을 확인할지. 로켓보안이 개발팀에 전달하는 보고서를 먼저 읽어보세요.</p>
+      <div class="hero-actions"><a class="button ink" href="#report">샘플 보고서 읽기</a><a class="underlink" href="#pricing">점검 비용 확인</a></div>
+    </div>
+    <figure class="specimen">
+      <a class="shelf" href="#report" aria-label="오름상점 샘플 보고서 읽기">
+        <div class="book">
+          <div class="jacket">
+            <div class="cover-heading"><span>로켓보안</span><span>웹 설정 점검</span></div>
+            <p class="book-title">오름상점<br>점검 보고서</p>
+            <img class="engraving" src="./assets/report-engraving.png" alt="" width="820" height="490" fetchpriority="high">
+            <div class="book-foot"><span lang="en">shop.example.test</span><span>최초 점검본</span></div>
+          </div>
+        </div>
+      </a>
+      <figcaption><span><b>샘플 보고서</b> 가상 고객 오름상점</span><a href="#report">펼쳐보기 <span aria-hidden="true">↓</span></a></figcaption>
+    </figure>
+  </section>
+  <section class="report-section" id="report" aria-labelledby="report-title"><div class="wrap">
+    <div class="section-intro"><div><p class="section-label">샘플 보고서</p><h2 id="report-title">개발팀이 받는 한 페이지</h2></div><p>점검 항목을 고르면 관측 근거와 영향,<br class="wide-only"> 개선 방법을 함께 읽을 수 있습니다.</p></div>
+    <div class="reader">
+      <div class="spine"><h3>점검 항목</h3>
+        <div class="pick" role="group" aria-label="점검 항목 선택">
+          <button type="button" aria-controls="finding-panel" aria-pressed="true"><span>01</span>전송 보안</button>
+          <button type="button" aria-controls="finding-panel" aria-pressed="false"><span>02</span>브라우저 보호</button>
+          <button type="button" aria-controls="finding-panel" aria-pressed="false"><span>03</span>세션 쿠키</button>
+        </div>
+      </div>
+      <article id="finding-panel" class="evidence">
+        <div aria-live="polite" aria-atomic="true">
+          <div class="paper-meta"><span id="finding-code">WEB–01</span><span>오름상점 · 예시 자료</span></div>
+          <h3 id="finding-title">HTTPS 강제 정책이 유지되지 않습니다</h3>
+          <dl class="readings">
+            <div><dt>관측 근거</dt><dd id="finding-obs">예시 응답에서 HSTS의 max-age 값이 0초입니다.</dd></div>
+            <div><dt>예상 영향</dt><dd id="finding-impact">브라우저가 이후 방문에도 HTTPS를 사용하도록 하는 정책이 유지되지 않습니다.</dd></div>
+            <div><dt>개선 방법</dt><dd id="finding-fix">HTTPS 적용 범위를 확인한 뒤 HSTS 유지 기간을 설정하고, 변경된 응답 헤더를 다시 확인합니다.</dd></div>
+          </dl>
+        </div>
+        <a class="doc-link" href="./examples/rocket-portal/#report">전체 보고서 열기 · PDF 저장 <span aria-hidden="true">↗</span></a>
+      </article>
+    </div>
+  </div></section>
+  <section id="process" class="process wrap two-column" aria-labelledby="process-title">
+    <div class="section-lead"><p class="section-label">진행 절차</p><h2 id="process-title">점검 전 합의부터<br>수정 후 확인까지</h2></div>
+    <ol class="process-list">
+      <li><h3>점검 범위를 정합니다</h3><p>대상 도메인과 로그인 후 기능, 제외할 경로와 허용 시간대를 정하고 담당자의 서면 승인을 확인합니다.</p></li>
+      <li><h3>발견한 문제를 기록합니다</h3><p>관측한 설정, 예상 영향, 권고 사항을 한 항목에 담습니다. 개발팀은 이 내용을 바탕으로 담당자와 수정 순서를 정할 수 있습니다.</p></li>
+      <li><h3>수정한 항목을 다시 확인합니다</h3><p>조치한 항목의 재점검을 요청하면 최초 결과와 변경 후 증적을 대조합니다.</p><a class="doc-link" href="./examples/rocket-portal/#report">재점검 요청 체험 <span aria-hidden="true">↗</span></a></li>
+    </ol>
+  </section>
+  <section id="pricing" class="pricing" aria-labelledby="price-title"><div class="wrap two-column">
+    <div class="section-lead"><p class="section-label">예상 비용</p><h2 id="price-title">웹 설정 점검은<br>도메인 단위로</h2><p class="section-desc">전송 보안, 브라우저 보호, 세션 쿠키를 포함합니다. 로그인 후 업무 흐름과 API 모의해킹은 점검 범위를 협의해 별도로 견적을 냅니다.</p></div>
+    <div class="estimate"><h3>예상 견적 계산기</h3><div class="field-row"><label for="count">점검할 도메인</label><select id="count"><option value="1">1개</option><option value="2">2개</option><option value="3">3개</option></select></div>
+      <div class="sum"><span>예상 합계</span><output for="count" id="total" aria-live="polite">100,000원</output></div>
+      <p>최초 점검 성공일부터 30일 동안 같은 범위의 재점검을 포함합니다. 체험 견적에는 실제 청구가 발생하지 않습니다.</p>
+      <a class="doc-link" href="./examples/rocket-portal/#billing">샘플 청구서 보기 <span aria-hidden="true">↗</span></a>
+    </div>
+  </div></section>
+  <section class="wrap two-column faq" id="faq" aria-labelledby="faq-title"><h2 id="faq-title">자주 묻는 질문</h2>
+    <div class="questions">
+      <details><summary>고객 포털에서 무엇을 체험할 수 있나요?</summary><p>가상 고객 오름상점의 보고서 열람, PDF 저장, 항목별 재점검 요청과 모의 결제를 체험할 수 있습니다. 체험 내용은 현재 브라우저 탭에 보관됩니다.</p></details>
+      <details><summary>도메인을 선택하면 실제 점검이 시작되나요?</summary><p>공개 체험은 샘플 자료로 진행합니다. 실제 점검은 대상 소유자를 확인하고 허용 범위와 일정을 서면으로 합의한 뒤 시작합니다.</p></details>
+      <details><summary>ISMS-P와 개인정보 컨설팅도 받을 수 있나요?</summary><p>인증 준비, 개인정보처리방침 평가와 증적 정리는 <a class="underlink" href="./consulting.html#privacy">컨설팅 안내</a>에서 확인할 수 있습니다.</p></details>
+    </div>
+  </section>
+  <section id="contact" class="contact" aria-labelledby="contact-title"><div class="wrap contact-inner">
+    <div><h2 id="contact-title">무엇을 점검하고 싶으신가요?</h2><p>대상 도메인과 확인하고 싶은 기능, 희망 일정을 알려주세요.</p></div>
+    <div class="contact-action"><a class="button white" href="mailto:contact@aplusnet.net?subject=%5B%EB%A1%9C%EC%BC%93%EB%B3%B4%EC%95%88%5D%20%EC%9B%B9%20%EB%AA%A8%EC%9D%98%ED%95%B4%ED%82%B9%20%EB%B2%94%EC%9C%84%20%EC%83%81%EB%8B%B4&amp;body=%EC%A0%90%EA%B2%80%ED%95%A0%20%EC%84%9C%EB%B9%84%EC%8A%A4%3A%0A%EB%8C%80%EC%83%81%20%EB%8F%84%EB%A9%94%EC%9D%B8%3A%0A%ED%9D%AC%EB%A7%9D%20%EC%9D%BC%EC%A0%95%3A%0A%ED%99%95%EC%9D%B8%ED%95%98%EB%A0%A4%EB%8A%94%20%EA%B8%B0%EB%8A%A5%3A%0A%EC%A0%9C%EC%99%B8%20%EB%B2%94%EC%9C%84%3A">상담 메일 작성 <span aria-hidden="true">↗</span></a><span>contact@aplusnet.net</span></div>
+  </div></section>
+</main>
+<footer><div class="wrap end"><div class="signature"><a class="brand" href="#top"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span><span>로켓보안</span></a><small>에이플러스넷</small></div>
+<nav class="footnav" aria-label="관련 서비스"><a href="./examples/rocket-portal/">고객 포털</a><a href="./consulting.html#services">ISMS-P 컨설팅</a><a href="./consulting.html#privacy">개인정보 평가</a><a href="./tools/delegation-workbench/">위임 작업실</a><a href="#top">맨 위로 ↑</a></nav></div></footer>
 <script>'use strict';
 const examples=[
   {
