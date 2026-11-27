@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>점검 방법과 재점검 판정 기준 | 로켓보안</title>
+  <meta name="description" content="로켓보안 웹 모의해킹의 점검 범위, 관측 근거, 우선순위와 재점검 판정을 오름상점의 예시로 확인하세요.">
+  <meta name="application-name" content="로켓보안">
+  <meta property="og:site_name" content="로켓보안">
+  <meta property="og:title" content="점검 방법과 재점검 판정 기준 | 로켓보안">
+  <link rel="canonical" href="https://happytoto.github.io/soc/methodology/">
+  <link rel="icon" href="../assets/rocket-mark.png?v=3" type="image/png">
+  <link rel="preload" href="../assets/fonts/SUIT-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/rocket-foundations.css?v=3">
+  <link rel="stylesheet" href="../assets/rocket-resource.css">
+  <style>
+    .method-sheet {margin:1.5rem 0; padding:clamp(1rem,3vw,2rem); border:1px solid #c7d2e0; border-radius:8px; background:#fff}
+    .method-sheet h3 {margin:0 0 .9rem}
+    .method-sheet dl {margin:0}
+    .method-sheet dl>div {display:grid;grid-template-columns:minmax(7rem,1fr) minmax(0,4fr);gap:.5rem 1.25rem;padding:.8rem 0;border-top:1px solid #dde2e7}
+    .method-sheet dt {font-weight:700;color:#263964}
+    .method-sheet dd {margin:0;overflow-wrap:anywhere}
+    .method-matrix {width:100%;border-collapse:collapse;margin:1.25rem 0}
+    .method-matrix caption {text-align:left;font-weight:700;margin:0 0 .7rem}
+    .method-matrix th,.method-matrix td {text-align:left;vertical-align:top;padding:.8rem;border-bottom:1px solid #d8dedf}
+    .method-matrix thead th {background:#eef1fa}
+    .method-matrix tbody th {width:24%;color:#293972}
+    @media(max-width:560px){.method-sheet dl>div{grid-template-columns:1fr;gap:.15rem}.method-matrix th,.method-matrix td{padding:.65rem .4rem}.method-matrix tbody th{width:30%}}
+  </style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-head"><div class="wrap"><a class="brand" href="../"><img src="../assets/rocket-mark.png?v=3" width="30" height="30" alt="">로켓보안</a>
+  <nav class="resource-nav" aria-label="주요 메뉴"><a href="../methodology/" aria-current="page">점검 방법</a><a href="../#report">샘플 보고서</a><a href="../response/">초동 대응</a><a href="../faq/">FAQ</a></nav>
+</div></header>
+<main id="main" class="wrap resource-main">
+  <nav class="crumb" aria-label="현재 위치"><a href="../">홈</a><span aria-hidden="true"> / </span><span aria-current="page">점검 방법</span></nav>
+  <div class="resource-intro"><p class="section-label">웹 모의해킹</p><h1>점검 방법과 재점검 판정 기준</h1>
+    <p>운영팀은 어디까지 점검해도 되는지 정하고, 개발팀은 무엇을 고치면 항목을 닫을 수 있는지 확인합니다. 가상 고객 오름상점의 예시를 따라 두 팀이 주고받는 문서를 살펴보세요.</p>
+  </div>
+  <nav class="resource-links" aria-label="이 페이지에서"><a href="#scope">점검 범위</a><a href="#evidence">보고서와 우선순위</a><a href="#retest">재점검 판정</a><a href="#references">참고 기준</a></nav>
+  <div class="resource-body">
+    <section id="scope" aria-labelledby="scope-title"><h2 id="scope-title">점검 범위를 합의할 때</h2>
+      <p>같은 도메인에도 고객이 운영하는 주문 화면과 외부 결제사가 운영하는 결제창이 섞여 있습니다. 착수 전에는 도메인, 기능, 계정 역할, 운영 주체를 한 줄씩 맞춰 보고 승인 담당자를 기재합니다.</p>
+      <div class="method-sheet"><h3>오름상점 범위 합의서 예시</h3><dl>
+        <div><dt>웹·API</dt><dd>시험 환경 <code>shop.example.test</code>의 로그인과 주문 조회 화면, 이 화면이 쓰는 주문 조회 API를 포함합니다.</dd></div>
+        <div><dt>계정·데이터</dt><dd>고객이 준비한 일반 회원과 상담원 시험 계정으로 역할별 허용 기능을 확인합니다. 주문 자료는 가상 고객 데이터만 사용합니다.</dd></div>
+        <div><dt>제외 범위</dt><dd>외부 결제사 도메인, 실제 카드 승인, 운영 고객 자료, 서비스 부하 시험은 범위에서 제외합니다.</dd></div>
+        <div><dt>작업 시간·중지</dt><dd>허용 시간과 시간대, 긴급 연락 담당자를 승인서에 남깁니다. 오류율 증가나 실제 고객 데이터 노출 징후를 발견하면 점검을 멈추고 담당자에게 알립니다.</dd></div>
+        <div><dt>증적 취급</dt><dd>보고서를 받을 사람, 전달 경로, 원본 보관 기간과 삭제 일정을 합의합니다. 공개 문의에는 비밀번호나 세션 값이 담긴 자료를 첨부하지 않습니다.</dd></div>
+      </dl></div>
+      <h3>대상이나 일정이 바뀌면</h3><p>추가 도메인, 관리자 권한, 새 API가 필요해지면 변경 이유와 영향을 기록합니다. 대상 소유자와 담당자가 추가 범위·일정·비용을 승인한 뒤 그 범위의 점검을 시작합니다.</p>
+      <p><a href="../#pricing">웹 설정 점검 예상 비용</a> · <a href="../#contact">전문가 점검 범위 상담</a></p>
+    </section>
+    <section id="evidence" aria-labelledby="evidence-title"><h2 id="evidence-title">관측한 사실에서 개발 티켓까지</h2>
+      <p>발견사항마다 대상, 관측 환경과 시각, 적용 조건, 개선 권고를 함께 기록합니다. 담당자는 보고서의 항목 번호로 개발 티켓과 재점검 요청을 연결할 수 있습니다.</p>
+      <div class="method-sheet"><h3>WEB–03 · 세션 쿠키 보호</h3><dl>
+        <div><dt>확인한 사실</dt><dd>가상 로그인 응답에 세션 쿠키의 <code>Secure</code> 속성이 있고 <code>HttpOnly</code> 속성이 빠져 있습니다. 예시에서는 쿠키 값을 가렸습니다.</dd></div>
+        <div><dt>영향과 한계</dt><dd>이 쿠키는 해당 페이지의 스크립트가 읽을 수 있습니다. 이용자 세션의 실제 유출 여부는 별도 증거가 있어야 판단할 수 있습니다.</dd></div>
+        <div><dt>개발팀 조치</dt><dd>정상 화면에서 이 값을 직접 읽을 필요가 있는지 확인합니다. 서버가 관리하는 세션 쿠키라면 발급과 갱신 모두에 보호 속성을 적용합니다.</dd></div>
+        <div><dt>완료 기준</dt><dd>시험 계정의 새 로그인과 세션 갱신 응답에서 필수 속성을 확인하고, 정상 로그인과 세션 유지가 동작하는지 점검합니다.</dd></div>
+      </dl></div>
+      <h3>어느 항목부터 고칠지</h3><p>고객 정보나 핵심 업무에 미치는 영향, 외부 노출 범위, 필요한 권한, 현재 방어 수단을 함께 봅니다. CVSS 산정을 합의한 항목에는 버전·점수·벡터와 가정을 남깁니다. 같은 점수여도 실제 운영 중인 결제 화면과 격리된 시험 화면의 수정 순서는 달라질 수 있습니다.</p>
+      <p>증거가 불충분한 항목에는 추가로 필요한 자료를 적습니다. 고객이 다른 배포본이나 설정 근거를 제시하면 양측이 버전과 시각을 맞춰 판정을 다시 검토하고 변경 이유를 남깁니다.</p>
+      <p><a href="../#report">가상 고객의 다른 발견사항 읽기</a></p>
+    </section>
+    <section id="retest" aria-labelledby="retest-title"><h2 id="retest-title">수정 후에는 같은 조건으로 비교합니다</h2>
+      <p>재점검을 요청할 때 최초 항목 번호, 수정 배포본, 배포 시각과 확인 가능한 시험 환경을 전달해 주세요. 환경이 달라졌다면 차이를 먼저 기록해야 최초 증적과 비교할 수 있습니다.</p>
+      <table class="method-matrix"><caption>재점검 판정과 후속 작업 예시</caption><thead><tr><th scope="col">판정</th><th scope="col">근거와 다음 행동</th></tr></thead><tbody>
+        <tr><th scope="row">조치 확인</th><td>합의한 경로 모두에서 완료 기준을 충족합니다. 최초·변경 증적과 배포본을 묶어 해당 항목을 종결합니다.</td></tr>
+        <tr><th scope="row">일부 조치</th><td>새 로그인에는 설정이 반영됐지만 갱신 경로에는 빠져 있습니다. 남은 경로와 담당자를 기록해 다시 요청합니다.</td></tr>
+        <tr><th scope="row">미조치</th><td>같은 조건에서 최초 관측값이 유지됩니다. 변경 대상과 배포 적용 여부를 개발팀과 대조합니다.</td></tr>
+        <tr><th scope="row">확인 보류</th><td>시험 계정 만료나 환경 차이로 비교할 수 없습니다. 필요한 조건과 다음 확인 시점을 적고 항목을 열어 둡니다.</td></tr>
+      </tbody></table>
+      <p>마무리 회의에서는 남은 항목별 담당자, 조치 예정일, 위험 수용 승인 여부와 재검토일을 정합니다. 최종 보고서의 범위·제외 항목·점검일을 함께 보관하면 다음 배포에서 어떤 항목을 다시 볼지 정하기 쉽습니다.</p>
+      <aside class="callout"><h3>점검 도중 실제 침해 징후가 보인다면</h3><p>점검을 잠시 멈추고 정해 둔 연락망으로 관측 시각, 대상, 증거 위치를 전달합니다. 피해 확산 방지와 증거 보존을 담당할 사람을 정한 뒤 점검 재개 여부를 결정합니다.</p><a href="../response/">초동 대응 자료 보기</a></aside>
+    </section>
+    <section id="references" aria-labelledby="refs-title"><h2 id="refs-title">보고서를 검토할 때 참고하는 기준</h2>
+      <ul><li><a href="https://wstg.owasp.org/v4.2/">OWASP WSTG 4.2</a>에서 합의한 대상에 맞는 웹 점검 주제를 고릅니다.</li>
+        <li><a href="https://asvs.owasp.org/">OWASP ASVS 5.0.0</a>은 기술적 보안 요구사항을 정의할 때 참고합니다. 보고서에 요구사항을 인용할 때 버전과 식별자를 함께 남깁니다.</li>
+        <li><a href="https://www.first.org/cvss/v4.0/user-guide">FIRST CVSS v4.0 사용 안내</a>에서 점수에 반영한 지표와 해석 방법을 확인할 수 있습니다.</li></ul>
+      <p>실제 적용할 항목과 검증 깊이는 고객의 서비스 구조와 계약 범위에 맞춰 정합니다. <a href="../faq/">의뢰 전 자주 묻는 질문</a></p>
+    </section>
+  </div>
+</main>
+<footer class="resource-footer"><div class="wrap"><span>로켓보안 · 운영사 에이플러스넷</span><a href="../#contact">점검 문의</a></div></footer>
+</body></html>

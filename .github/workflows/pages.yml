@@ -6,6 +6,9 @@ on:
     # 기본 브랜치가 main으로 바뀌기 전까지는 작업 브랜치에서 배포한다.
     branches: [main, claude/homepage-sales-example-t27l8g]
   workflow_dispatch:
+  schedule:
+    # 03:17, 09:17, 15:17, 21:17 Asia/Seoul. GitHub may queue scheduled runs.
+    - cron: '17 0,6,12,18 * * *'
 
 permissions:
   contents: read
@@ -26,6 +29,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Test advisory source validation and outage handling
+        run: python3 -m unittest discover -s .github/scripts -p test_refresh_advisories.py
+      - name: Refresh public advisories and preserve previous successful data
+        run: python3 .github/scripts/refresh_advisories.py
       - name: Configure Pages
         uses: actions/configure-pages@v5
         continue-on-error: true

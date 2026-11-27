@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="application-name" content="로켓보안">
+  <meta name="description" content="웹 모의해킹 착수 전 승인 범위, 발견사항 검토와 재점검, 도메인 견적, 고객 포털과 증적 보관에 대한 로켓보안 이용 안내입니다.">
+  <meta property="og:site_name" content="로켓보안">
+  <meta property="og:title" content="모의해킹 서비스 자주 묻는 질문 | 로켓보안">
+  <link rel="canonical" href="https://happytoto.github.io/soc/faq/">
+  <title>모의해킹 서비스 자주 묻는 질문 | 로켓보안</title>
+  <link rel="icon" type="image/png" href="../assets/rocket-mark.png?v=3">
+  <link rel="preload" as="font" type="font/woff2" href="../assets/fonts/SUIT-Variable.woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/rocket-foundations.css?v=3">
+  <link rel="stylesheet" href="../assets/rocket-resource.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">본문으로 건너뛰기</a>
+  <header class="site-head"><div class="wrap">
+    <a class="brand" href="../" aria-label="로켓보안 홈"><img src="../assets/rocket-mark.png?v=3" alt="" width="32" height="32">로켓보안</a>
+    <nav class="resource-nav" aria-label="주요 메뉴"><a href="../methodology/">점검 방법</a><a href="../#report">샘플 보고서</a><a href="../response/">초동 대응</a><a href="../faq/" aria-current="page">FAQ</a></nav>
+  </div></header>
+  <main id="main" class="wrap resource-main">
+    <nav class="crumb" aria-label="현재 위치"><a href="../">홈</a><span aria-hidden="true"> / </span><span aria-current="page">자주 묻는 질문</span></nav>
+    <div class="resource-intro"><p class="section-label">모의해킹 이용 안내</p><h1>자주 묻는 질문</h1>
+      <p>우리 서비스의 어느 부분을 맡길 수 있는지, 보고서를 받은 뒤 무엇을 해야 하는지 확인하세요.</p></div>
+    <nav class="resource-links" aria-label="질문 분야"><a href="#scope">점검 범위와 착수</a>
+<a href="#report">보고서와 재점검</a>
+<a href="#billing">가격과 이용 기간</a>
+<a href="#account">로그인과 고객 포털</a>
+<a href="#privacy">증적과 고객 정보</a>
+<a href="#incident">사고 징후와 긴급 문의</a></nav>
+    <div class="resource-body">
+    <section id="scope" aria-labelledby="scope-title">
+      <h2 id="scope-title">점검 범위와 착수</h2>
+      <details id="scope-1" open><summary>도메인을 입력하거나 결제하면 실제 점검이 시작되나요?</summary><p>샘플 포털에서는 가상 고객 오름상점의 자료를 사용합니다. 실제 업무는 점검할 자산의 소유자 또는 위임받은 담당자를 확인하고, 대상·제외 범위·허용 시간대를 서면으로 합의한 후 시작합니다. 결제 내역은 주문을 확인하는 자료입니다.</p></details>
+      <details id="scope-2"><summary>웹 설정 점검과 로그인 이후의 모의해킹은 어떻게 신청하나요?</summary><p>웹 설정 점검의 공개 예시는 전송 보안, 브라우저 보호, 세션 쿠키를 다룹니다. 회원·관리자 권한 차이, 주문 승인 등 업무 흐름이나 API를 확인하려면 애플리케이션, 역할, 기능 목록을 알려주세요. 기능별 범위와 예상 일정을 별도로 협의합니다.</p></details>
+      <details id="scope-3"><summary>상담 전에 어떤 정보를 정리하면 되나요?</summary><ul><li>대표 도메인과 환경을 적습니다. 운영 서버와 테스트 서버는 구분합니다.</li><li>확인하고 싶은 업무 흐름과 사용자 역할, 제외할 경로를 적습니다.</li><li>점검을 승인할 담당자, 장애 시 연락할 담당자와 허용 시간대를 정합니다.</li><li>외부 서비스가 연결된 지점과 사용 가능한 가상 주문·테스트 계정을 표시합니다. 첫 문의에는 계정 정보 대신 제공 가능 여부만 적습니다.</li></ul><p><a href="../#contact">점검 범위 상담하기</a></p></details>
+      <details id="scope-4"><summary>결제창이나 외부 로그인도 우리 도메인에 연결돼 있습니다. 어디까지 포함하나요?</summary><p>고객이 변경할 수 있는 연동 설정과 외부 사업자가 운영하는 시스템의 경계를 범위표에 나눠 적습니다. 제3자 시스템을 점검하려면 해당 운영자의 허용 조건과 별도 승인을 확인합니다. 승인 여부가 불분명하면 그 대상은 보류하고, 고객 측 설정에서 확인할 사항을 먼저 정합니다.</p></details>
+      <details id="scope-5"><summary>운영 중 장애가 생기거나 배포 일정이 바뀌면 어떻게 하나요?</summary><p>착수 전에 중단을 요청할 연락처와 중단 기준을 정합니다. 운영 이상을 발견하면 영향을 받는 기능, 최초 관찰 시각과 최근 변경 사항을 담당자에게 알리고 작업을 중단합니다. 재개 시각과 변경된 범위는 양쪽 담당자가 다시 확인합니다.</p></details>
+    </section>
+    <section id="report" aria-labelledby="report-title">
+      <h2 id="report-title">보고서와 재점검</h2>
+      <details id="report-1"><summary>발견사항 한 건을 어떤 순서로 읽으면 되나요?</summary><p>먼저 관측 근거에서 어떤 환경과 설정을 확인했는지 읽으세요. 예상 영향에서 우리 서비스의 이용 조건과 맞는지 판단한 뒤 개선 방법을 담당 개발팀에 전달합니다. 예를 들어 쿠키 보호 항목은 속성 유무를 확인한 근거와, 설정 변경 후 로그인 상태가 유지되는지 확인할 일을 함께 보여줍니다.</p><p><a href="../#report">실제 형식으로 샘플 읽기</a></p></details>
+      <details id="report-2"><summary>보고서에 없는 기능도 안전하다고 볼 수 있나요?</summary><p>결과를 해석할 때에는 점검 대상과 제외 항목, 사용한 사용자 역할, 확인 시점을 먼저 대조하세요. 접근 권한 부족으로 확인하지 못한 기능이나 점검 후 바뀐 릴리스는 별도 확인 대상입니다. 보고서를 인수할 때 미확인 항목과 후속 담당자를 함께 정하면 놓치는 일이 줄어듭니다.</p></details>
+      <details id="report-3"><summary>오탐이 의심되거나 위험도에 동의하지 않으면요?</summary><p>보고서의 항목 번호, 확인한 환경과 시각, 다른 결과가 나온 조건을 알려주세요. 프로그램 앞단에 적용된 보호 정책이나 의도된 예외가 있다면 민감값을 가린 설정 근거를 함께 제시하세요. 담당자와 관측 사실을 대조하고 결과·영향 평가·예외 사유 중 무엇을 수정할지 정합니다.</p></details>
+      <details id="report-4"><summary>재점검 요청과 조치 완료는 어떻게 구분하나요?</summary><p>요청은 수정 결과를 확인해 달라는 접수입니다. 항목 번호와 변경한 대상, 배포 버전 또는 시각을 남겨 주세요. 최초 관측 조건과 같은 범위에서 변경된 설정과 관련 기능을 확인한 뒤 조치 결과를 판단합니다. 아직 배포되지 않았거나 확인할 권한이 부족하면 남은 조건을 기록합니다.</p><p><a href="../examples/rocket-portal/#report">샘플 포털에서 재점검 요청 체험</a></p></details>
+      <details id="report-5"><summary>어떤 형식으로 보고서를 받나요?</summary><p>샘플 포털에서 HTML 보고서를 열고 ‘인쇄 / PDF’를 선택하면 브라우저의 PDF 저장 기능을 이용할 수 있습니다. 실제 업무의 보고서 형식, 상세 증적 부록, 열람 대상과 전달 경로는 착수할 때 협의합니다.</p></details>
+    </section>
+    <section id="billing" aria-labelledby="billing-title">
+      <h2 id="billing-title">가격과 이용 기간</h2>
+      <details id="billing-1"><summary>도메인 10만 원에는 무엇이 포함되나요?</summary><p>공개 계산기의 도메인당 100,000원은 웹 설정 점검 예시 단가입니다. 도메인 2개를 선택하면 200,000원으로 계산되며 실제 청구는 발생하지 않습니다. 로그인 업무 흐름, API 또는 추가 자산은 상담 견적에서 범위를 확인하세요. 실제 주문 금액은 고객 계정의 결제창을 열기 전에 확인할 수 있습니다.</p><p><a href="../#pricing">도메인별 예상 견적 계산</a></p></details>
+      <details id="billing-2"><summary>30일은 언제부터이며, 기능을 추가하면 어떻게 하나요?</summary><p>홈페이지의 웹 설정 점검 예시는 최초 점검 성공일부터 30일간 같은 범위의 재점검을 포함합니다. 새로운 도메인이나 기능, 사용자 역할을 추가하려면 먼저 범위 변경을 요청하세요. 실제 이용 조건은 해당 견적과 합의한 점검 범위에서 확인합니다.</p></details>
+      <details id="billing-3"><summary>샘플 청구서, 테스트 결제, 실제 결제는 어디에서 확인하나요?</summary><p>샘플 포털의 모의 결제는 현재 브라우저 탭의 예시 청구서만 바꿉니다. 고객 계정 화면은 상점 연결 상태에 따라 테스트 또는 실제 결제 모드와 주문 합계를 표시합니다. 테스트 모드에서는 실제 청구가 발생하지 않으며, 실제 결제 모드에서는 결제창에서 승인한 금액이 청구됩니다.</p><p><a href="https://rocket-security-account.vercel.app/">내 계정의 주문·결제 상태 확인</a></p></details>
+      <details id="billing-4"><summary>결제창을 닫았는데 주문 상태가 확실하지 않습니다.</summary><p>같은 Google 계정의 ‘내 주문 내역’에서 해당 주문의 금액과 처리 상태를 먼저 확인하세요. 승인 결과 확인 중 연결이 끊겼다면 화면의 ‘승인 결과 다시 확인’을 이용합니다. 상태가 계속 불분명하면 추가 결제에 앞서 주문번호, 결제 시각과 금액만 운영팀에 알려주세요.</p></details>
+    </section>
+    <section id="account" aria-labelledby="account-title">
+      <h2 id="account-title">로그인과 고객 포털</h2>
+      <details id="account-1"><summary>Google 로그인 버튼이나 결제 버튼이 보이지 않아요.</summary><p>고객 계정 화면은 현재 연결 상태를 확인해 사용할 수 있는 동작을 표시합니다. ‘연결을 준비하고 있습니다’가 보이면 화면의 ‘연결 상태 새로고침’으로 다시 확인할 수 있습니다. 계정 연결을 기다리는 동안 샘플 고객 포털의 보고서·재점검·청구 흐름을 둘러볼 수 있습니다.</p><p><a href="https://rocket-security-account.vercel.app/">고객 계정 열기</a> · <a href="../examples/rocket-portal/">샘플 고객 포털 열기</a></p></details>
+      <details id="account-2"><summary>체험한 보고서와 재점검 요청을 동료에게 공유할 수 있나요?</summary><p>샘플 포털의 체험 상태는 현재 브라우저 탭에 저장됩니다. 동료에게 샘플 주소를 보내면 각자 예시 자료로 체험할 수 있고, 보고서 내용은 인쇄 또는 PDF 저장으로 전달할 수 있습니다. 실제 고객 업무 자료를 공유할 때는 양쪽 담당자가 정한 수신자와 전달 경로를 사용하세요.</p></details>
+    </section>
+    <section id="privacy" aria-labelledby="privacy-title">
+      <h2 id="privacy-title">증적과 고객 정보</h2>
+      <details id="privacy-1"><summary>화면 캡처나 로그를 보낼 때 무엇을 가려야 하나요?</summary><p>첫 문의에는 항목 번호, 시각과 시간대, 환경, 관측한 현상의 요약이면 충분합니다. 캡처 사본의 이름·연락처·고객번호는 마스킹하고, 비밀번호·세션 쿠키·접근 토큰·결제 정보는 빼주세요. 전체 운영 로그나 원본 증적이 필요하면 먼저 수신자와 전달 방법을 합의합니다.</p></details>
+      <details id="privacy-2"><summary>보고서를 누가 보며, 증적은 언제까지 보관하나요?</summary><p>실제 업무에서는 필요한 증적 종류와 열람자를 정하고, 계약·착수 단계에서 저장 위치, 전달 방식, 보관 기간과 삭제 확인 방법을 합의합니다. 내부 정책이나 감사 일정에 필요한 기간이 있다면 견적 협의 때 알려주세요.</p><p><a href="../consulting.html#privacy">개인정보·ISMS-P 컨설팅 안내</a></p></details>
+    </section>
+    <section id="incident" aria-labelledby="incident-title">
+      <h2 id="incident-title">사고 징후와 긴급 문의</h2>
+      <details id="incident-1"><summary>점검을 기다리던 중 계정 탈취나 웹 변조 징후를 발견했습니다.</summary><p>조직의 보안·운영 담당자에게 즉시 알리고, 최초 발견 시각과 영향을 받은 서비스, 현재 보이는 현상을 기록합니다. 점검 예약과 별도로 사고 대응 담당자를 지정하고 조치 내용을 한 곳에 모으세요. 로켓보안 초동 대응 안내에서 상황별 확인 순서와 인계 항목을 볼 수 있습니다.</p><p><a href="../response/guides.html">상황별 초동 대응 안내</a> · <a href="../response/">보안 동향과 원문 확인</a></p></details>
+      <details id="incident-2"><summary>새 보안 권고가 나오면 우리 서비스의 발견사항으로 등록되나요?</summary><p>공개 권고를 읽을 때는 먼저 우리 조직이 해당 제품이나 기능을 쓰는지 확인하세요. 이어서 적용 버전, 운영 환경과 공급사의 원문을 대조합니다. 특정 고객 서비스에 영향이 있다는 판단은 자산과 설정을 확인한 뒤 내릴 수 있습니다.</p><p><a href="../response/">최신 공개 자료 확인</a></p></details>
+    </section>
+    <aside class="callout"><h2>우리 서비스에 맞는 범위가 궁금하신가요?</h2><p>대상 도메인, 확인하고 싶은 업무 흐름과 희망 일정을 알려주세요. 운영 데이터는 첫 상담에서 요약으로 설명해 주시면 됩니다.</p><p><a href="../#contact">점검 범위 상담하기</a></p></aside>
+    </div>
+  </main>
+  <footer class="resource-footer"><div class="wrap"><a class="brand" href="../">로켓보안</a><span>운영사 에이플러스넷</span><nav class="resource-nav" aria-label="관련 메뉴"><a href="../consulting.html">보안 컨설팅</a><a href="../response/">초동 대응</a><a href="#top">맨 위로</a></nav></div></footer>
+</body>
+</html>
