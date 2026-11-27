@@ -1,0 +1,65 @@
+@font-face {
+  font-family: "SUIT Variable";
+  src: url("/assets/fonts/SUIT-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+:root {
+  color-scheme: light;
+  --ink: #192526;
+  --muted: #526165;
+  --paper: #f8f8f4;
+  --line: #cbd1d1;
+  --blue: #243fbe;
+  --wash: #e1e6fb;
+}
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: var(--paper); font: 400 1rem/1.65 "SUIT Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; letter-spacing: -.012em; word-break: keep-all; overflow-wrap: anywhere; }
+.frame { width: min(100%, 62rem); margin: auto; padding-inline: clamp(1rem,5vw,3rem); }
+header { border-bottom: 1px solid var(--line); }
+.bar,.account,.actions,.total,footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .75rem 1.5rem; }
+.bar { min-height: 4.5rem; }
+a { color: var(--blue); text-underline-offset: .2em; }
+.brand { display: inline-flex; align-items: center; gap: .5rem; font-size: 1.22rem; font-weight: 780; letter-spacing: -.025em; text-decoration: none; color: var(--ink); }
+.home { color: var(--muted); }
+.home,.brand,footer a { align-content: center; min-height: 2.75rem; }
+main { padding-block: clamp(2rem,5vw,4rem); }
+h1,h2,h3,p { margin: 0; }
+h1,h2,h3 { line-height: 1.25; letter-spacing: -.035em; }
+h1 { font-size: clamp(2.5rem,6vw,4rem); }
+h2 { font-size: clamp(1.35rem,2.7vw,1.85rem); }
+h3 { font-size: 1.1rem; }
+.lead { margin: .75rem 0 2rem; font-size: clamp(1rem,2vw,1.2rem); color: var(--muted); }
+.section,.notice { background: white; border: 1px solid var(--line); padding: clamp(1.2rem,4vw,2rem); margin-top: 1rem; border-radius: .5rem; }
+.notice { background: var(--wash); border-color: #b7c4f0; }
+.section p,.notice p { margin-top: .5rem; }
+.notice .actions { justify-content: flex-start; margin-top: .75rem; }
+.notice .actions:not(:has(> :not([hidden]))) { display: none; }
+.muted { color: var(--muted); }
+button,.button,select { font: inherit; letter-spacing: inherit; }
+button,.button { min-height: 2.875rem; display: inline-flex; align-items: center; justify-content: center; line-height: 1.4; border: 1px solid #aebad2; color: var(--blue); padding: .55rem 1rem; border-radius: .35rem; background: white; text-align: center; text-decoration: none; font-weight: 660; cursor: pointer; }
+.primary { color: white; background: var(--blue); border-color: var(--blue); }
+button:hover:not(:disabled),.button:hover { border-color: var(--blue); }
+.primary:hover:not(:disabled) { background: #182d88; }
+button:disabled { opacity: .62; cursor: progress; }
+:where(a,button,select):focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.skip { position: absolute; left: 1rem; top: -5rem; background: white; padding: .5rem; }
+.skip:focus { top: .5rem; }
+.purchase form { max-width: 28rem; margin-top: 1.25rem; }
+label { display: block; margin-bottom: .4rem; font-weight: 650; }
+select { min-height: 2.875rem; min-width: 7.5rem; padding: .5rem; border: 1px solid #879698; border-radius: .35rem; color: var(--ink); background: white; }
+.total { margin: 1rem 0; padding-block: .75rem; border-block: 1px solid var(--line); }
+output { color: var(--blue); font-size: 1.5rem; font-weight: 730; font-variant-numeric: tabular-nums; }
+.feedback:empty { display: none; }
+#orders { margin: 1rem 0 0; padding: 0; list-style: none; }
+#orders li { padding: 1.2rem 0; border-top: 1px solid var(--line); }
+#orders .meta { color: var(--muted); font-size: .9rem; }
+#orders button { margin-top: .6rem; }
+footer { justify-content: flex-start; padding-block: 1.25rem; font-size: .9rem; }
+[hidden] { display: none !important; }
+@media(max-width: 32rem) {
+  .account { align-items: start; }
+  .actions { justify-content: flex-start; gap: .5rem; }
+  .purchase form,.purchase form button { width: 100%; }
+  .section { padding: 1.1rem; }
+}

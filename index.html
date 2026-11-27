@@ -1,25 +1,29 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>로켓보안 | 웹 모의해킹 · 취약점 점검과 재점검</title>
+<title>로켓보안 | 웹 모의해킹·취약점 점검</title>
+<meta name="application-name" content="로켓보안">
+<meta property="og:site_name" content="로켓보안">
+<link rel="icon" type="image/png" sizes="48x48" href="./assets/rocket-mark.png?v=3">
 <meta name="description" content="웹 모의해킹과 보안점검의 범위를 상담하고, 샘플 보고서에서 관측 근거와 개선 후 재점검 절차를 확인하세요. 로켓보안 고객 포털과 도메인별 예상 견적을 체험할 수 있습니다.">
 <meta name="theme-color" content="#f8f8f4"><meta property="og:type" content="website"><meta property="og:locale" content="ko_KR"><meta property="og:title" content="로켓보안 | 웹 모의해킹과 취약점 점검"><meta property="og:description" content="무엇을 점검하고 어떻게 고칠지, 고객이 받는 보고서부터 확인하세요."><meta property="og:url" content="https://happytoto.github.io/soc/"><link rel="canonical" href="https://happytoto.github.io/soc/">
 <link rel="preload" as="font" type="font/woff2" href="./assets/fonts/SUIT-Variable.woff2" crossorigin>
-<link rel="stylesheet" href="./assets/rocket-edition.css?v=2">
+<link rel="stylesheet" href="./assets/rocket-foundations.css?v=3">
+<link rel="stylesheet" href="./assets/rocket-edition.css?v=3">
 </head>
 <body id="top">
 <a class="skip" href="#main">본문으로 건너뛰기</a>
 <header class="mast">
   <div class="wrap navbar">
-    <a class="brand" aria-label="로켓보안 홈" href="#top"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span><span>로켓보안</span></a>
+    <a class="brand" aria-label="로켓보안 홈" href="#top"><img class="brand-mark" src="./assets/rocket-mark.png?v=3" width="32" height="32" alt=""><span>로켓보안</span></a>
     <nav class="desktop-nav" aria-label="주요 메뉴"><a href="#report">샘플 보고서</a><a href="#process">진행 절차</a><a href="#pricing">예상 비용</a><a href="./consulting.html">보안 컨설팅</a></nav>
-    <a class="portal-link" href="./examples/rocket-portal/">고객 포털 체험<span class="out-arrow" aria-hidden="true">↗</span></a>
+    <a class="portal-link" href="https://rocket-security-account.vercel.app/">고객 로그인<span class="out-arrow" aria-hidden="true">↗</span></a>
     <details class="mobile-menu" id="menu"><summary aria-label="메뉴"><span class="hamburger" aria-hidden="true"></span></summary><nav aria-label="모바일 메뉴"><a href="#report">샘플 보고서</a><a href="#process">진행 절차</a><a href="#pricing">예상 비용</a><a href="./consulting.html">보안 컨설팅</a></nav></details>
   </div>
 </header>
 <main id="main">
   <section class="hero wrap" aria-labelledby="headline">
     <div class="hero-copy">
-      <p class="service-line">웹 모의해킹 · 취약점 점검</p>
+      <p class="service-line">로켓보안 웹 모의해킹</p>
       <h1 id="headline">보고서를 열면,<br>고칠 곳이 보입니다.</h1>
       <p class="lede">어떤 설정에서 문제가 보였는지, 왜 바꿔야 하는지, 수정 후 무엇을 확인할지. 로켓보안이 개발팀에 전달하는 보고서를 먼저 읽어보세요.</p>
       <div class="hero-actions"><a class="button ink" href="#report">샘플 보고서 읽기</a><a class="underlink" href="#pricing">점검 비용 확인</a></div>
@@ -75,7 +79,7 @@
     <div class="estimate"><h3>예상 견적 계산기</h3><div class="field-row"><label for="count">점검할 도메인</label><select id="count"><option value="1">1개</option><option value="2">2개</option><option value="3">3개</option></select></div>
       <div class="sum"><span>예상 합계</span><output for="count" id="total" aria-live="polite">100,000원</output></div>
       <p>최초 점검 성공일부터 30일 동안 같은 범위의 재점검을 포함합니다. 체험 견적에는 실제 청구가 발생하지 않습니다.</p>
-      <a class="doc-link" href="./examples/rocket-portal/#billing">샘플 청구서 보기 <span aria-hidden="true">↗</span></a>
+      <div class="estimate-links"><a class="doc-link" href="./examples/rocket-portal/#billing">샘플 청구서 보기 <span aria-hidden="true">↗</span></a><a class="doc-link" href="https://rocket-security-account.vercel.app/">고객 로그인·결제 <span aria-hidden="true">↗</span></a></div>
     </div>
   </div></section>
   <section class="wrap two-column faq" id="faq" aria-labelledby="faq-title"><h2 id="faq-title">자주 묻는 질문</h2>
@@ -90,8 +94,8 @@
     <div class="contact-action"><a class="button white" href="mailto:contact@aplusnet.net?subject=%5B%EB%A1%9C%EC%BC%93%EB%B3%B4%EC%95%88%5D%20%EC%9B%B9%20%EB%AA%A8%EC%9D%98%ED%95%B4%ED%82%B9%20%EB%B2%94%EC%9C%84%20%EC%83%81%EB%8B%B4&amp;body=%EC%A0%90%EA%B2%80%ED%95%A0%20%EC%84%9C%EB%B9%84%EC%8A%A4%3A%0A%EB%8C%80%EC%83%81%20%EB%8F%84%EB%A9%94%EC%9D%B8%3A%0A%ED%9D%AC%EB%A7%9D%20%EC%9D%BC%EC%A0%95%3A%0A%ED%99%95%EC%9D%B8%ED%95%98%EB%A0%A4%EB%8A%94%20%EA%B8%B0%EB%8A%A5%3A%0A%EC%A0%9C%EC%99%B8%20%EB%B2%94%EC%9C%84%3A">상담 메일 작성 <span aria-hidden="true">↗</span></a><span>contact@aplusnet.net</span></div>
   </div></section>
 </main>
-<footer><div class="wrap end"><div class="signature"><a class="brand" href="#top"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span><span>로켓보안</span></a><small>에이플러스넷</small></div>
-<nav class="footnav" aria-label="관련 서비스"><a href="./examples/rocket-portal/">고객 포털</a><a href="./consulting.html#services">ISMS-P 컨설팅</a><a href="./consulting.html#privacy">개인정보 평가</a><a href="./tools/delegation-workbench/">위임 작업실</a><a href="#top">맨 위로 ↑</a></nav></div></footer>
+<footer><div class="wrap end"><div class="signature"><a class="brand" href="#top"><img class="brand-mark" src="./assets/rocket-mark.png?v=3" width="32" height="32" alt=""><span>로켓보안</span></a><small>운영사 에이플러스넷</small></div>
+<nav class="footnav" aria-label="관련 서비스"><a href="./examples/rocket-portal/">고객 포털 체험</a><a href="https://rocket-security-account.vercel.app/">고객 로그인·결제</a><a href="./consulting.html#services">ISMS-P 컨설팅</a><a href="./consulting.html#privacy">개인정보 평가</a><a href="./tools/delegation-workbench/">위임 작업실</a><a href="#top">맨 위로 ↑</a></nav></div></footer>
 <script>'use strict';
 const examples=[
   {

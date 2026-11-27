@@ -1,0 +1,16 @@
+{
+  "name": "rocket-security-account",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "@vercel/blob": "2.9.0",
+    "google-auth-library": "11.3.4"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  }
+}
